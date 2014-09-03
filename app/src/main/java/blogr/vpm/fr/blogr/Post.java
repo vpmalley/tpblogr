@@ -7,11 +7,16 @@ import java.util.Date;
  */
 public class Post {
 
-  String title;
+    public Post(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 
-  String content;
+    private String title;
 
-  Date date;
+  private String content;
+
+  private Date date;
 
   public String getTitle() {
     return title;
@@ -31,9 +36,5 @@ public class Post {
 
   public Date getDate() {
     return date;
-  }
-
-  public void setDate(Date date) {
-    this.date = date;
   }
 }

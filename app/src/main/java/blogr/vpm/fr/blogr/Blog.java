@@ -18,4 +18,8 @@ public class Blog {
   public Address getRecipient() throws AddressException {
       return new InternetAddress(recipientEmail);
   }
+
+    public String getEmailAddress() {
+        return recipientEmail;
+    }
 }
