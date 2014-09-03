@@ -17,6 +17,7 @@
         android:ems="10"
         android:id="@+id/postContent"
         android:layout_margin="3dp"
+        android:hint="Have a story to share today?"
         />
 
 </RelativeLayout>
