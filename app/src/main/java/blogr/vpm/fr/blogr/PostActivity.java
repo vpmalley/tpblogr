@@ -21,15 +21,14 @@ public class PostActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        setTitle("");
 
-        // get current blog from SharedPreferences
         publisher = new TPPostPublisher(this);
 
         contentField = (EditText) findViewById(R.id.postContent);
 
-        //titleField = (EditText) findViewById(R.id.postContent);
-
-        currentBlog = new Blog("grosergio@gmail.com");
+        // get current blog from SharedPreferences
+        currentBlog = new Blog("myblog@gmail.com");
 
         // saved instance state!
 
@@ -40,6 +39,7 @@ public class PostActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.post, menu);
+        titleField = (EditText) menu.findItem(R.id.action_title).getActionView();
         return true;
     }
 
@@ -50,7 +50,7 @@ public class PostActivity extends Activity {
             return true;
         }
         if (id == R.id.action_publish) {
-            publisher.publish(currentBlog, new Post("New Post", contentField.getText().toString()));
+            publisher.publish(currentBlog, new Post(titleField.getText().toString(), contentField.getText().toString()));
             return true;
         }
         return super.onOptionsItemSelected(item);
