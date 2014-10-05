@@ -1,8 +1,12 @@
-package blogr.vpm.fr.blogr;
+package blogr.vpm.fr.blogr.publish;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+
+import blogr.vpm.fr.blogr.bean.Blog;
+import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.publish.PostPublisher;
 
 
 /**

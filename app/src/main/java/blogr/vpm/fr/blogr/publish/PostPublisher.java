@@ -1,4 +1,7 @@
-package blogr.vpm.fr.blogr;
+package blogr.vpm.fr.blogr.publish;
+
+import blogr.vpm.fr.blogr.bean.Blog;
+import blogr.vpm.fr.blogr.bean.Post;
 
 /**
  * Created by vincent on 29/08/14.

@@ -1,4 +1,4 @@
-package blogr.vpm.fr.blogr;
+package blogr.vpm.fr.blogr.bean;
 
 import javax.mail.Address;
 import javax.mail.internet.AddressException;

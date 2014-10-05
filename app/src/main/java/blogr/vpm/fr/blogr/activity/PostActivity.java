@@ -1,10 +1,16 @@
-package blogr.vpm.fr.blogr;
+package blogr.vpm.fr.blogr.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+
+import blogr.vpm.fr.blogr.publish.PostPublisher;
+import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.publish.TPPostPublisher;
+import blogr.vpm.fr.blogr.bean.Blog;
+import blogr.vpm.fr.blogr.bean.Post;
 
 
 public class PostActivity extends Activity {

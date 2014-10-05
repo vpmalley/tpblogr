@@ -1,4 +1,4 @@
-package blogr.vpm.fr.blogr;
+package blogr.vpm.fr.blogr.bean;
 
 import java.util.Date;
 
