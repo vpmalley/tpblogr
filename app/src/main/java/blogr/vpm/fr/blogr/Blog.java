@@ -15,7 +15,11 @@ public class Blog {
 
   private String url;
 
-  public Address getRecipient() throws AddressException {
+    public Blog(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
+    }
+
+    public Address getRecipient() throws AddressException {
       return new InternetAddress(recipientEmail);
   }
 

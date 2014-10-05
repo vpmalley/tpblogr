@@ -29,6 +29,10 @@ public class PostActivity extends Activity {
 
         //titleField = (EditText) findViewById(R.id.postContent);
 
+        currentBlog = new Blog("grosergio@gmail.com");
+
+        // saved instance state!
+
     }
 
 
@@ -41,15 +45,12 @@ public class PostActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
         }
         if (id == R.id.action_publish) {
-            publisher.publish(currentBlog, new Post(titleField.getText().toString(), contentField.getText().toString()));
+            publisher.publish(currentBlog, new Post("New Post", contentField.getText().toString()));
             return true;
         }
         return super.onOptionsItemSelected(item);
