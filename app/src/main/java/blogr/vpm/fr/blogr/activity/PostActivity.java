@@ -9,6 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import java.util.List;
+
+import blogr.vpm.fr.blogr.persistence.FilePostSaver;
+import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.publish.TPPostPublisher;
@@ -20,7 +24,11 @@ public class PostActivity extends Activity {
 
     private PostPublisher publisher;
 
+    private PostSaver saver;
+
     private Blog currentBlog;
+
+    private Post currentPost;
 
     private EditText contentField;
 
@@ -32,7 +40,9 @@ public class PostActivity extends Activity {
         setContentView(R.layout.activity_post);
         setTitle("");
 
+        // init services
         publisher = new TPPostPublisher(this);
+        saver = new FilePostSaver(this);
 
         contentField = (EditText) findViewById(R.id.postContent);
 
@@ -40,10 +50,21 @@ public class PostActivity extends Activity {
         currentBlog = new Blog(prefs.getString("pref_blog_name", ""), prefs.getString("pref_blog_email", ""));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        List<Post> posts = saver.retrieveAll();
+        refreshPost(posts.get(0));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        savePost();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.post, menu);
         titleField = (EditText) menu.findItem(R.id.action_title).getActionView();
         return true;
@@ -61,5 +82,22 @@ public class PostActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Refreshes the view with the passed Post
+     * @param post the post used to display in the view
+     */
+    private void refreshPost(Post post){
+        this.currentPost = post;
+        setTitle(currentPost.getTitle());
+        contentField.setText(currentPost.getContent());
+    }
+
+    /**
+     * Saves the current post
+     */
+    private void savePost() {
+        saver.persist(currentPost);
     }
 }
