@@ -15,15 +15,16 @@ public class Blog {
 
   private String url;
 
-    public Blog(String recipientEmail) {
-        this.recipientEmail = recipientEmail;
-    }
+  public Blog(String title, String recipientEmail) {
+    this.title = title;
+    this.recipientEmail = recipientEmail;
+  }
 
-    public Address getRecipient() throws AddressException {
+  public Address getRecipient() throws AddressException {
       return new InternetAddress(recipientEmail);
   }
 
-    public String getEmailAddress() {
+  public String getEmailAddress() {
         return recipientEmail;
     }
 }

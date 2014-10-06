@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="pref_blog_name"
+        android:title="@string/pref_blog_name"
+        android:summary="@string/summary_pref_blog_name"
+        android:dialogTitle="@string/dialog_pref_blog_name" />
+
+    <EditTextPreference
+        android:key="pref_blog_email"
+        android:title="@string/pref_blog_email"
+        android:summary="@string/summary_pref_blog_email"
+        android:dialogTitle="@string/dialog_pref_blog_email" />
+    
+</PreferenceScreen>

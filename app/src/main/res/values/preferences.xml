@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_blog_name">Blog name</string>
+    <string name="summary_pref_blog_name">The name of the blog</string>
+    <string name="dialog_pref_blog_name">Set your blog\'s name</string>
+    <string name="pref_blog_email">Blog email address</string>
+    <string name="summary_pref_blog_email">Sending an email to this address will publish a new post</string>
+    <string name="dialog_pref_blog_email">Set the email address given on your blog management page</string>
+    <string name="pref_blog_url">Blog link</string>
+    <string name="summary_pref_blog_url">The url of the web page for your blog</string>
+    <string name="dialog_pref_blog_url">Set the url to read your blog</string>
+</resources>

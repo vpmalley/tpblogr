@@ -1,7 +1,10 @@
 package blogr.vpm.fr.blogr.activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -33,11 +36,8 @@ public class PostActivity extends Activity {
 
         contentField = (EditText) findViewById(R.id.postContent);
 
-        // get current blog from SharedPreferences
-        currentBlog = new Blog("myblog@gmail.com");
-
-        // saved instance state!
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        currentBlog = new Blog(prefs.getString("pref_blog_name", ""), prefs.getString("pref_blog_email", ""));
     }
 
 
@@ -53,6 +53,7 @@ public class PostActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, PreferenceActivity.class));
             return true;
         }
         if (id == R.id.action_publish) {
