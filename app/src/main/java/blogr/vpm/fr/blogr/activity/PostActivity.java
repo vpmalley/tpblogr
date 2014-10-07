@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class PostActivity extends Activity {
         saver = new FilePostSaver(this);
 
         contentField = (EditText) findViewById(R.id.postContent);
+        refreshPost();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         currentBlog = new Blog(prefs.getString("pref_blog_name", ""), prefs.getString("pref_blog_email", ""));
@@ -54,7 +56,10 @@ public class PostActivity extends Activity {
     protected void onResume() {
         super.onResume();
         List<Post> posts = saver.retrieveAll();
-        refreshPost(posts.get(0));
+        if (!posts.isEmpty()){
+            currentPost = posts.get(0);
+            refreshPost();
+        }
     }
 
     @Override
@@ -67,6 +72,7 @@ public class PostActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.post, menu);
         titleField = (EditText) menu.findItem(R.id.action_title).getActionView();
+        refreshPost();
         return true;
     }
 
@@ -85,19 +91,24 @@ public class PostActivity extends Activity {
     }
 
     /**
-     * Refreshes the view with the passed Post
-     * @param post the post used to display in the view
+     * Refreshes the view with the current Post
      */
-    private void refreshPost(Post post){
-        this.currentPost = post;
-        setTitle(currentPost.getTitle());
-        contentField.setText(currentPost.getContent());
+    private void refreshPost(){
+        if (currentPost != null) {
+            if (titleField != null) {
+                titleField.setText(currentPost.getTitle());
+            }
+            if (contentField != null) {
+                contentField.setText(currentPost.getContent());
+            }
+        }
     }
 
     /**
-     * Saves the current post
+     * Saves the post built from the view
      */
     private void savePost() {
-        saver.persist(currentPost);
+        Post post = new Post(titleField.getText().toString(), contentField.getText().toString());
+        saver.persist(post);
     }
 }
