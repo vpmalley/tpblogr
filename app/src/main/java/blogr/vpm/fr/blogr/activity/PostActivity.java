@@ -1,32 +1,37 @@
 package blogr.vpm.fr.blogr.activity;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import java.util.List;
-
-import blogr.vpm.fr.blogr.persistence.FilePostSaver;
-import blogr.vpm.fr.blogr.persistence.PostSaver;
-import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.publish.TPPostPublisher;
-import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
 
 
-public class PostActivity extends Activity {
+public class PostActivity extends Activity implements PostSelectionListener{
+
+    private PostEditionFragment postEditionFragment;
+    private Fragment postListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        postEditionFragment = (PostEditionFragment) getFragmentManager().findFragmentById(R.id.postEditionFragment);
+        postListFragment = getFragmentManager().findFragmentById(R.id.postListFragment);
+        FragmentTransaction displayPostList = getFragmentManager().beginTransaction();
+        displayPostList.hide(postEditionFragment);
+        displayPostList.commit();
         setTitle("");
+    }
+
+    @Override
+    public void onPostSelection(Post post) {
+        postEditionFragment.editPost(post);
+        FragmentTransaction displayPostEdition = getFragmentManager().beginTransaction();
+        displayPostEdition.hide(postListFragment);
+        displayPostEdition.show(postEditionFragment);
+        displayPostEdition.commit();
     }
 }

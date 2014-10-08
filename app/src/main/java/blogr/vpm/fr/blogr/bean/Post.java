@@ -37,4 +37,8 @@ public class Post {
   public Date getDate() {
     return date;
   }
+
+    public static Post emptyPost() {
+        return new Post("", "");
+    }
 }

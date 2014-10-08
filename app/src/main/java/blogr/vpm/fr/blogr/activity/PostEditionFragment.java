@@ -13,14 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import java.util.List;
-
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
-import blogr.vpm.fr.blogr.persistence.FilePostRetriever;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
-import blogr.vpm.fr.blogr.persistence.PostRetriever;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.publish.TPPostPublisher;
@@ -28,13 +24,11 @@ import blogr.vpm.fr.blogr.publish.TPPostPublisher;
 /**
  * Created by vincent on 07/10/14.
  */
-public class PostFragment extends Fragment{
+public class PostEditionFragment extends Fragment{
 
     private PostPublisher publisher;
 
     private PostSaver saver;
-
-    private PostRetriever retriever;
 
     private Blog currentBlog;
 
@@ -52,7 +46,6 @@ public class PostFragment extends Fragment{
         // init services
         publisher = new TPPostPublisher(getActivity());
         saver = new FilePostSaver(getActivity());
-        retriever = new FilePostRetriever(getActivity());
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         currentBlog = new Blog(prefs.getString("pref_blog_name", ""), prefs.getString("pref_blog_email", ""));
@@ -67,17 +60,14 @@ public class PostFragment extends Fragment{
     public void onResume() {
         super.onResume();
         contentField = (EditText) getView().findViewById(R.id.postContent);
-        List<Post> posts = retriever.retrieveAll();
-        if (!posts.isEmpty()){
-            currentPost = posts.get(0);
-            refreshPost();
-        }
+        refreshViewFromPost();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        savePost();
+        refreshPostFromView();
+        saveCurrentPost();
     }
 
     @Override
@@ -85,7 +75,7 @@ public class PostFragment extends Fragment{
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.post, menu);
         titleField = (EditText) menu.findItem(R.id.action_title).getActionView();
-        refreshPost();
+        refreshViewFromPost();
     }
 
     @Override
@@ -96,7 +86,7 @@ public class PostFragment extends Fragment{
             startActivity(new Intent(getActivity(), PreferenceActivity.class));
             return true;
         }
-        if (id == R.id.action_publish) {
+        else if (id == R.id.action_publish) {
             publisher.publish(currentBlog, new Post(titleField.getText().toString(), contentField.getText().toString()));
             return true;
         }
@@ -104,9 +94,18 @@ public class PostFragment extends Fragment{
     }
 
     /**
+     * Updates the current post with given instance and refreshes the view
+     * @param post The new post to edit
+     */
+    public void editPost(Post post){
+        currentPost = post;
+        refreshViewFromPost();
+    }
+
+    /**
      * Refreshes the view with the current Post
      */
-    private void refreshPost(){
+    private void refreshViewFromPost(){
         if (currentPost != null) {
             if (titleField != null) {
                 titleField.setText(currentPost.getTitle());
@@ -118,10 +117,21 @@ public class PostFragment extends Fragment{
     }
 
     /**
+     * Refreshes the Post with the current view elements
+     */
+    private void refreshPostFromView(){
+        if ((titleField != null) && (contentField != null)) {
+            currentPost = new Post(titleField.getText().toString(), contentField.getText().toString());
+        }
+    }
+
+    /**
      * Saves the post built from the view
      */
-    private void savePost() {
-        Post post = new Post(titleField.getText().toString(), contentField.getText().toString());
-        saver.persist(post);
+    private void saveCurrentPost() {
+        // save only if non-empty post
+        if ((!"".equals(currentPost.getTitle())) && (!"".equals(currentPost.getTitle()))) {
+            saver.persist(currentPost);
+        }
     }
 }
