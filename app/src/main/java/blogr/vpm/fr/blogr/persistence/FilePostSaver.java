@@ -67,42 +67,7 @@ public class FilePostSaver implements PostSaver {
         return saved;
     }
 
-    @Override
-    public List<Post> retrieveAll() {
-        List<Post> posts = new ArrayList<Post>();
-        if (isExternalStorageReadable()) {
-            File postDir = new File(Environment.getExternalStoragePublicDirectory("BlogR"), "posts");
-            if (postDir.exists() && postDir.isDirectory()) {
-                for (File postFile : postDir.listFiles()) {
-                    StringWriter postWriter = new StringWriter();
-                    FileInputStream postFileIn = null;
-                    try {
-                        postFileIn = new FileInputStream(postFile);
-                        IOUtils.copy(postFileIn, postWriter, "UTF-8");
-                    } catch (IOException e) {
-                        Toast.makeText(context, "Could not retrieve post", Toast.LENGTH_SHORT).show();
-                    } finally {
-                        if (postFileIn != null) {
-                            try {
-                                postFileIn.close();
-                            } catch (IOException e) {
-                                Toast.makeText(context, "Might not retrieve post", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                    posts.add(new Post(postFile.getName().replace(".txt", "").replace('_', ' '), postWriter.toString()));
-                }
-            }
-        }
-        return posts;
-    }
-
     private boolean isExternalStorageWritable() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
-    }
-
-    private boolean isExternalStorageReadable() {
-        String storageState = Environment.getExternalStorageState();
-        return (Environment.MEDIA_MOUNTED.equals(storageState) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(storageState));
     }
 }

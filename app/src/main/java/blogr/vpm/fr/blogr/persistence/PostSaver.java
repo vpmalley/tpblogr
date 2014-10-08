@@ -17,10 +17,4 @@ public interface PostSaver {
      */
     boolean persist(Post post);
 
-    /**
-     * Retrieves all persisted blog posts
-     * @return the list of persisted posts
-     */
-    List<Post> retrieveAll();
-
 }

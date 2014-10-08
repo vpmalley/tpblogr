@@ -18,7 +18,9 @@ import java.util.List;
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.persistence.FilePostRetriever;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
+import blogr.vpm.fr.blogr.persistence.PostRetriever;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.publish.TPPostPublisher;
@@ -31,6 +33,8 @@ public class PostFragment extends Fragment{
     private PostPublisher publisher;
 
     private PostSaver saver;
+
+    private PostRetriever retriever;
 
     private Blog currentBlog;
 
@@ -48,6 +52,7 @@ public class PostFragment extends Fragment{
         // init services
         publisher = new TPPostPublisher(getActivity());
         saver = new FilePostSaver(getActivity());
+        retriever = new FilePostRetriever(getActivity());
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         currentBlog = new Blog(prefs.getString("pref_blog_name", ""), prefs.getString("pref_blog_email", ""));
@@ -62,7 +67,7 @@ public class PostFragment extends Fragment{
     public void onResume() {
         super.onResume();
         contentField = (EditText) getView().findViewById(R.id.postContent);
-        List<Post> posts = saver.retrieveAll();
+        List<Post> posts = retriever.retrieveAll();
         if (!posts.isEmpty()){
             currentPost = posts.get(0);
             refreshPost();
