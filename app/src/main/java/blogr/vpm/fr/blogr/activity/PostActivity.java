@@ -23,92 +23,10 @@ import blogr.vpm.fr.blogr.bean.Post;
 
 public class PostActivity extends Activity {
 
-    private PostPublisher publisher;
-
-    private PostSaver saver;
-
-    private Blog currentBlog;
-
-    private Post currentPost;
-
-    private EditText contentField;
-
-    private EditText titleField;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         setTitle("");
-
-        // init services
-        publisher = new TPPostPublisher(this);
-        saver = new FilePostSaver(this);
-
-        contentField = (EditText) findViewById(R.id.postContent);
-        refreshPost();
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        currentBlog = new Blog(prefs.getString("pref_blog_name", ""), prefs.getString("pref_blog_email", ""));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        List<Post> posts = saver.retrieveAll();
-        if (!posts.isEmpty()){
-            currentPost = posts.get(0);
-            refreshPost();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        savePost();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.post, menu);
-        titleField = (EditText) menu.findItem(R.id.action_title).getActionView();
-        refreshPost();
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, PreferenceActivity.class));
-            return true;
-        }
-        if (id == R.id.action_publish) {
-            publisher.publish(currentBlog, new Post(titleField.getText().toString(), contentField.getText().toString()));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Refreshes the view with the current Post
-     */
-    private void refreshPost(){
-        if (currentPost != null) {
-            if (titleField != null) {
-                titleField.setText(currentPost.getTitle());
-            }
-            if (contentField != null) {
-                contentField.setText(currentPost.getContent());
-            }
-        }
-    }
-
-    /**
-     * Saves the post built from the view
-     */
-    private void savePost() {
-        Post post = new Post(titleField.getText().toString(), contentField.getText().toString());
-        saver.persist(post);
     }
 }
