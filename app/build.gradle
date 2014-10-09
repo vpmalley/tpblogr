@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android'
 
 android {
     compileSdkVersion 19
@@ -28,4 +29,5 @@ dependencies {
     compile files('../libs/mail.jar')
     compile group: 'commons-io', name: 'commons-io', version: '+'
     compile group: 'com.googlecode.flickrj-android', name: 'flickrj-android', version: '+'
+    compile group: 'com.google.android.gms', name: 'play-services', version: '6.1.+'
 }
