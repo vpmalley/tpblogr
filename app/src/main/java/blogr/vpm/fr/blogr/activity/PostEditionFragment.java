@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,8 +13,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.googlecode.flickrjandroid.Flickr;
+import com.googlecode.flickrjandroid.people.User;
+import com.googlecode.flickrjandroid.photos.PhotoList;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.apis.flickr.FlickrJAndroidProvider;
+import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
@@ -43,6 +51,7 @@ public class PostEditionFragment extends Fragment{
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        Log.d("postF", "creating fragment");
         // init services
         publisher = new TPPostPublisher(getActivity());
         saver = new FilePostSaver(getActivity());
@@ -88,6 +97,13 @@ public class PostEditionFragment extends Fragment{
         }
         else if (id == R.id.action_publish) {
             publisher.publish(currentBlog, new Post(titleField.getText().toString(), contentField.getText().toString()));
+            return true;
+        }
+        else if (id == R.id.action_insert) {
+            Log.d("flickr", "will call F");
+            FlickrProvider flickrP = new FlickrJAndroidProvider(getActivity());
+            PhotoList photos = flickrP.getUserPhotos("VinceTraveller", 5);
+            Toast.makeText(getActivity(), photos.get(0).getTitle(), Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);

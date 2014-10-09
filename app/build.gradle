@@ -28,4 +28,5 @@ dependencies {
     compile files('../libs/mail.jar')
     compile group: 'commons-io', name: 'commons-io', version: '+'
     compile group: 'com.googlecode.flickrj-android', name: 'flickrj-android', version: '+'
+    compile group: 'org.slf4j', name: 'slf4j-android', version: '+'
 }

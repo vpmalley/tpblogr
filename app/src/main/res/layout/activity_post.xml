@@ -10,14 +10,12 @@
 
     <fragment android:name="blogr.vpm.fr.blogr.activity.PostListFragment"
         android:id="@+id/postListFragment"
-        android:layout_weight="1"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <fragment android:name="blogr.vpm.fr.blogr.activity.PostEditionFragment"
         android:id="@+id/postEditionFragment"
-        android:layout_weight="2"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>
