@@ -17,4 +17,11 @@ public interface PostSaver {
      */
     boolean persist(Post post);
 
+    /**
+     * Deletes a persisted post
+     * @param post the post to delete
+     * @return whether the post was deleted
+     */
+    boolean delete(Post post);
+
 }

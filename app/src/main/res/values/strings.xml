@@ -6,6 +6,7 @@
     <string name="action_publish">Publish</string>
     <string name="action_title">Title</string>
     <string name="action_new">New</string>
+    <string name="action_delete">Delete</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>

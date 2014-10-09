@@ -47,6 +47,11 @@ public class PostListFragment extends ListFragment {
             postItems.add(post.getTitle());
         }
         setListAdapter(new ArrayAdapter<String>(getActivity(), R.layout.post_item, postItems));
+
+        // set contextual actions
+        ListView postView = getListView();
+        postView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        postView.setMultiChoiceModeListener(new PostListChoiceModeListener(getActivity(), posts));
     }
 
     @Override

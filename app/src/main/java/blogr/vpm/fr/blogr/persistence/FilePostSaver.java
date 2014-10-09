@@ -63,6 +63,12 @@ public class FilePostSaver implements PostSaver {
         return saved;
     }
 
+    @Override
+    public boolean delete(Post post) {
+        // TODO
+        return false;
+    }
+
     private boolean isExternalStorageWritable() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
