@@ -6,6 +6,11 @@
         android:orderInCategory="10"
         android:showAsAction="always"
         android:actionLayout="@layout/title_text"/>
+    <item android:id="@+id/action_insert_location"
+        android:title="@string/action_insert_location"
+        android:orderInCategory="80"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_place"/>
     <item android:id="@+id/action_publish"
         android:title="@string/action_publish"
         android:orderInCategory="90"
@@ -14,6 +19,6 @@
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_settings"/> />
 </menu>

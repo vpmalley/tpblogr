@@ -1,7 +1,6 @@
 package blogr.vpm.fr.blogr.location;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationClient;
 
 /**
@@ -30,7 +28,8 @@ public class PlayServicesLocationProvider implements LocationProvider, GooglePla
     @Override
     public void connect() {
         if (!isServiceAvailable()){
-            throw new IllegalStateException("Play Services are not up-to-date and location cannot be obtained");
+            Toast.makeText(activity, "Play Services are not up-to-date and location cannot be obtained",
+                    Toast.LENGTH_SHORT).show();
         }
 
         locationClient = new LocationClient(activity, this, new LocationFailedConnectionListener(activity));
@@ -41,9 +40,14 @@ public class PlayServicesLocationProvider implements LocationProvider, GooglePla
     public Location getCurrentLocation() {
         // if it has not been instantiated yet
         if (locationClient == null){
-            throw new IllegalStateException("Play Services are not connected to and location cannot be obtained");
+            Toast.makeText(activity, "Play Services are not connected to and location cannot be obtained",
+                    Toast.LENGTH_SHORT).show();
         }
         Location lastLocation = locationClient.getLastLocation();
+        if (lastLocation == null){
+            Toast.makeText(activity, "Location is currently not available. Check Position parameters",
+                    Toast.LENGTH_SHORT).show();
+        }
         return lastLocation;
     }
 

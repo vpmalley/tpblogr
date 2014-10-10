@@ -16,6 +16,9 @@ import android.widget.EditText;
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.insertion.DefaultInserter;
+import blogr.vpm.fr.blogr.insertion.Inserter;
+import blogr.vpm.fr.blogr.location.LatLongTagProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
 import blogr.vpm.fr.blogr.location.PlayServicesLocationProvider;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
@@ -95,6 +98,11 @@ public class PostEditionFragment extends Fragment{
         }
         else if (id == R.id.action_publish) {
             publisher.publish(currentBlog, new Post(titleField.getText().toString(), contentField.getText().toString()));
+            return true;
+        }
+        else if (id == R.id.action_insert_location) {
+            Inserter locationInserter = new DefaultInserter();
+            locationInserter.insert(contentField, new LatLongTagProvider(locationProvider));
             return true;
         }
         return super.onOptionsItemSelected(item);
