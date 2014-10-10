@@ -8,6 +8,11 @@
     <string name="action_title">Title</string>
     <string name="action_new">New</string>
     <string name="action_delete">Delete</string>
+    <string name="customtext">your text here</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">, longitude</string>
+    <string name="altitude">, altitude</string>
+    <string name="newpost">New Post</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>

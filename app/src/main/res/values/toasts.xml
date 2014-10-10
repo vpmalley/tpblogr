@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="outdatedplayservices">Play Services are not up-to-date and location cannot be obtained</string>
+    <string name="disconnectedplayservices">Play Services are not connected to and location cannot be obtained</string>
+    <string name="checkpositionparams">Location is currently not available. Check Position parameters</string>
+    <string name="cannotgepost">Could not retrieve post</string>
+    <string name="mightnotgepost">Might not retrieve post</string>
+    <string name="mightnotsavepost">Might not save post</string>
+    <string name="cannotsavepost">Could not save post</string>
+</resources>

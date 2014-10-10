@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
 
 /**
@@ -39,13 +40,13 @@ public class FilePostRetriever implements PostRetriever{
                         postFileIn = new FileInputStream(postFile);
                         IOUtils.copy(postFileIn, postWriter, "UTF-8");
                     } catch (IOException e) {
-                        Toast.makeText(context, "Could not retrieve post", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getResources().getString(R.string.cannotgepost), Toast.LENGTH_SHORT).show();
                     } finally {
                         if (postFileIn != null) {
                             try {
                                 postFileIn.close();
                             } catch (IOException e) {
-                                Toast.makeText(context, "Might not retrieve post", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, context.getResources().getString(R.string.mightnotgepost), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -60,6 +61,4 @@ public class FilePostRetriever implements PostRetriever{
         String storageState = Environment.getExternalStorageState();
         return (Environment.MEDIA_MOUNTED.equals(storageState) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(storageState));
     }
-
-
 }

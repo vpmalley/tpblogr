@@ -1,11 +1,21 @@
 package blogr.vpm.fr.blogr.insertion;
 
+import android.content.Context;
 import android.widget.EditText;
+
+import blogr.vpm.fr.blogr.R;
 
 /**
  * Created by vincent on 08/10/14.
  */
 public class DefaultInserter implements Inserter {
+
+    Context context;
+
+    public DefaultInserter(Context context) {
+        this.context = context;
+    }
+
     @Override
     public void insert(EditText contentField, SingleTagProvider tagProvider) {
         int position = contentField.getSelectionEnd();
@@ -32,7 +42,7 @@ public class DefaultInserter implements Inserter {
         String contentAfterTags = content.substring(endPosition);
 
         if (startPosition == endPosition){
-            contentBetweenTags = "your text here";
+            contentBetweenTags = context.getResources().getString(R.string.customtext);
         }
 
         StringBuilder contentBuilder = new StringBuilder();

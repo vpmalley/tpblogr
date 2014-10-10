@@ -1,7 +1,9 @@
 package blogr.vpm.fr.blogr.location;
 
+import android.content.Context;
 import android.location.Location;
 
+import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 
 /**
@@ -10,6 +12,8 @@ import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 public class LatLongTagProvider implements SingleTagProvider {
 
     LocationProvider locationProvider;
+
+    Context context;
 
     public LatLongTagProvider(LocationProvider locationProvider) {
         this.locationProvider = locationProvider;
@@ -20,11 +24,11 @@ public class LatLongTagProvider implements SingleTagProvider {
         Location currentLocation = locationProvider.getCurrentLocation();
         StringBuilder locationBuilder = new StringBuilder();
         if (currentLocation != null) {
-            locationBuilder.append("latitude ");
+            locationBuilder.append(context.getResources().getString(R.string.latitude));
             locationBuilder.append(currentLocation.getLatitude());
-            locationBuilder.append(", longitude ");
+            locationBuilder.append(context.getResources().getString(R.string.longitude));
             locationBuilder.append(currentLocation.getLongitude());
-            locationBuilder.append(", altitude ");
+            locationBuilder.append(context.getResources().getString(R.string.altitude));
             locationBuilder.append(currentLocation.getAltitude());
         }
         return locationBuilder.toString();

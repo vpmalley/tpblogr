@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 
+import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
 
 /**
@@ -29,7 +30,7 @@ public class FilePostSaver implements PostSaver {
         boolean saved = false;
         String postTitle = post.getTitle();
         if (postTitle.isEmpty()) {
-            postTitle = "New_Post";
+            postTitle = context.getResources().getString(R.string.newpost);
         }
         if (isExternalStorageWritable()) {
             // create directory if non existent
@@ -40,7 +41,7 @@ public class FilePostSaver implements PostSaver {
             try {
                 postFile.createNewFile();
             } catch (IOException e) {
-                Toast.makeText(context, "Could not save post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.cannotsavepost), Toast.LENGTH_SHORT).show();
             }
             // fill file
             FileOutputStream postFileOut = null;
@@ -49,13 +50,13 @@ public class FilePostSaver implements PostSaver {
                 IOUtils.copy(new StringReader(post.getContent()), postFileOut, "UTF-8");
                 saved = true;
             } catch (IOException e) {
-                Toast.makeText(context, "Could not save post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.cannotsavepost), Toast.LENGTH_SHORT).show();
             } finally {
                 if (postFileOut != null) {
                     try {
                         postFileOut.close();
                     } catch (IOException e) {
-                        Toast.makeText(context, "Might not save post", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getResources().getString(R.string.mightnotsavepost), Toast.LENGTH_SHORT).show();
                     }
                 }
             }

@@ -15,6 +15,8 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 
+import blogr.vpm.fr.blogr.R;
+
 /**
  * Created by vincent on 09/10/14.
  */
@@ -35,7 +37,7 @@ public class PlayServicesLocationProvider implements LocationProvider, GooglePla
     @Override
     public void connect() {
         if (!isServiceAvailable()){
-            Toast.makeText(activity, "Play Services are not up-to-date and location cannot be obtained",
+            Toast.makeText(activity, activity.getResources().getString(R.string.outdatedplayservices),
                     Toast.LENGTH_SHORT).show();
         }
         if (isEnabled) {
@@ -48,7 +50,7 @@ public class PlayServicesLocationProvider implements LocationProvider, GooglePla
     public Location getCurrentLocation() {
         // if it has not been instantiated yet
         if (isEnabled && (locationClient == null)){
-            Toast.makeText(activity, "Play Services are not connected to and location cannot be obtained",
+            Toast.makeText(activity, activity.getResources().getString(R.string.disconnectedplayservices),
                     Toast.LENGTH_SHORT).show();
         }
         Location lastLocation = null;
@@ -56,7 +58,7 @@ public class PlayServicesLocationProvider implements LocationProvider, GooglePla
             lastLocation = locationClient.getLastLocation();
         }
         if (lastLocation == null){
-            Toast.makeText(activity, "Location is currently not available. Check Position parameters",
+            Toast.makeText(activity, activity.getResources().getString(R.string.checkpositionparams),
                     Toast.LENGTH_SHORT).show();
         }
         return lastLocation;
