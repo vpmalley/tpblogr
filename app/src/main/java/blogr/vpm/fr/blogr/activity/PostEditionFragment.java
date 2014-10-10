@@ -16,6 +16,8 @@ import android.widget.EditText;
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.location.LocationProvider;
+import blogr.vpm.fr.blogr.location.PlayServicesLocationProvider;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
@@ -29,6 +31,8 @@ public class PostEditionFragment extends Fragment{
     private PostPublisher publisher;
 
     private PostSaver saver;
+
+    private LocationProvider locationProvider;
 
     private Blog currentBlog;
 
@@ -46,6 +50,7 @@ public class PostEditionFragment extends Fragment{
         // init services
         publisher = new TPPostPublisher(getActivity());
         saver = new FilePostSaver(getActivity());
+        locationProvider = new PlayServicesLocationProvider(getActivity());
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         currentBlog = new Blog(prefs.getString("pref_blog_name", ""), prefs.getString("pref_blog_email", ""));
@@ -61,6 +66,7 @@ public class PostEditionFragment extends Fragment{
         super.onResume();
         contentField = (EditText) getView().findViewById(R.id.postContent);
         refreshViewFromPost();
+        locationProvider.connect();
     }
 
     @Override
@@ -68,6 +74,7 @@ public class PostEditionFragment extends Fragment{
         super.onPause();
         refreshPostFromView();
         saveCurrentPost();
+        locationProvider.disconnect();
     }
 
     @Override
@@ -130,7 +137,7 @@ public class PostEditionFragment extends Fragment{
      */
     private void saveCurrentPost() {
         // save only if non-empty post
-        if ((!"".equals(currentPost.getTitle())) && (!"".equals(currentPost.getTitle()))) {
+        if ((currentPost != null) && (!"".equals(currentPost.getTitle())) && (!"".equals(currentPost.getTitle()))) {
             saver.persist(currentPost);
         }
     }

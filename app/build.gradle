@@ -27,6 +27,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('../libs/mail.jar')
     compile group: 'commons-io', name: 'commons-io', version: '+'
-    compile group: 'com.googlecode.flickrj-android', name: 'flickrj-android', version: '+'
     compile group: 'com.google.android.gms', name: 'play-services', version: '6.1.+'
 }
