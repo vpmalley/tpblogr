@@ -24,6 +24,8 @@ public class LatLongTagProvider implements SingleTagProvider {
             locationBuilder.append(currentLocation.getLatitude());
             locationBuilder.append(", longitude ");
             locationBuilder.append(currentLocation.getLongitude());
+            locationBuilder.append(", altitude ");
+            locationBuilder.append(currentLocation.getAltitude());
         }
         return locationBuilder.toString();
     }
