@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="prefs_category_permissions">Permissions</string>
+    <string name="prefs_summ_category_permissions">Override Android permissions</string>
+    <string name="prefs_category_blog">Blog</string>
+    <string name="prefs_summ_category_blog">Manage your blog</string>
+    <string name="pref_permissions_position">Position</string>
+    <string name="summary_pref_permissions_position">Gives permission to the app to access position</string>
     <string name="pref_blog_name">Blog name</string>
     <string name="summary_pref_blog_name">The name of the blog</string>
     <string name="dialog_pref_blog_name">Set your blog\'s name</string>

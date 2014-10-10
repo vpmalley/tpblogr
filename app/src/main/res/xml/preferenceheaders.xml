@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+    <header
+        android:fragment="blogr.vpm.fr.blogr.activity.PreferenceCategoryFragment"
+        android:title="@string/prefs_category_permissions"
+        android:summary="@string/prefs_summ_category_permissions" >
+        <extra android:name="category" android:value="permissions" />
+    </header>
+    <header
+        android:fragment="blogr.vpm.fr.blogr.activity.PreferenceCategoryFragment"
+        android:title="@string/prefs_category_blog"
+        android:summary="@string/prefs_summ_category_blog" >
+        <extra android:name="category" android:value="blog" />
+    </header>
+</preference-headers>

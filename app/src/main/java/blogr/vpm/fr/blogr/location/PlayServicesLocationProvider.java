@@ -2,8 +2,11 @@ package blogr.vpm.fr.blogr.location;
 
 import android.app.Activity;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,12 +20,16 @@ import com.google.android.gms.location.LocationClient;
  */
 public class PlayServicesLocationProvider implements LocationProvider, GooglePlayServicesClient.ConnectionCallbacks {
 
-    private Activity activity;
+    private final Activity activity;
 
     private LocationClient locationClient;
 
+    private final boolean isEnabled;
+
     public PlayServicesLocationProvider(Activity activity) {
         this.activity = activity;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        isEnabled = prefs.getBoolean("pref_permissions_position", false);
     }
 
     @Override
@@ -31,19 +38,23 @@ public class PlayServicesLocationProvider implements LocationProvider, GooglePla
             Toast.makeText(activity, "Play Services are not up-to-date and location cannot be obtained",
                     Toast.LENGTH_SHORT).show();
         }
-
-        locationClient = new LocationClient(activity, this, new LocationFailedConnectionListener(activity));
-        locationClient.connect();
+        if (isEnabled) {
+            locationClient = new LocationClient(activity, this, new LocationFailedConnectionListener(activity));
+            locationClient.connect();
+        }
     }
 
     @Override
     public Location getCurrentLocation() {
         // if it has not been instantiated yet
-        if (locationClient == null){
+        if (isEnabled && (locationClient == null)){
             Toast.makeText(activity, "Play Services are not connected to and location cannot be obtained",
                     Toast.LENGTH_SHORT).show();
         }
-        Location lastLocation = locationClient.getLastLocation();
+        Location lastLocation = null;
+        if (isEnabled) {
+            lastLocation = locationClient.getLastLocation();
+        }
         if (lastLocation == null){
             Toast.makeText(activity, "Location is currently not available. Check Position parameters",
                     Toast.LENGTH_SHORT).show();
@@ -53,7 +64,9 @@ public class PlayServicesLocationProvider implements LocationProvider, GooglePla
 
     @Override
     public void disconnect() {
-        locationClient.disconnect();
+        if (isEnabled) {
+            locationClient.disconnect();
+        }
     }
 
     private boolean isServiceAvailable(){

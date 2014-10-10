@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key="pref_permissions_position"
+        android:title="@string/pref_permissions_position"
+        android:summary="@string/summary_pref_permissions_position"
+        android:defaultValue="false"/>
+
+</PreferenceScreen>

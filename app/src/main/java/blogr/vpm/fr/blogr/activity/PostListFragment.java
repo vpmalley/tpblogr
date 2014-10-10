@@ -65,7 +65,7 @@ public class PostListFragment extends ListFragment {
 
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            startActivity(new Intent(getActivity(), PreferenceActivity.class));
+            startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
             return true;
         }
         else if (id == R.id.action_new) {
