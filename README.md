@@ -1,4 +1,4 @@
 tpblogr
 =======
 
-small android app to blog on Traveller's point
+small android app to blog while on the road.
