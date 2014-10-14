@@ -30,14 +30,22 @@ public class PostActivity extends Activity implements PostSelectionListener{
     @Override
     public void onPostSelection(Post post) {
         postEditionFragment.editPost(post);
-        FragmentTransaction displayPostEdition = getFragmentManager().beginTransaction();
-        displayPostEdition.hide(postListFragment);
-        displayPostEdition.show(postEditionFragment);
-        displayPostEdition.commit();
+        displayPostEdition();
     }
 
     @Override
     public void onActionModeFinished(ActionMode mode) {
         postListFragment.onResume();
+    }
+
+    /**
+     * Displays the fragment to edit a post and hides the fragment with the list of posts
+     */
+    private void displayPostEdition() {
+        FragmentTransaction displayPostEdition = getFragmentManager().beginTransaction();
+        displayPostEdition.hide(postListFragment);
+        displayPostEdition.show(postEditionFragment);
+        displayPostEdition.addToBackStack("displayPostEdition");
+        displayPostEdition.commit();
     }
 }
