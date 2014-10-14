@@ -50,6 +50,7 @@ public class PostListChoiceModeListener implements AbsListView.MultiChoiceModeLi
             for (Post selectedPost : selectedPosts){
                 Log.d("contextualAction", "deleting " + selectedPost.getTitle());
                 postSaver.delete(selectedPost);
+                // TODO update the list in the fragment
             }
             actionMode.finish();
             return true;
