@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.ActionMode;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
@@ -33,5 +34,10 @@ public class PostActivity extends Activity implements PostSelectionListener{
         displayPostEdition.hide(postListFragment);
         displayPostEdition.show(postEditionFragment);
         displayPostEdition.commit();
+    }
+
+    @Override
+    public void onActionModeFinished(ActionMode mode) {
+        postListFragment.onResume();
     }
 }
