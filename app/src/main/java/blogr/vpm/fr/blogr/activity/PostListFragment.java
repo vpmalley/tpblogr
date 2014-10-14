@@ -3,12 +3,16 @@ package blogr.vpm.fr.blogr.activity;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +45,8 @@ public class PostListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        posts = retriever.retrieveAll();
-        List<String> postItems = new ArrayList<String>();
-        for (Post post : posts) {
-            postItems.add(post.getTitle());
-        }
-        setListAdapter(new ArrayAdapter<String>(getActivity(), R.layout.post_item, postItems));
-
-        // set contextual actions
-        ListView postView = getListView();
-        postView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        postView.setMultiChoiceModeListener(new PostListChoiceModeListener(getActivity(), posts));
+        retrieveAndLoadAllPosts();
+        setContextualListeners();
     }
 
     @Override
@@ -78,7 +73,29 @@ public class PostListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Post selectedPost = (Post) posts.get(position);
+        Post selectedPost = posts.get(position);
         postSelectionListener.onPostSelection(selectedPost);
+    }
+
+    /**
+     * Defines the listener when long clicking on one or multiple items of the list
+     */
+    private void setContextualListeners() {
+        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        final AbsListView.MultiChoiceModeListener actionModeCallback = new PostListChoiceModeListener(getActivity(), posts);
+        getListView().setMultiChoiceModeListener(actionModeCallback);
+    }
+
+    /**
+     * Retrieves all posts from file system and sets the list adapter with these posts.
+     */
+    private void retrieveAndLoadAllPosts() {
+        setEmptyText(getActivity().getResources().getString(R.string.postlist_emptytext));
+        posts = retriever.retrieveAll();
+        List<String> postItems = new ArrayList<String>();
+        for (Post post : posts) {
+            postItems.add(post.getTitle());
+        }
+        setListAdapter(new ArrayAdapter<String>(getActivity(), R.layout.post_item, postItems));
     }
 }

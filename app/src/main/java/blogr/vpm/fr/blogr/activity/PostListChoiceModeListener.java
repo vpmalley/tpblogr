@@ -1,6 +1,8 @@
 package blogr.vpm.fr.blogr.activity;
 
+import android.app.ListFragment;
 import android.content.Context;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,11 +21,11 @@ import blogr.vpm.fr.blogr.persistence.PostSaver;
  */
 public class PostListChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 
-    PostSaver postSaver;
+    private final PostSaver postSaver;
 
-    List<Post> selectedPosts;
+    private final List<Post> selectedPosts;
 
-    List<Post> posts;
+    private final List<Post> posts;
 
     public PostListChoiceModeListener(Context context, List<Post> posts) {
         this.postSaver = new FilePostSaver(context);
@@ -34,7 +36,7 @@ public class PostListChoiceModeListener implements AbsListView.MultiChoiceModeLi
     @Override
     public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
         actionMode.getMenuInflater().inflate(R.menu.posts_context, menu);
-        return false;
+        return true;
     }
 
     @Override
@@ -46,6 +48,7 @@ public class PostListChoiceModeListener implements AbsListView.MultiChoiceModeLi
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
         if (R.id.action_delete == menuItem.getItemId()){
             for (Post selectedPost : selectedPosts){
+                Log.d("contextualAction", "deleting " + selectedPost.getTitle());
                 postSaver.delete(selectedPost);
             }
             actionMode.finish();
@@ -60,7 +63,11 @@ public class PostListChoiceModeListener implements AbsListView.MultiChoiceModeLi
     }
 
     @Override
-    public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
-        selectedPosts.add(posts.get(i));
+    public void onItemCheckedStateChanged(ActionMode actionMode, int position, long l, boolean checked) {
+        if (checked){
+            selectedPosts.add(posts.get(position));
+        } else {
+            selectedPosts.remove(posts.get(position));
+        }
     }
 }

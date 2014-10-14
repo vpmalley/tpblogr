@@ -8,5 +8,6 @@
         android:gravity="left"
         android:id="@+id/postItem"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="?android:attr/activatedBackgroundIndicator"
 />
 

@@ -13,6 +13,7 @@
     <string name="longitude">, longitude</string>
     <string name="altitude">, altitude</string>
     <string name="newpost">New Post</string>
+    <string name="postlist_emptytext">No Post</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>
