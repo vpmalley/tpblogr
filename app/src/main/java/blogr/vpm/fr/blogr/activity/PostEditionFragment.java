@@ -103,7 +103,7 @@ public class PostEditionFragment extends Fragment{
         }
         else if (id == R.id.action_insert_location) {
             Inserter locationInserter = new DefaultInserter(getActivity());
-            locationInserter.insert(contentField, new LatLongTagProvider(locationProvider));
+            locationInserter.insert(contentField, new LatLongTagProvider(getActivity(), locationProvider));
             return true;
         }
         return super.onOptionsItemSelected(item);
