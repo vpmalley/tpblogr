@@ -28,6 +28,12 @@ public class PostActivity extends Activity implements PostSelectionListener{
     }
 
     @Override
+    public boolean onNavigateUp() {
+        getFragmentManager().popBackStack();
+        return true;
+    }
+
+    @Override
     public void onPostSelection(Post post) {
         postEditionFragment.editPost(post);
         displayPostEdition();

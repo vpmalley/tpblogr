@@ -67,6 +67,7 @@ public class PostEditionFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         contentField = (EditText) getView().findViewById(R.id.postContent);
         refreshViewFromPost();
         locationProvider.connect();

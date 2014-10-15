@@ -14,6 +14,12 @@ import blogr.vpm.fr.blogr.R;
 public class AllPreferencesActivity extends PreferenceActivity {
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
     public void onBuildHeaders(List<android.preference.PreferenceActivity.Header> target) {
         loadHeadersFromResource(R.xml.preferenceheaders, target);
     }
