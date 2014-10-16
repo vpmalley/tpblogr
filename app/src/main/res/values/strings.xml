@@ -14,6 +14,7 @@
     <string name="altitude">, altitude </string>
     <string name="newpost">New Post</string>
     <string name="postlist_emptytext">No Post</string>
+    <string name="action_insert_picture">Insert Picture</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>
