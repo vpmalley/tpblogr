@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_blog_service_options">
+        <item>@string/pref_blog_service_option_blog_tp</item>
+        <item>@string/pref_blog_service_option_email_std</item>
+    </string-array>
+    <string-array name="pref_blog_service_values">
+        <item>@string/pref_blog_service_value_blog_tp</item>
+        <item>@string/pref_blog_service_value_email_std</item>
+    </string-array>
+</resources>

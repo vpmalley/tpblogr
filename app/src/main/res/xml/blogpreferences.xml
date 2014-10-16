@@ -12,5 +12,13 @@
         android:title="@string/pref_blog_email"
         android:summary="@string/summary_pref_blog_email"
         android:dialogTitle="@string/dialog_pref_blog_email" />
+
+    <ListPreference
+        android:key="pref_blog_service"
+        android:title="@string/pref_blog_service"
+        android:summary="@string/pref_blog_service_summary"
+        android:entries="@array/pref_blog_service_options"
+        android:entryValues="@array/pref_blog_service_values"
+        android:defaultValue="@string/pref_blog_service_value_blog_tp" />
     
 </PreferenceScreen>
