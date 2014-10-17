@@ -1,11 +1,14 @@
 package blogr.vpm.fr.blogr.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by vincent on 29/08/14.
  */
-public class Post {
+public class Post implements Serializable {
+
+    public static final String INTENT_EXTRA_KEY = "intent_extra_post";
 
     public Post(String title, String content) {
         this.title = title;

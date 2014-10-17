@@ -22,7 +22,7 @@ import blogr.vpm.fr.blogr.persistence.PostRetriever;
 /**
  * Created by vincent on 08/10/14.
  */
-public class PostListFragment extends ListFragment {
+public class PostListFragment extends ListFragment implements InvalidatedModelListener{
 
     private PostRetriever retriever;
 
@@ -95,5 +95,10 @@ public class PostListFragment extends ListFragment {
             postItems.add(post.getTitle());
         }
         setListAdapter(new ArrayAdapter<String>(getActivity(), R.layout.post_item, postItems));
+    }
+
+    @Override
+    public void onInvalidatedModel() {
+        retrieveAndLoadAllPosts();
     }
 }
