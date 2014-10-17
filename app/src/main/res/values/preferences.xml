@@ -19,6 +19,6 @@
     <string name="pref_blog_service_summary">The blog service for this blog</string>
     <string name="pref_blog_service_value_blog_tp">blog_tp</string>
     <string name="pref_blog_service_value_email_std">email_std</string>
-    <string name="pref_blog_service_option_blog_tp">Traveller's Point Blog</string>
+    <string name="pref_blog_service_option_blog_tp">Traveller\'s Point Blog</string>
     <string name="pref_blog_service_option_email_std">Email</string>
 </resources>

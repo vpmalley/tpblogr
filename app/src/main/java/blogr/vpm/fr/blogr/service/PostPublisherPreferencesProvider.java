@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 
+import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.publish.StdEmailPostPublisher;
 import blogr.vpm.fr.blogr.publish.TPPostPublisher;
