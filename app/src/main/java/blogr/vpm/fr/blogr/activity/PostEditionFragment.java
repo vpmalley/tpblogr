@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Blog;
@@ -28,7 +26,6 @@ import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.picture.PictureTagProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
-import blogr.vpm.fr.blogr.publish.TPPostPublisher;
 import blogr.vpm.fr.blogr.service.PostPublisherPreferencesProvider;
 import blogr.vpm.fr.blogr.service.PostPublisherProvider;
 
@@ -92,7 +89,7 @@ public class PostEditionFragment extends Fragment{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.post, menu);
+        inflater.inflate(R.menu.postedition, menu);
         titleField = (EditText) menu.findItem(R.id.action_title).getActionView();
         refreshViewFromPost();
     }
