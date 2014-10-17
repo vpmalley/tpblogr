@@ -29,6 +29,8 @@ import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.picture.PictureTagProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.publish.TPPostPublisher;
+import blogr.vpm.fr.blogr.service.PostPublisherPreferencesProvider;
+import blogr.vpm.fr.blogr.service.PostPublisherProvider;
 
 /**
  * Created by vincent on 07/10/14.
@@ -36,7 +38,8 @@ import blogr.vpm.fr.blogr.publish.TPPostPublisher;
 public class PostEditionFragment extends Fragment{
 
     public static final int PICK_PIC_REQ_CODE = 32;
-    private PostPublisher publisher;
+
+    private PostPublisherProvider publisherProvider;
 
     private PostSaver saver;
 
@@ -56,7 +59,7 @@ public class PostEditionFragment extends Fragment{
         setHasOptionsMenu(true);
 
         // init services
-        publisher = new TPPostPublisher(getActivity());
+        publisherProvider = new PostPublisherPreferencesProvider();
         saver = new FilePostSaver(getActivity());
         locationProvider = new PlayServicesLocationProvider(getActivity());
 
@@ -102,6 +105,7 @@ public class PostEditionFragment extends Fragment{
                 startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
                 return true;
             case R.id.action_publish:
+                PostPublisher publisher = publisherProvider.getService(getActivity());
                 publisher.publish(currentBlog, new Post(titleField.getText().toString(), contentField.getText().toString()));
                 return true;
             case R.id.action_insert_location:
