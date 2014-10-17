@@ -45,6 +45,7 @@ public class PostListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
         retrieveAndLoadAllPosts();
         setContextualListeners();
     }

@@ -1,8 +1,10 @@
 package blogr.vpm.fr.blogr.activity;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Blog;
@@ -23,6 +26,7 @@ import blogr.vpm.fr.blogr.location.LocationProvider;
 import blogr.vpm.fr.blogr.location.PlayServicesLocationProvider;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
+import blogr.vpm.fr.blogr.picture.PictureTagProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.publish.TPPostPublisher;
 
@@ -31,6 +35,7 @@ import blogr.vpm.fr.blogr.publish.TPPostPublisher;
  */
 public class PostEditionFragment extends Fragment{
 
+    public static final int PICK_PIC_REQ_CODE = 32;
     private PostPublisher publisher;
 
     private PostSaver saver;
@@ -67,6 +72,7 @@ public class PostEditionFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         contentField = (EditText) getView().findViewById(R.id.postContent);
         refreshViewFromPost();
         locationProvider.connect();
@@ -91,21 +97,35 @@ public class PostEditionFragment extends Fragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
+                return true;
+            case R.id.action_publish:
+                publisher.publish(currentBlog, new Post(titleField.getText().toString(), contentField.getText().toString()));
+                return true;
+            case R.id.action_insert_location:
+                Inserter locationInserter = new DefaultInserter(getActivity());
+                locationInserter.insert(contentField, new LatLongTagProvider(getActivity(), locationProvider));
+                return true;
+            case R.id.action_insert_picture:
+                Intent i = new Intent(Intent.ACTION_PICK);
+                i.setType("image/*");
+                startActivityForResult(i, PICK_PIC_REQ_CODE);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        else if (id == R.id.action_publish) {
-            publisher.publish(currentBlog, new Post(titleField.getText().toString(), contentField.getText().toString()));
-            return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)){
+            String pictureUri = data.getData().toString();
+            // TODO the Uri is not really to be used directly
+            new DefaultInserter(getActivity()).insert(contentField,
+                    new PictureTagProvider(getActivity(), pictureUri));
         }
-        else if (id == R.id.action_insert_location) {
-            Inserter locationInserter = new DefaultInserter(getActivity());
-            locationInserter.insert(contentField, new LatLongTagProvider(locationProvider));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**

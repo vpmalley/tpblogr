@@ -11,11 +11,12 @@ import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
  */
 public class LatLongTagProvider implements SingleTagProvider {
 
-    LocationProvider locationProvider;
+    private final LocationProvider locationProvider;
 
-    Context context;
+    private final Context context;
 
-    public LatLongTagProvider(LocationProvider locationProvider) {
+    public LatLongTagProvider(Context context, LocationProvider locationProvider) {
+        this.context = context;
         this.locationProvider = locationProvider;
     }
 

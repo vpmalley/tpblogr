@@ -6,6 +6,10 @@
         android:orderInCategory="10"
         android:showAsAction="always"
         android:actionLayout="@layout/title_text"/>
+    <item android:id="@+id/action_insert_picture"
+        android:title="@string/action_insert_picture"
+        android:orderInCategory="70"
+        android:showAsAction="ifRoom"/>
     <item android:id="@+id/action_insert_location"
         android:title="@string/action_insert_location"
         android:orderInCategory="80"
