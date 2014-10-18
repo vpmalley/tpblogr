@@ -28,10 +28,23 @@ public class FilePostSaver implements PostSaver {
     }
 
     @Override
+    public boolean exists(Post post) {
+        File postFile = getFileForPost(post);
+        return postFile.exists();
+    }
+
+    @Override
     public boolean persist(Post post) {
         boolean saved = false;
         if (isExternalStorageWritable()) {
             File postFile = getFileForPost(post);
+            if (!postFile.exists()){
+                try {
+                    postFile.createNewFile();
+                } catch (IOException e) {
+                    Toast.makeText(context, context.getResources().getString(R.string.cannotsavepost), Toast.LENGTH_SHORT).show();
+                }
+            }
             // fill file
             FileOutputStream postFileOut = null;
             try {
@@ -74,11 +87,6 @@ public class FilePostSaver implements PostSaver {
         dir.mkdirs();
         // create file if non existent
         File postFile = new File(dir, getFileName(post));
-        try {
-            postFile.createNewFile();
-        } catch (IOException e) {
-            Toast.makeText(context, context.getResources().getString(R.string.cannotsavepost), Toast.LENGTH_SHORT).show();
-        }
         return postFile;
     }
 

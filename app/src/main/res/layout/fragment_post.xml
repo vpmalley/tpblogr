@@ -16,7 +16,7 @@
         android:ems="10"
         android:id="@+id/postContent"
         android:layout_margin="2dp"
-        android:hint="Have a story to share today?"
+        android:hint="@string/post_content_hint"
         android:background="@null"
         />
 

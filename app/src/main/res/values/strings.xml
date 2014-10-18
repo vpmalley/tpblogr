@@ -16,6 +16,7 @@
     <string name="action_insert">Insert</string>
     <string name="action_insert_picture">Picture</string>
     <string name="action_insert_location">Location</string>
+    <string name="post_content_hint">Have a story to share today?</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>

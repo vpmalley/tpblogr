@@ -35,6 +35,7 @@ import blogr.vpm.fr.blogr.service.PostPublisherProvider;
 public class PostEditionFragment extends Fragment{
 
     public static final int PICK_PIC_REQ_CODE = 32;
+    public static final int MAX_NEW_POST_FILES = 100;
 
     private PostPublisherProvider publisherProvider;
 
@@ -165,9 +166,33 @@ public class PostEditionFragment extends Fragment{
      * Saves the post built from the view
      */
     private void saveCurrentPost() {
-        // save only if non-empty post
-            if ((currentPost != null) && (!"".equals(currentPost.getTitle())) && (!"".equals(currentPost.getTitle()))) {
+        // save only if post has content or title
+            if ((currentPost != null) && (!isPostTitleEmpty() || !isPostContentEmpty())) {
+                if (isPostTitleEmpty()){
+                    determineAvailablePostTitle();
+                }
             saver.persist(currentPost);
         }
+    }
+
+    /**
+     * Determines a title for the post that does not exist yet - in order not to override written post.
+     */
+    private void determineAvailablePostTitle() {
+        String newPostTitle = getActivity().getResources().getString(R.string.newpost);
+        currentPost.setTitle(newPostTitle);
+        if (saver.exists(currentPost)) {
+            for (int i = 1; saver.exists(currentPost) && (i < MAX_NEW_POST_FILES); i++) {
+                currentPost.setTitle(newPostTitle + " " + i);
+            }
+        }
+    }
+
+    private boolean isPostContentEmpty() {
+        return ("".equals(currentPost.getContent()));
+    }
+
+    private boolean isPostTitleEmpty() {
+        return ("".equals(currentPost.getTitle()));
     }
 }
