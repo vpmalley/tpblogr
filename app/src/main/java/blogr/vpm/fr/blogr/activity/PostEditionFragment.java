@@ -19,6 +19,7 @@ import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.insertion.Inserter;
+import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 import blogr.vpm.fr.blogr.location.LatLongTagProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
 import blogr.vpm.fr.blogr.location.PlayServicesLocationProvider;
@@ -67,14 +68,24 @@ public class PostEditionFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_post, container, false);
+        View v = inflater.inflate(R.layout.fragment_post, container, false);
+        contentField = (EditText) v.findViewById(R.id.postContent);
+        refreshViewFromPost();
+        return v;
     }
 
+    /**
+     * Notes on lifecycle
+     * before onResume, the currentPost has the right content and title
+     * between onResume and onPause, the view has the right content and title
+     * between onPause and onResume, the currentPost has the right content and title but the view should not change
+     * (e.g. when onActivityResult() is called)
+     * after onPause, the currentPost has the right content and title but the view should not change
+     */
     @Override
     public void onResume() {
         super.onResume();
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-        contentField = (EditText) getView().findViewById(R.id.postContent);
         refreshViewFromPost();
         locationProvider.connect();
     }
@@ -120,13 +131,18 @@ public class PostEditionFragment extends Fragment{
         }
     }
 
+    // called before onResume
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)){
             String pictureUri = data.getData().toString();
             // TODO the Uri is not really to be used directly
-            new DefaultInserter(getActivity()).insert(contentField,
-                    new PictureTagProvider(getActivity(), pictureUri));
+            SingleTagProvider pictureTagProvider = new PictureTagProvider(getActivity(), pictureUri);
+            String updatedPostContent = new DefaultInserter(getActivity()).insert(contentField, pictureTagProvider);
+            // the currentPost must be updated because onActivityResult is called before onResume
+            currentPost.setContent(updatedPostContent);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

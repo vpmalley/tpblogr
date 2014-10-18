@@ -17,7 +17,7 @@ public class DefaultInserter implements Inserter {
     }
 
     @Override
-    public void insert(EditText contentField, SingleTagProvider tagProvider) {
+    public String insert(EditText contentField, SingleTagProvider tagProvider) {
         int position = contentField.getSelectionEnd();
         String content = contentField.getText().toString();
         String contentBeforeTag = content.substring(0, position);
@@ -30,10 +30,11 @@ public class DefaultInserter implements Inserter {
 
         contentField.setText(contentBuilder.toString());
         contentField.setSelection(position + tagProvider.getTag().length());
+        return contentBuilder.toString();
     }
 
     @Override
-    public void insert(EditText contentField, SurroundingTagsProvider tagProvider) {
+    public String insert(EditText contentField, SurroundingTagsProvider tagProvider) {
         int startPosition = contentField.getSelectionStart();
         int endPosition = contentField.getSelectionEnd();
         String content = contentField.getText().toString();
@@ -55,5 +56,6 @@ public class DefaultInserter implements Inserter {
         contentField.setText(contentBuilder.toString());
         contentField.setSelection(startPosition, startPosition + tagProvider.getStartTag().length() +
                 contentBetweenTags.length() + tagProvider.getEndTag().length());
+        return contentBuilder.toString();
     }
 }
