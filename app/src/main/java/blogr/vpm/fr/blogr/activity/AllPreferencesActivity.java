@@ -1,6 +1,5 @@
 package blogr.vpm.fr.blogr.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
@@ -16,7 +15,6 @@ public class AllPreferencesActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
