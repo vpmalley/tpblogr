@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -115,7 +116,8 @@ public class PostEditionFragment extends Fragment{
                 return true;
             case R.id.action_publish:
                 PostPublisher publisher = publisherProvider.getService(getActivity());
-                publisher.publish(currentBlog, new Post(titleField.getText().toString(), contentField.getText().toString()));
+                refreshPostFromView();
+                publisher.publish(currentBlog, currentPost);
                 return true;
             case R.id.action_insert_location:
                 Inserter locationInserter = new DefaultInserter(getActivity());
@@ -135,9 +137,9 @@ public class PostEditionFragment extends Fragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)){
-            String pictureUri = data.getData().toString();
-            // TODO the Uri is not really to be used directly
-            SingleTagProvider pictureTagProvider = new PictureTagProvider(getActivity(), pictureUri);
+            Uri pictureUri = data.getData();
+            currentPost.addPicture(pictureUri);
+            SingleTagProvider pictureTagProvider = new PictureTagProvider(getActivity(), pictureUri.toString());
             String updatedPostContent = new DefaultInserter(getActivity()).insert(contentField, pictureTagProvider);
             // the currentPost must be updated because onActivityResult is called before onResume
             currentPost.setContent(updatedPostContent);
@@ -174,7 +176,8 @@ public class PostEditionFragment extends Fragment{
      */
     private void refreshPostFromView(){
         if ((titleField != null) && (contentField != null)) {
-            currentPost = new Post(titleField.getText().toString(), contentField.getText().toString());
+            currentPost.setTitle(titleField.getText().toString());
+            currentPost.setContent(contentField.getText().toString());
         }
     }
 

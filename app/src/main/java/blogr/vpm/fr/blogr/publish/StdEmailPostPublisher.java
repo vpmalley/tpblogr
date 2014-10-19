@@ -18,14 +18,36 @@ public class StdEmailPostPublisher implements PostPublisher {
         this.context = context;
     }
 
+
     @Override
     public void publish(Blog blog, Post post) {
+        Intent intent;
+        if (!post.getPicturesAsMediaContent().isEmpty()) {
+            intent = emailIntentWithAttachments(blog, post);
+        } else {
+            intent = emailIntentWithoutAttachments(blog, post);
+        }
+        context.startActivity(intent);
+    }
+
+    private Intent emailIntentWithAttachments(Blog blog, Post post) {
+        Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{blog.getEmailAddress()});
+        intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
+        intent.putExtra(Intent.EXTRA_TEXT, post.getContent());
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, post.getPicturesAsFiles(context));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
+    }
+
+    public Intent emailIntentWithoutAttachments(Blog blog, Post post) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
         intent.putExtra(Intent.EXTRA_TEXT, post.getContent());
         intent.setData(Uri.parse("mailto:" + blog.getEmailAddress()));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        return intent;
     }
 }
