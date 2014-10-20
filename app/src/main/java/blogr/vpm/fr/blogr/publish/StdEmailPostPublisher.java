@@ -3,6 +3,7 @@ package blogr.vpm.fr.blogr.publish;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.Html;
 
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
@@ -38,7 +39,8 @@ public class StdEmailPostPublisher implements PostPublisher {
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{blog.getEmailAddress()});
         intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-        intent.putExtra(Intent.EXTRA_TEXT, this.formatter.format(post.getContent()));
+        String htmlContent = this.formatter.format(post.getContent());
+        intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(htmlContent));
         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, post.getPicturesAsFiles(context));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
@@ -48,7 +50,8 @@ public class StdEmailPostPublisher implements PostPublisher {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-        intent.putExtra(Intent.EXTRA_TEXT, this.formatter.format(post.getContent()));
+        String htmlContent = this.formatter.format(post.getContent());
+        intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(htmlContent));
         intent.setData(Uri.parse("mailto:" + blog.getEmailAddress()));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
