@@ -21,6 +21,7 @@ import com.googlecode.flickrjandroid.photos.PhotoList;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrJAndroidProvider;
+import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
@@ -101,9 +102,9 @@ public class PostEditionFragment extends Fragment{
         }
         else if (id == R.id.action_insert) {
             Log.d("flickr", "will call F");
-            FlickrProvider flickrP = new FlickrJAndroidProvider(getActivity());
-            PhotoList photos = flickrP.getUserPhotos("VinceTraveller", 5);
-            Toast.makeText(getActivity(), photos.get(0).getTitle(), Toast.LENGTH_SHORT).show();
+            FlickrProvider flickrD = new FlickrJAndroidProvider(getActivity());
+            FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD);
+            flickrP.getUserPhotos("VinceTraveller", 5);
             return true;
         }
         return super.onOptionsItemSelected(item);
