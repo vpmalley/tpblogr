@@ -17,6 +17,8 @@ import blogr.vpm.fr.blogr.publish.PostPublisher;
  */
 public class TPJavaMailPostPublisher implements PostPublisher {
 
+    private Formatter formatter;
+
     @Override
     public void publish(Blog blog, Post post) {
         try {
@@ -26,6 +28,11 @@ public class TPJavaMailPostPublisher implements PostPublisher {
         } catch (MessagingException e){
             // TODO display error
         }
+    }
+
+    @Override
+    public void setFormatter(Formatter formatter) {
+        this.formatter = formatter;
     }
 
     private Message generateEmail(Post post) throws MessagingException {

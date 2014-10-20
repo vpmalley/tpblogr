@@ -15,5 +15,11 @@ public interface PostPublisher {
    * @param blog the blog to publish on
    * @param post the post to publish
    */
-  public void publish(Blog blog, Post post);
+  void publish(Blog blog, Post post);
+
+  /**
+   * Overrides the default formatter for this publisher
+   * @param formatter the formatter to use when publishing
+   */
+  void setFormatter(Formatter formatter);
 }

@@ -14,8 +14,11 @@ public class StdEmailPostPublisher implements PostPublisher {
 
     private final Context context;
 
+    private Formatter formatter;
+
     public StdEmailPostPublisher(Context context) {
         this.context = context;
+        this.formatter = new HtmlFormatter();
     }
 
 
@@ -35,7 +38,7 @@ public class StdEmailPostPublisher implements PostPublisher {
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{blog.getEmailAddress()});
         intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-        intent.putExtra(Intent.EXTRA_TEXT, post.getContent());
+        intent.putExtra(Intent.EXTRA_TEXT, this.formatter.format(post.getContent()));
         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, post.getPicturesAsFiles(context));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
@@ -45,9 +48,14 @@ public class StdEmailPostPublisher implements PostPublisher {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-        intent.putExtra(Intent.EXTRA_TEXT, post.getContent());
+        intent.putExtra(Intent.EXTRA_TEXT, this.formatter.format(post.getContent()));
         intent.setData(Uri.parse("mailto:" + blog.getEmailAddress()));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
+    }
+
+    @Override
+    public void setFormatter(Formatter formatter) {
+
     }
 }
