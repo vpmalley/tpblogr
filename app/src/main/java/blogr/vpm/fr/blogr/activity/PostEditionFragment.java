@@ -21,11 +21,13 @@ import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.insertion.Inserter;
 import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
+import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.location.LatLongTagProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
 import blogr.vpm.fr.blogr.location.PlayServicesLocationProvider;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
+import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
 import blogr.vpm.fr.blogr.picture.PictureTagProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.service.PostPublisherPreferencesProvider;
@@ -139,7 +141,8 @@ public class PostEditionFragment extends Fragment{
         if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)){
             Uri pictureUri = data.getData();
             currentPost.addPicture(pictureUri);
-            SingleTagProvider pictureTagProvider = new PictureTagProvider(getActivity(), pictureUri.toString());
+            //SingleTagProvider pictureTagProvider = new PictureTagProvider(getActivity(), pictureUri.toString());
+            SurroundingTagsProvider pictureTagProvider = new PictureMdTagsProvider(pictureUri.toString());
             String updatedPostContent = new DefaultInserter(getActivity()).insert(contentField, pictureTagProvider);
             // the currentPost must be updated because onActivityResult is called before onResume
             currentPost.setContent(updatedPostContent);
