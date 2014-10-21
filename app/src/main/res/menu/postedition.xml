@@ -31,5 +31,10 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_settings"/> />
+        android:icon="@drawable/ic_action_settings"/>
+    <item android:id="@+id/action_insert"
+        android:title="@string/action_insert"
+        android:orderInCategory="90"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_new"/>
 </menu>
