@@ -140,6 +140,11 @@ public class PostEditionFragment extends Fragment{
                 i.setType("image/*");
                 startActivityForResult(i, PICK_PIC_REQ_CODE);
                 return true;
+            case R.id.action_insert_flickr:
+                FlickrProvider flickrD = new FlickrJAndroidProvider(getActivity());
+                FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD);
+                flickrP.getUserPhotos("VinceTraveller", 5);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -159,13 +164,6 @@ public class PostEditionFragment extends Fragment{
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-        else if (id == R.id.action_insert) {
-            FlickrProvider flickrD = new FlickrJAndroidProvider(getActivity());
-            FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD);
-            flickrP.getUserPhotos("VinceTraveller", 5);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
