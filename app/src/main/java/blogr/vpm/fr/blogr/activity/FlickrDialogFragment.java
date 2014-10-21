@@ -14,6 +14,7 @@ import com.googlecode.flickrjandroid.photos.Photo;
 import com.googlecode.flickrjandroid.photos.PhotoList;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
  * Created by vincent on 20/10/14.
@@ -21,6 +22,12 @@ import blogr.vpm.fr.blogr.R;
 public class FlickrDialogFragment extends DialogFragment {
 
     public static final String ARG_PICS = "flickrPics";
+
+    private final PicturePickedListener picturePickedListener;
+
+    public FlickrDialogFragment(PicturePickedListener picturePickedListener) {
+        this.picturePickedListener = picturePickedListener;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -32,8 +39,7 @@ public class FlickrDialogFragment extends DialogFragment {
                 .setAdapter(picsAdapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position) {
-                        // pick the pic
-                        Toast.makeText(getActivity(), "picked pic " + pics[position], Toast.LENGTH_SHORT).show();
+                        picturePickedListener.onPicturePicked(pics[position]);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

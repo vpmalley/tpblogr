@@ -37,6 +37,7 @@ import blogr.vpm.fr.blogr.location.PlayServicesLocationProvider;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
+import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 import blogr.vpm.fr.blogr.picture.PictureTagProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.service.PostPublisherPreferencesProvider;
@@ -45,7 +46,7 @@ import blogr.vpm.fr.blogr.service.PostPublisherProvider;
 /**
  * Created by vincent on 07/10/14.
  */
-public class PostEditionFragment extends Fragment{
+public class PostEditionFragment extends Fragment implements PicturePickedListener {
 
     public static final int PICK_PIC_REQ_CODE = 32;
     public static final int MAX_NEW_POST_FILES = 100;
@@ -142,7 +143,7 @@ public class PostEditionFragment extends Fragment{
                 return true;
             case R.id.action_insert_flickr:
                 FlickrProvider flickrD = new FlickrJAndroidProvider(getActivity());
-                FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD);
+                FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD, this);
                 flickrP.getUserPhotos("VinceTraveller", 5);
                 return true;
             default:
@@ -156,14 +157,18 @@ public class PostEditionFragment extends Fragment{
         if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)){
             Uri pictureUri = data.getData();
             currentPost.addPicture(pictureUri);
-            //SingleTagProvider pictureTagProvider = new PictureTagProvider(getActivity(), pictureUri.toString());
-            SurroundingTagsProvider pictureTagProvider = new PictureMdTagsProvider(pictureUri.toString());
-            String updatedPostContent = new DefaultInserter(getActivity()).insert(contentField, pictureTagProvider);
-            // the currentPost must be updated because onActivityResult is called before onResume
-            currentPost.setContent(updatedPostContent);
+            onPicturePicked(pictureUri.toString());
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onPicturePicked(String picUrl) {
+        SurroundingTagsProvider pictureTagProvider = new PictureMdTagsProvider(picUrl);
+        String updatedPostContent = new DefaultInserter(getActivity()).insert(contentField, pictureTagProvider);
+        // the currentPost must be updated because this may be called before onResume
+        currentPost.setContent(updatedPostContent);
     }
 
     /**

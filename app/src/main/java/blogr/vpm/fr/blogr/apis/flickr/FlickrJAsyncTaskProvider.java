@@ -3,6 +3,7 @@ package blogr.vpm.fr.blogr.apis.flickr;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.graphics.Picture;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import com.googlecode.flickrjandroid.photos.Photo;
 import com.googlecode.flickrjandroid.photos.PhotoList;
 
 import blogr.vpm.fr.blogr.activity.FlickrDialogFragment;
+import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
  * Created by vincent on 19/10/14.
@@ -21,9 +23,12 @@ public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider
 
     private final Activity activity;
 
-    public FlickrJAsyncTaskProvider(Activity activity, FlickrProvider delegate) {
+    private final PicturePickedListener picturePickedListener;
+
+    public FlickrJAsyncTaskProvider(Activity activity, FlickrProvider delegate, PicturePickedListener picturePickedListener) {
         this.delegate = delegate;
         this.activity = activity;
+        this.picturePickedListener = picturePickedListener;
     }
 
     @Override
@@ -42,10 +47,10 @@ public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider
 
         String[] picDescriptions = new String[pics.size()];
         for (int i = 0; i < pics.size(); i++){
-            picDescriptions[i] = pics.get(i).getTitle();
+            picDescriptions[i] = pics.get(i).getUrl();
         }
 
-        DialogFragment flickrFragment = new FlickrDialogFragment();
+        DialogFragment flickrFragment = new FlickrDialogFragment(picturePickedListener);
         Bundle args = new Bundle();
         args.putStringArray(FlickrDialogFragment.ARG_PICS, picDescriptions);
         flickrFragment.setArguments(args);
