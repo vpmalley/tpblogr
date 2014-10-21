@@ -18,6 +18,8 @@ public class PreferenceCategoryFragment extends PreferenceFragment{
             addPreferencesFromResource(R.xml.permissionspreferences);
         } else if ("blog".equals(getArguments().getString(CATEGORY))) {
             addPreferencesFromResource(R.xml.blogpreferences);
+        } else if ("flickr".equals(getArguments().getString(CATEGORY))) {
+            addPreferencesFromResource(R.xml.flickrpreferences);
         }
     }
 

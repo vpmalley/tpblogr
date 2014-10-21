@@ -4,6 +4,8 @@
     <string name="prefs_summ_category_permissions">Override Android permissions</string>
     <string name="prefs_category_blog">Blog</string>
     <string name="prefs_summ_category_blog">Manage your blog</string>
+    <string name="prefs_category_flickr">Flickr</string>
+    <string name="prefs_summ_category_flickr">Configure Flickr picture insertion</string>
     <string name="pref_permissions_position">Position</string>
     <string name="summary_pref_permissions_position">Gives permission to the app to access position</string>
     <string name="pref_blog_name">Blog name</string>
@@ -21,4 +23,10 @@
     <string name="pref_blog_service_value_email_std">email_std</string>
     <string name="pref_blog_service_option_blog_tp">Traveller\'s Point Blog</string>
     <string name="pref_blog_service_option_email_std">Email</string>
+    <string name="pref_flickr_number_pics">Number of pictures to list</string>
+    <string name="summary_pref_flickr_number_pics">When inserting pictures from Flickr, choose how many are listed</string>
+    <string name="dialog_pref_flickr_number_pics">Pick how many pictures will be listed</string>
+    <string name="pref_flickr_username">Flickr user name</string>
+    <string name="summary_pref_flickr_username">Your Flickr user name</string>
+    <string name="dialog_pref_flickr_username">Write your Flickr user name</string>
 </resources>

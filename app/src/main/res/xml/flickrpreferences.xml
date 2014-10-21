@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="pref_flickr_number_pics"
+        android:title="@string/pref_flickr_number_pics"
+        android:summary="@string/summary_pref_flickr_number_pics"
+        android:dialogTitle="@string/dialog_pref_flickr_number_pics"
+        android:defaultValue="20"/>
+
+    <EditTextPreference
+        android:key="pref_flickr_username"
+        android:title="@string/pref_flickr_username"
+        android:summary="@string/summary_pref_flickr_username"
+        android:dialogTitle="@string/dialog_pref_flickr_username"/>
+
+</PreferenceScreen>
