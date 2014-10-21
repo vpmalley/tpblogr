@@ -7,6 +7,8 @@
     <string name="action_title">Title</string>
     <string name="action_insert">Insert</string>
     <string name="action_new">New</string>
+    <string name="flickr_pick_picture">Pick a picture from Flickr</string>
+    <string name="cancel">Cancel</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>

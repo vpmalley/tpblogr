@@ -101,7 +101,6 @@ public class PostEditionFragment extends Fragment{
             return true;
         }
         else if (id == R.id.action_insert) {
-            Log.d("flickr", "will call F");
             FlickrProvider flickrD = new FlickrJAndroidProvider(getActivity());
             FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD);
             flickrP.getUserPhotos("VinceTraveller", 5);
