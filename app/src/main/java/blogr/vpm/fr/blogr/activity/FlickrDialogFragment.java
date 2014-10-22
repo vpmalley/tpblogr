@@ -14,6 +14,7 @@ import com.googlecode.flickrjandroid.photos.Photo;
 import com.googlecode.flickrjandroid.photos.PhotoList;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
@@ -31,15 +32,16 @@ public class FlickrDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final String[] pics = getArguments().getStringArray(ARG_PICS);
-        ArrayAdapter<String> picsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.post_item, pics);
+        final ParcelableFlickrPhoto[] pPics = (ParcelableFlickrPhoto[]) getArguments().getParcelableArray(ARG_PICS);
+
+        ArrayAdapter<ParcelableFlickrPhoto> picsAdapter = new ArrayAdapter<ParcelableFlickrPhoto>(getActivity(), R.layout.post_item, pPics);
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.flickr_pick_picture)
                 .setAdapter(picsAdapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position) {
-                        picturePickedListener.onPicturePicked(pics[position]);
+                        picturePickedListener.onPicturePicked(pPics[position].getPicUrl());
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

@@ -8,8 +8,8 @@ package blogr.vpm.fr.blogr.picture;
 public interface PicturePickedListener {
 
     /**
-     * Called when a user picked a picture among a list, and that should be inserted
-     * @param picUrl
+     * Called when a user picked a picture among a list, and this picture's url should be inserted
+     * @param picUrl the url to the picture file to be inserted
      */
     void onPicturePicked(String picUrl);
 }

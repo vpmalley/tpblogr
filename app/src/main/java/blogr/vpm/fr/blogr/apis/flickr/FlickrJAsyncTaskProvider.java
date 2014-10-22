@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.googlecode.flickrjandroid.photos.Photo;
 import com.googlecode.flickrjandroid.photos.PhotoList;
+import com.googlecode.flickrjandroid.photos.PhotoUrl;
 
 import blogr.vpm.fr.blogr.activity.FlickrDialogFragment;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
@@ -44,18 +45,33 @@ public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider
 
     @Override
     protected void onPostExecute(PhotoList pics) {
+        ParcelableFlickrPhoto[] pPics = getParcelablePictureArray(pics);
+        openFlickrDialog(pPics);
+    }
 
-        String[] picDescriptions = new String[pics.size()];
+    /**
+     * Transforms the list of pictures into an array of parcelable (i.e. serializable) pictures
+     * @param pics the list of pictures from the Flickr API
+     * @return an array of parcelable pictures
+     */
+    private ParcelableFlickrPhoto[] getParcelablePictureArray(PhotoList pics) {
+        ParcelableFlickrPhoto[] pPics = new ParcelableFlickrPhoto[pics.size()];
         for (int i = 0; i < pics.size(); i++){
-            picDescriptions[i] = pics.get(i).getUrl();
+            pPics[i] = new ParcelableFlickrPhoto(pics.get(i));
         }
+        return pPics;
+    }
 
+    /**
+     * Opens a dialog with the list of Flickr pictures
+     * @param pPics the array of parcelable (i.e. serializable) pictures
+     */
+    private void openFlickrDialog(ParcelableFlickrPhoto[] pPics) {
         DialogFragment flickrFragment = new FlickrDialogFragment(picturePickedListener);
         Bundle args = new Bundle();
-        args.putStringArray(FlickrDialogFragment.ARG_PICS, picDescriptions);
+        args.putParcelableArray(FlickrDialogFragment.ARG_PICS, pPics);
         flickrFragment.setArguments(args);
         flickrFragment.show(activity.getFragmentManager(), "flickrPicker");
-
     }
 
     public class FlickrSearchBean {
