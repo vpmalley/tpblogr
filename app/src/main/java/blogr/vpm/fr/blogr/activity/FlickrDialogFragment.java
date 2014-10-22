@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -24,6 +25,8 @@ public class FlickrDialogFragment extends DialogFragment {
 
     private final PicturePickedListener picturePickedListener;
 
+    private LayoutInflater inflater;
+
     public FlickrDialogFragment(PicturePickedListener picturePickedListener) {
         this.picturePickedListener = picturePickedListener;
     }
@@ -36,10 +39,8 @@ public class FlickrDialogFragment extends DialogFragment {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (convertView == null){
-                    //LayoutInflater vi = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    //LayoutInflater vi = getActivity().getLayoutInflater();
-                    //convertView = vi.inflate(R.layout.flickr_pic_item, parent);
-                    //convertView = super.getView(position, convertView, parent);
+                    LayoutInflater vi = getActivity().getLayoutInflater();
+                    convertView = vi.inflate(R.layout.flickr_pic_item, parent, false);
                 }
                 ImageView picImage = (ImageView) convertView.findViewById(R.id.picImage);
                 TextView picTitle = (TextView) convertView.findViewById(R.id.picTitle);
