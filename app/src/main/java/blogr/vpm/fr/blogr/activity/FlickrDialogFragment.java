@@ -5,13 +5,11 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.Toast;
-
-import com.googlecode.flickrjandroid.photos.Photo;
-import com.googlecode.flickrjandroid.photos.PhotoList;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
@@ -34,7 +32,22 @@ public class FlickrDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final ParcelableFlickrPhoto[] pPics = (ParcelableFlickrPhoto[]) getArguments().getParcelableArray(ARG_PICS);
 
-        ArrayAdapter<ParcelableFlickrPhoto> picsAdapter = new ArrayAdapter<ParcelableFlickrPhoto>(getActivity(), R.layout.post_item, pPics);
+        ArrayAdapter<ParcelableFlickrPhoto> picsAdapter = new ArrayAdapter<ParcelableFlickrPhoto>(getActivity(), R.layout.flickr_pic_item, pPics){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null){
+                    //LayoutInflater vi = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    //LayoutInflater vi = getActivity().getLayoutInflater();
+                    //convertView = vi.inflate(R.layout.flickr_pic_item, parent);
+                    //convertView = super.getView(position, convertView, parent);
+                }
+                ImageView picImage = (ImageView) convertView.findViewById(R.id.picImage);
+                TextView picTitle = (TextView) convertView.findViewById(R.id.picTitle);
+                picImage.setImageResource(R.drawable.ic_action_new);
+                picTitle.setText(pPics[position].getTitle());
+                return convertView;
+            }
+        };
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.flickr_pick_picture)
