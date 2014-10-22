@@ -18,6 +18,7 @@
         android:layout_margin="2dp"
         android:hint="@string/post_content_hint"
         android:background="@null"
+        android:imeOptions="flagNoExtractUi"
         />
 
 </RelativeLayout>
