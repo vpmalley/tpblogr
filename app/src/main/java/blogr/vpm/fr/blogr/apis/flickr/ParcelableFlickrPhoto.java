@@ -3,7 +3,9 @@ package blogr.vpm.fr.blogr.apis.flickr;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import com.googlecode.flickrjandroid.FlickrException;
 import com.googlecode.flickrjandroid.photos.Photo;
 import com.googlecode.flickrjandroid.photos.PhotoList;
 
@@ -12,18 +14,17 @@ import com.googlecode.flickrjandroid.photos.PhotoList;
  */
 public class ParcelableFlickrPhoto implements Parcelable {
 
-    private static final String DEFAULT_ORIGINAL_IMAGE_SUFFIX = "_o.jpg";
-    private static final String SMALL_SQUARE_IMAGE_SUFFIX = "_s.jpg";
-    private static final String SMALL_IMAGE_SUFFIX = "_m.jpg";
-    private static final String THUMBNAIL_IMAGE_SUFFIX = "_t.jpg";
-    private static final String MEDIUM_IMAGE_SUFFIX = ".jpg";
-    private static final String LARGE_IMAGE_SUFFIX = "_b.jpg";
-    private static final String LARGE_SQUARE_IMAGE_SUFFIX = "_q.jpg";
-
     private static final String PAR_ID = "parceled_id";
-    private static final String PAR_URL = "parceled_id";
-    private static final String PAR_TITLE = "parceled_id";
-    private static final String PAR_DESC = "parceled_id";
+    private static final String PAR_URL = "parceled_url";
+    private static final String PAR_TITLE = "parceled_title";
+    private static final String PAR_DESC = "parceled_desc";
+    private static final String PAR_URL_T = "parceled_url_thumbnail";
+    private static final String PAR_URL_S = "parceled_url_small";
+    private static final String PAR_URL_M = "parceled_url_medium";
+    private static final String PAR_URL_L = "parceled_url_large";
+    private static final String PAR_URL_O = "parceled_url_original";
+    private static final String PAR_URL_SQ = "parceled_url_square";
+    private static final String PAR_URL_LSQ = "parceled_url_largesquare";
 
     private final String id;
 
@@ -33,11 +34,37 @@ public class ParcelableFlickrPhoto implements Parcelable {
 
     private final String description;
 
+    private final String thumbnailSizeUrl;
+
+    private final String smallSizeUrl;
+
+    private final String mediumSizeUrl;
+
+    private final String largeSizeUrl;
+
+    private String originalSizeUrl;
+
+    private final String largeSquareSizeUrl;
+
+    private final String squareSizeUrl;
+
     public ParcelableFlickrPhoto(Photo photo) {
         this.id = photo.getId();
         this.picUrl = photo.getUrl();
         this.title = photo.getTitle();
         this.description = photo.getDescription();
+        this.thumbnailSizeUrl = photo.getThumbnailUrl();
+        this.smallSizeUrl = photo.getSmallUrl();
+        this.mediumSizeUrl = photo.getMediumUrl();
+        this.largeSizeUrl = photo.getLargeUrl();
+        try {
+            this.originalSizeUrl = photo.getOriginalUrl();
+        } catch (FlickrException e) {
+            this.originalSizeUrl = "";
+            Log.e("flickr", "could not retrieve original sized picture.");
+        }
+        this.squareSizeUrl = photo.getSmallSquareUrl();
+        this.largeSquareSizeUrl = photo.getLargeSquareUrl();
     }
 
     private ParcelableFlickrPhoto(Parcel p){
@@ -45,6 +72,13 @@ public class ParcelableFlickrPhoto implements Parcelable {
         this.picUrl = p.readBundle().getString(PAR_URL);
         this.title = p.readBundle().getString(PAR_TITLE);
         this.description = p.readBundle().getString(PAR_DESC);
+        this.thumbnailSizeUrl = p.readBundle().getString(PAR_URL_T);
+        this.smallSizeUrl = p.readBundle().getString(PAR_URL_S);
+        this.mediumSizeUrl = p.readBundle().getString(PAR_URL_M);
+        this.largeSizeUrl = p.readBundle().getString(PAR_URL_L);
+        this.originalSizeUrl = p.readBundle().getString(PAR_URL_O);
+        this.squareSizeUrl = p.readBundle().getString(PAR_URL_SQ);
+        this.largeSquareSizeUrl = p.readBundle().getString(PAR_URL_LSQ);
     }
 
     public String getId() {
@@ -61,6 +95,34 @@ public class ParcelableFlickrPhoto implements Parcelable {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getThumbnailSizeUrl() {
+        return thumbnailSizeUrl;
+    }
+
+    public String getSmallSizeUrl() {
+        return smallSizeUrl;
+    }
+
+    public String getMediumSizeUrl() {
+        return mediumSizeUrl;
+    }
+
+    public String getLargeSizeUrl() {
+        return largeSizeUrl;
+    }
+
+    public String getOriginalSizeUrl() {
+        return originalSizeUrl;
+    }
+
+    public String getLargeSquareSizeUrl() {
+        return largeSquareSizeUrl;
+    }
+
+    public String getSquareSizeUrl() {
+        return squareSizeUrl;
     }
 
     @Override
@@ -80,6 +142,13 @@ public class ParcelableFlickrPhoto implements Parcelable {
         b.putString(PAR_URL, picUrl);
         b.putString(PAR_TITLE, title);
         b.putString(PAR_DESC, description);
+        b.putString(PAR_URL_T, thumbnailSizeUrl);
+        b.putString(PAR_URL_S, smallSizeUrl);
+        b.putString(PAR_URL_M, mediumSizeUrl);
+        b.putString(PAR_URL_L, largeSizeUrl);
+        b.putString(PAR_URL_O, originalSizeUrl);
+        b.putString(PAR_URL_SQ, squareSizeUrl);
+        b.putString(PAR_URL_LSQ, largeSquareSizeUrl);
         parcel.writeBundle(b);
     }
 
