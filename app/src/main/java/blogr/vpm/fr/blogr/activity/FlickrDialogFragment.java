@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +14,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.apis.flickr.AsyncPictureLoader;
+import blogr.vpm.fr.blogr.picture.AsyncPictureLoader;
 import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
+import blogr.vpm.fr.blogr.picture.ImageViewLoader;
+import blogr.vpm.fr.blogr.picture.PictureLoadedListener;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
@@ -26,9 +33,12 @@ public class FlickrDialogFragment extends DialogFragment {
 
     private final PicturePickedListener picturePickedListener;
 
+    private final List<Bitmap> bitmaps;
+
     // TODO try to keep a no-argument constructor
     public FlickrDialogFragment(PicturePickedListener picturePickedListener) {
         this.picturePickedListener = picturePickedListener;
+        bitmaps = new ArrayList<Bitmap>();
     }
 
     @Override
@@ -44,10 +54,16 @@ public class FlickrDialogFragment extends DialogFragment {
                 }
                 ImageView picImage = (ImageView) convertView.findViewById(R.id.picImage);
                 TextView picTitle = (TextView) convertView.findViewById(R.id.picTitle);
+
                 picImage.setImageResource(R.drawable.ic_action_picture);
                 picTitle.setText(pPics[position].getTitle());
-                String[] picUrlAsArray = {pPics[position].getThumbnailSizeUrl()};
-                new AsyncPictureLoader(picImage).execute(picUrlAsArray);
+
+                boolean cached = (bitmaps.size() > position) && (bitmaps.get(position) != null);
+                if (cached){
+                    picImage.setImageBitmap(bitmaps.get(position));
+                } else {
+                    asyncLoadPicture(position, picImage, pPics);
+                }
                 return convertView;
             }
         };
@@ -67,5 +83,12 @@ public class FlickrDialogFragment extends DialogFragment {
                     }
                 })
                 .create();
+    }
+
+    private void asyncLoadPicture(int position, ImageView picImage, ParcelableFlickrPhoto[] pPics) {
+        String[] picUrlAsArray = {pPics[position].getSmallSizeUrl()};
+        PictureLoadedListener pictureLoadedListener = new ImageViewLoader(bitmaps, position, picImage);
+        Log.d("images", position + "-" + picUrlAsArray[0]);
+        new AsyncPictureLoader(pictureLoadedListener).execute(picUrlAsArray);
     }
 }

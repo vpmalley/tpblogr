@@ -1,26 +1,27 @@
-package blogr.vpm.fr.blogr.apis.flickr;
+package blogr.vpm.fr.blogr.picture;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ImageView;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import blogr.vpm.fr.blogr.picture.PictureLoadedListener;
+
 /**
  * Created by vincent on 22/10/14.
  *
- * An asynchronous task to download a picture in order to display it in an ImageView.
+ * An asynchronous task to download a picture. It calls a listener once loaded.
  */
 public class AsyncPictureLoader extends AsyncTask<String, Integer, Bitmap> {
 
-    private final ImageView pictureView;
+    private final PictureLoadedListener pictureLoadedListener;
 
-    public AsyncPictureLoader(ImageView pictureView) {
-        this.pictureView = pictureView;
+    public AsyncPictureLoader(PictureLoadedListener pictureLoadedListener) {
+        this.pictureLoadedListener = pictureLoadedListener;
     }
 
     @Override
@@ -50,6 +51,6 @@ public class AsyncPictureLoader extends AsyncTask<String, Integer, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap pictureBitmap) {
-        pictureView.setImageBitmap(pictureBitmap);
+        pictureLoadedListener.onPictureLoaded(pictureBitmap);
     }
 }

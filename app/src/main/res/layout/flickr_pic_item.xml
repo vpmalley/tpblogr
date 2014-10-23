@@ -11,13 +11,13 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:maxHeight="30dp"
         android:id="@+id/picImage"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_margin="2dp"
         android:id="@+id/picTitle"
+        android:gravity="center_vertical|left"
         android:textAppearance="?android:attr/textAppearanceSmall"
     />
 </LinearLayout>
