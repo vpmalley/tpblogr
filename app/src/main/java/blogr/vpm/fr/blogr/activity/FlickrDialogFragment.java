@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.apis.flickr.AsyncPictureLoader;
 import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
@@ -44,8 +45,10 @@ public class FlickrDialogFragment extends DialogFragment {
                 }
                 ImageView picImage = (ImageView) convertView.findViewById(R.id.picImage);
                 TextView picTitle = (TextView) convertView.findViewById(R.id.picTitle);
-                picImage.setImageResource(R.drawable.ic_action_new);
+                picImage.setImageResource(R.drawable.ic_action_picture);
                 picTitle.setText(pPics[position].getTitle());
+                String[] picUrlAsArray = {pPics[position].getThumbnailSizeUrl()};
+                new AsyncPictureLoader(picImage).execute(picUrlAsArray);
                 return convertView;
             }
         };

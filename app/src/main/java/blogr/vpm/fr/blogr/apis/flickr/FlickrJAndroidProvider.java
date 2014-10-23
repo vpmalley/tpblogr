@@ -31,18 +31,14 @@ public class FlickrJAndroidProvider implements FlickrProvider {
         PhotoList photos = new PhotoList();
         Flickr f = new Flickr(context.getResources().getString(R.string.flickr_api_key));
         try {
-            Log.d("flickr", "start getting user pics");
             User user = f.getPeopleInterface().findByUsername(username);
             photos = f.getPhotosInterface().getContactsPublicPhotos(user.getId(), count, false, false, false);
         } catch (IOException e) {
             Log.d("flickr", e.getMessage());
-            //Toast.makeText(context, "Could not retrieve pictures for user " + username, Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             Log.d("flickr", e.getMessage());
-            //Toast.makeText(context, "Could not retrieve pictures for user " + username, Toast.LENGTH_SHORT).show();
         } catch (FlickrException e) {
             Log.d("flickr", e.getMessage());
-            //Toast.makeText(context, "Could not retrieve pictures for user " + username, Toast.LENGTH_SHORT).show();
         }
         return photos;
     }

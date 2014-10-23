@@ -12,6 +12,7 @@ import com.googlecode.flickrjandroid.photos.Photo;
 import com.googlecode.flickrjandroid.photos.PhotoList;
 import com.googlecode.flickrjandroid.photos.PhotoUrl;
 
+import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.activity.FlickrDialogFragment;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
@@ -45,8 +46,12 @@ public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider
 
     @Override
     protected void onPostExecute(PhotoList pics) {
-        ParcelableFlickrPhoto[] pPics = getParcelablePictureArray(pics);
-        openFlickrDialog(pPics);
+        if (pics.size() > 0){
+            ParcelableFlickrPhoto[] pPics = getParcelablePictureArray(pics);
+            openFlickrDialog(pPics);
+        } else {
+            Toast.makeText(activity, activity.getResources().getString(R.string.no_access_flickr), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
