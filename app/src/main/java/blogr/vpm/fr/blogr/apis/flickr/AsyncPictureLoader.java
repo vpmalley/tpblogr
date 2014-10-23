@@ -3,6 +3,7 @@ package blogr.vpm.fr.blogr.apis.flickr;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.IOException;
@@ -29,12 +30,21 @@ public class AsyncPictureLoader extends AsyncTask<String, Integer, Bitmap> {
         }
         String pictureUrl = urls[0];
         InputStream pictureStream = null;
+        Bitmap pictureBitmap = null;
         try {
             pictureStream = new URL(pictureUrl).openStream();
+            pictureBitmap = BitmapFactory.decodeStream(pictureStream);
         } catch (IOException e) {
             throw new IllegalArgumentException("A well-formatted url was expected.");
+        } finally {
+            if (pictureStream != null) {
+                try {
+                    pictureStream.close();
+                } catch (IOException e) {
+                    Log.e("flickr", e.getMessage());
+                }
+            }
         }
-        Bitmap pictureBitmap = BitmapFactory.decodeStream(pictureStream);
         return pictureBitmap;
     }
 

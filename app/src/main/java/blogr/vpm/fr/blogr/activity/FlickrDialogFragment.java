@@ -26,8 +26,7 @@ public class FlickrDialogFragment extends DialogFragment {
 
     private final PicturePickedListener picturePickedListener;
 
-    private LayoutInflater inflater;
-
+    // TODO try to keep a no-argument constructor
     public FlickrDialogFragment(PicturePickedListener picturePickedListener) {
         this.picturePickedListener = picturePickedListener;
     }
