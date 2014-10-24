@@ -12,6 +12,8 @@ import com.googlecode.flickrjandroid.photos.PhotoList;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
 
 import blogr.vpm.fr.blogr.R;
 
@@ -32,7 +34,7 @@ public class FlickrJAndroidProvider implements FlickrProvider {
         Flickr f = new Flickr(context.getResources().getString(R.string.flickr_api_key));
         try {
             User user = f.getPeopleInterface().findByUsername(username);
-            photos = f.getPhotosInterface().getContactsPublicPhotos(user.getId(), count, false, false, false);
+            photos = f.getPeopleInterface().getPublicPhotos(user.getId(), count, 1);
         } catch (IOException e) {
             Log.d("flickr", e.getMessage());
         } catch (JSONException e) {
