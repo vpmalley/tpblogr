@@ -15,11 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import com.googlecode.flickrjandroid.Flickr;
-import com.googlecode.flickrjandroid.people.User;
-import com.googlecode.flickrjandroid.photos.PhotoList;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrJAndroidProvider;
@@ -29,7 +24,6 @@ import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.insertion.Inserter;
-import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.location.LatLongTagProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
@@ -38,10 +32,9 @@ import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
-import blogr.vpm.fr.blogr.picture.PictureTagProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
-import blogr.vpm.fr.blogr.service.PostPublisherPreferencesProvider;
-import blogr.vpm.fr.blogr.service.PostPublisherProvider;
+import blogr.vpm.fr.blogr.service.PostPublishingPreferencesProvider;
+import blogr.vpm.fr.blogr.service.PostPublishingServiceProvider;
 
 /**
  * Created by vincent on 07/10/14.
@@ -51,7 +44,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
     public static final int PICK_PIC_REQ_CODE = 32;
     public static final int MAX_NEW_POST_FILES = 100;
 
-    private PostPublisherProvider publisherProvider;
+    private PostPublishingServiceProvider publisherProvider;
 
     private PostSaver saver;
 
@@ -72,7 +65,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
 
         Log.d("postF", "creating fragment");
         // init services
-        publisherProvider = new PostPublisherPreferencesProvider();
+        publisherProvider = new PostPublishingPreferencesProvider();
         saver = new FilePostSaver(getActivity());
         locationProvider = new PlayServicesLocationProvider(getActivity());
 
@@ -128,7 +121,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
                 startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
                 return true;
             case R.id.action_publish:
-                PostPublisher publisher = publisherProvider.getService(getActivity());
+                PostPublisher publisher = publisherProvider.getPublisherService(getActivity());
                 refreshPostFromView();
                 publisher.publish(currentBlog, currentPost);
                 return true;
@@ -168,7 +161,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
 
     @Override
     public void onPicturePicked(String picUrl) {
-        SurroundingTagsProvider pictureTagProvider = new PictureMdTagsProvider(picUrl);
+        SurroundingTagsProvider pictureTagProvider = publisherProvider.getPictureTagsProvider(getActivity(), picUrl);
         String updatedPostContent = new DefaultInserter(getActivity()).insert(contentField, pictureTagProvider);
         // the currentPost must be updated because this may be called before onResume
         currentPost.setContent(updatedPostContent);
