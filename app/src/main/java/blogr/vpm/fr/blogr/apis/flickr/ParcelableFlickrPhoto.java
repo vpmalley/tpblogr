@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.apis.flickr;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,12 +8,15 @@ import android.util.Log;
 
 import com.googlecode.flickrjandroid.FlickrException;
 import com.googlecode.flickrjandroid.photos.Photo;
-import com.googlecode.flickrjandroid.photos.PhotoList;
+
+import blogr.vpm.fr.blogr.picture.PictureLoadedListener;
 
 /**
  * Created by vince on 22/10/14.
+ *
+ * The bean to store a picture from Flickr.
  */
-public class ParcelableFlickrPhoto implements Parcelable {
+public class ParcelableFlickrPhoto implements Parcelable, PictureLoadedListener {
 
     private static final String PAR_ID = "parceled_id";
     private static final String PAR_URL = "parceled_url";
@@ -47,6 +51,8 @@ public class ParcelableFlickrPhoto implements Parcelable {
     private final String largeSquareSizeUrl;
 
     private final String squareSizeUrl;
+
+    private Bitmap smallBitmap;
 
     public ParcelableFlickrPhoto(Photo photo) {
         this.id = photo.getId();
@@ -125,6 +131,10 @@ public class ParcelableFlickrPhoto implements Parcelable {
         return squareSizeUrl;
     }
 
+    public Bitmap getSmallBitmap() {
+        return smallBitmap;
+    }
+
     @Override
     public String toString() {
         return getTitle();
@@ -152,6 +162,10 @@ public class ParcelableFlickrPhoto implements Parcelable {
         parcel.writeBundle(b);
     }
 
+    @Override
+    public void onPictureLoaded(Bitmap pictureBitmap) {
+        this.smallBitmap = pictureBitmap;
+    }
 
     public static final Creator CREATOR = new Creator<ParcelableFlickrPhoto>(){
 

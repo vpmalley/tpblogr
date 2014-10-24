@@ -20,7 +20,7 @@
     <string name="post_content_hint">Have a story to share today?</string>
     <string name="flickr_pick_picture">Pick a picture from Flickr</string>
     <string name="cancel">Cancel</string>
-    <string name="no_access_flickr">Pictures could not be loaded from Flickr. Check your connection and try again later.</string>
+    <string name="no_access_flickr">Pictures could not be loaded from Flickr. Check your connection, your username in the settings and try again later.</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>
