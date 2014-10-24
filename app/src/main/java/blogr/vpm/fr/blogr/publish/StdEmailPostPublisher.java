@@ -22,7 +22,6 @@ public class StdEmailPostPublisher implements PostPublisher {
         this.formatter = new HtmlFormatter();
     }
 
-
     @Override
     public void publish(Blog blog, Post post) {
         Intent intent;
@@ -34,31 +33,37 @@ public class StdEmailPostPublisher implements PostPublisher {
         context.startActivity(intent);
     }
 
-    private Intent emailIntentWithAttachments(Blog blog, Post post) {
-        Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{blog.getEmailAddress()});
-        intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-        String htmlContent = this.formatter.format(post.getContent());
-        intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(htmlContent));
-        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, post.getPicturesAsFiles(context));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        return intent;
-    }
-
-    public Intent emailIntentWithoutAttachments(Blog blog, Post post) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-        String htmlContent = this.formatter.format(post.getContent());
-        intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(htmlContent));
-        intent.setData(Uri.parse("mailto:" + blog.getEmailAddress()));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        return intent;
-    }
-
     @Override
     public void setFormatter(Formatter formatter) {
+        this.formatter = formatter;
+    }
 
+    protected void putEmailContent(Intent intent, String content) {
+        intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(content));
+    }
+
+    private Intent emailIntentWithAttachments(Blog blog, Post post) {
+        Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{blog.getEmailAddress()});
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, post.getPicturesAsFiles(context));
+
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
+        String content = this.formatter.format(post.getContent());
+        putEmailContent(intent, content);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
+    }
+
+    private Intent emailIntentWithoutAttachments(Blog blog, Post post) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:" + blog.getEmailAddress()));
+
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
+        String content = this.formatter.format(post.getContent());
+        putEmailContent(intent, content);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 }

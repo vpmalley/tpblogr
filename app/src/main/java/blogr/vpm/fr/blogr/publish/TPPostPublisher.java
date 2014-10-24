@@ -16,5 +16,11 @@ public class TPPostPublisher extends StdEmailPostPublisher {
 
     public TPPostPublisher(Context context) {
         super(context);
+        setFormatter(new IdentityFormatter());
+    }
+
+    @Override
+    protected void putEmailContent(Intent intent, String content) {
+        intent.putExtra(Intent.EXTRA_TEXT, content);
     }
 }
