@@ -57,11 +57,14 @@ public class StdEmailPostPublisher implements PostPublisher {
 
     private Intent emailIntentWithoutAttachments(Blog blog, Post post) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:" + blog.getEmailAddress()));
 
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
         String content = this.formatter.format(post.getContent());
+        putEmailContent(intent, content);
+
+        intent.setData(Uri.parse("mailto:" + blog.getEmailAddress()));
+
         putEmailContent(intent, content);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;

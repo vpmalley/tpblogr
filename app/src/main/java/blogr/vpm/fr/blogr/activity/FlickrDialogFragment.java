@@ -69,7 +69,7 @@ public class FlickrDialogFragment extends DialogFragment {
                 .setAdapter(picsAdapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position) {
-                        picturePickedListener.onPicturePicked(pPics[position].getThumbnailSizeUrl());
+                        picturePickedListener.onPicturePicked(pPics[position].getMediumSizeUrl());
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
