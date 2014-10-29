@@ -11,27 +11,27 @@ import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
  */
 public class LatLongTagProvider implements SingleTagProvider {
 
-    private final LocationProvider locationProvider;
+  private final LocationProvider locationProvider;
 
-    private final Context context;
+  private final Context context;
 
-    public LatLongTagProvider(Context context, LocationProvider locationProvider) {
-        this.context = context;
-        this.locationProvider = locationProvider;
+  public LatLongTagProvider(Context context, LocationProvider locationProvider) {
+    this.context = context;
+    this.locationProvider = locationProvider;
+  }
+
+  @Override
+  public String getTag() {
+    Location currentLocation = locationProvider.getCurrentLocation();
+    StringBuilder locationBuilder = new StringBuilder();
+    if (currentLocation != null) {
+      locationBuilder.append(context.getResources().getString(R.string.latitude));
+      locationBuilder.append(currentLocation.getLatitude());
+      locationBuilder.append(context.getResources().getString(R.string.longitude));
+      locationBuilder.append(currentLocation.getLongitude());
+      locationBuilder.append(context.getResources().getString(R.string.altitude));
+      locationBuilder.append(currentLocation.getAltitude());
     }
-
-    @Override
-    public String getTag() {
-        Location currentLocation = locationProvider.getCurrentLocation();
-        StringBuilder locationBuilder = new StringBuilder();
-        if (currentLocation != null) {
-            locationBuilder.append(context.getResources().getString(R.string.latitude));
-            locationBuilder.append(currentLocation.getLatitude());
-            locationBuilder.append(context.getResources().getString(R.string.longitude));
-            locationBuilder.append(currentLocation.getLongitude());
-            locationBuilder.append(context.getResources().getString(R.string.altitude));
-            locationBuilder.append(currentLocation.getAltitude());
-        }
-        return locationBuilder.toString();
-    }
+    return locationBuilder.toString();
+  }
 }

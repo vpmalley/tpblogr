@@ -19,46 +19,46 @@ import blogr.vpm.fr.blogr.bean.Post;
 /**
  * Created by vincent on 08/10/14.
  */
-public class FilePostRetriever implements PostRetriever{
+public class FilePostRetriever implements PostRetriever {
 
-    private final Context context;
+  private final Context context;
 
-    public FilePostRetriever(Context context) {
-        this.context = context;
-    }
+  public FilePostRetriever(Context context) {
+    this.context = context;
+  }
 
-    @Override
-    public List<Post> retrieveAll() {
-        List<Post> posts = new ArrayList<Post>();
-        if (isExternalStorageReadable()) {
-            File postDir = new File(Environment.getExternalStoragePublicDirectory("BlogR"), "posts");
-            if (postDir.exists() && postDir.isDirectory()) {
-                for (File postFile : postDir.listFiles()) {
-                    StringWriter postWriter = new StringWriter();
-                    FileInputStream postFileIn = null;
-                    try {
-                        postFileIn = new FileInputStream(postFile);
-                        IOUtils.copy(postFileIn, postWriter, "UTF-8");
-                    } catch (IOException e) {
-                        Toast.makeText(context, context.getResources().getString(R.string.cannotgepost), Toast.LENGTH_SHORT).show();
-                    } finally {
-                        if (postFileIn != null) {
-                            try {
-                                postFileIn.close();
-                            } catch (IOException e) {
-                                Toast.makeText(context, context.getResources().getString(R.string.mightnotgepost), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                    posts.add(new Post(postFile.getName().replace(".txt", "").replace('_', ' '), postWriter.toString()));
-                }
+  @Override
+  public List<Post> retrieveAll() {
+    List<Post> posts = new ArrayList<Post>();
+    if (isExternalStorageReadable()) {
+      File postDir = new File(Environment.getExternalStoragePublicDirectory("BlogR"), "posts");
+      if (postDir.exists() && postDir.isDirectory()) {
+        for (File postFile : postDir.listFiles()) {
+          StringWriter postWriter = new StringWriter();
+          FileInputStream postFileIn = null;
+          try {
+            postFileIn = new FileInputStream(postFile);
+            IOUtils.copy(postFileIn, postWriter, "UTF-8");
+          } catch (IOException e) {
+            Toast.makeText(context, context.getResources().getString(R.string.cannotgepost), Toast.LENGTH_SHORT).show();
+          } finally {
+            if (postFileIn != null) {
+              try {
+                postFileIn.close();
+              } catch (IOException e) {
+                Toast.makeText(context, context.getResources().getString(R.string.mightnotgepost), Toast.LENGTH_SHORT).show();
+              }
             }
+          }
+          posts.add(new Post(postFile.getName().replace(".txt", "").replace('_', ' '), postWriter.toString()));
         }
-        return posts;
+      }
     }
+    return posts;
+  }
 
-    private boolean isExternalStorageReadable() {
-        String storageState = Environment.getExternalStorageState();
-        return (Environment.MEDIA_MOUNTED.equals(storageState) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(storageState));
-    }
+  private boolean isExternalStorageReadable() {
+    String storageState = Environment.getExternalStorageState();
+    return (Environment.MEDIA_MOUNTED.equals(storageState) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(storageState));
+  }
 }

@@ -22,26 +22,26 @@ import blogr.vpm.fr.blogr.R;
  */
 public class FlickrJAndroidProvider implements FlickrProvider {
 
-    private Context context;
+  private Context context;
 
-    public FlickrJAndroidProvider(Context context) {
-        this.context = context;
-    }
+  public FlickrJAndroidProvider(Context context) {
+    this.context = context;
+  }
 
-    @Override
-    public PhotoList getUserPhotos(String username, int count) {
-        PhotoList photos = new PhotoList();
-        Flickr f = new Flickr(context.getResources().getString(R.string.flickr_api_key));
-        try {
-            User user = f.getPeopleInterface().findByUsername(username);
-            photos = f.getPeopleInterface().getPublicPhotos(user.getId(), count, 1);
-        } catch (IOException e) {
-            Log.d("flickr", e.getMessage());
-        } catch (JSONException e) {
-            Log.d("flickr", e.getMessage());
-        } catch (FlickrException e) {
-            Log.d("flickr", e.getMessage());
-        }
-        return photos;
+  @Override
+  public PhotoList getUserPhotos(String username, int count) {
+    PhotoList photos = new PhotoList();
+    Flickr f = new Flickr(context.getResources().getString(R.string.flickr_api_key));
+    try {
+      User user = f.getPeopleInterface().findByUsername(username);
+      photos = f.getPeopleInterface().getPublicPhotos(user.getId(), count, 1);
+    } catch (IOException e) {
+      Log.d("flickr", e.getMessage());
+    } catch (JSONException e) {
+      Log.d("flickr", e.getMessage());
+    } catch (FlickrException e) {
+      Log.d("flickr", e.getMessage());
     }
+    return photos;
+  }
 }

@@ -7,23 +7,23 @@ import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
  */
 public class PictureTpTagsProvider implements SurroundingTagsProvider {
 
-    private final String pictureUrl;
+  private final String pictureUrl;
 
-    public PictureTpTagsProvider(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
-    }
+  public PictureTpTagsProvider(String pictureUrl) {
+    this.pictureUrl = pictureUrl;
+  }
 
-    @Override
-    public String getStartTag() {
-        StringBuilder startTagBuilder = new StringBuilder();
-        startTagBuilder.append("[ img=\"");
-        startTagBuilder.append(pictureUrl);
-        startTagBuilder.append("\" ");
-        return startTagBuilder.toString();
-    }
+  @Override
+  public String getStartTag() {
+    StringBuilder startTagBuilder = new StringBuilder();
+    startTagBuilder.append("[ img=\"");
+    startTagBuilder.append(pictureUrl);
+    startTagBuilder.append("\" ");
+    return startTagBuilder.toString();
+  }
 
-    @Override
-    public String getEndTag() {
-        return " ]";
-    }
+  @Override
+  public String getEndTag() {
+    return " ]";
+  }
 }

@@ -17,29 +17,29 @@ import blogr.vpm.fr.blogr.publish.PostPublisher;
  */
 public class TPJavaMailPostPublisher implements PostPublisher {
 
-    private Formatter formatter;
+  private Formatter formatter;
 
-    @Override
-    public void publish(Blog blog, Post post) {
-        try {
-            Message postMessage = generateEmail(post);
-            //postMessage.setRecipient(blog.getRecipient());
-            Transport.send(postMessage);
-        } catch (MessagingException e){
-            // TODO display error
-        }
+  @Override
+  public void publish(Blog blog, Post post) {
+    try {
+      Message postMessage = generateEmail(post);
+      //postMessage.setRecipient(blog.getRecipient());
+      Transport.send(postMessage);
+    } catch (MessagingException e) {
+      // TODO display error
     }
+  }
 
-    @Override
-    public void setFormatter(Formatter formatter) {
-        this.formatter = formatter;
-    }
+  @Override
+  public void setFormatter(Formatter formatter) {
+    this.formatter = formatter;
+  }
 
-    private Message generateEmail(Post post) throws MessagingException {
-        Message message = new MimeMessage(Session.getDefaultInstance(new Properties()));
-        message.setSubject(post.getTitle());
-        //message.setDataHandler(new DataHandler);
-        return message;
-    }
+  private Message generateEmail(Post post) throws MessagingException {
+    Message message = new MimeMessage(Session.getDefaultInstance(new Properties()));
+    message.setSubject(post.getTitle());
+    //message.setDataHandler(new DataHandler);
+    return message;
+  }
 
 }

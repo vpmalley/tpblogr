@@ -11,19 +11,19 @@ import blogr.vpm.fr.blogr.bean.Post;
  */
 public class PostEditionActivity extends Activity {
 
-    private PostEditionFragment postEditionFragment;
+  private PostEditionFragment postEditionFragment;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_edition);
-        postEditionFragment = (PostEditionFragment) getFragmentManager().findFragmentById(R.id.postEditionFragment);
-        setTitle("");
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_post_edition);
+    postEditionFragment = (PostEditionFragment) getFragmentManager().findFragmentById(R.id.postEditionFragment);
+    setTitle("");
+    getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if (getIntent().hasExtra(Post.INTENT_EXTRA_KEY)) {
-            Post post = (Post) getIntent().getExtras().get(Post.INTENT_EXTRA_KEY);
-            postEditionFragment.editPost(post);
-        }
+    if (getIntent().hasExtra(Post.INTENT_EXTRA_KEY)) {
+      Post post = (Post) getIntent().getExtras().get(Post.INTENT_EXTRA_KEY);
+      postEditionFragment.editPost(post);
     }
+  }
 }

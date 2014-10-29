@@ -13,26 +13,26 @@ import blogr.vpm.fr.blogr.bean.Post;
  */
 public class PostListActivity extends Activity implements PostSelectionListener {
 
-    private PostListFragment postListFragment;
+  private PostListFragment postListFragment;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_list);
-        postListFragment = (PostListFragment) getFragmentManager().findFragmentById(R.id.postListFragment);
-        setTitle("");
-        getActionBar().setDisplayHomeAsUpEnabled(false); // no parent activity
-    }
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_post_list);
+    postListFragment = (PostListFragment) getFragmentManager().findFragmentById(R.id.postListFragment);
+    setTitle("");
+    getActionBar().setDisplayHomeAsUpEnabled(false); // no parent activity
+  }
 
-    @Override
-    public void onActionModeFinished(ActionMode mode) {
-        postListFragment.onInvalidatedModel();
-    }
+  @Override
+  public void onActionModeFinished(ActionMode mode) {
+    postListFragment.onInvalidatedModel();
+  }
 
-    @Override
-    public void onPostSelection(Post post) {
-        Intent i = new Intent(this, PostEditionActivity.class);
-        i.putExtra(Post.INTENT_EXTRA_KEY, post);
-        startActivity(i);
-    }
+  @Override
+  public void onPostSelection(Post post) {
+    Intent i = new Intent(this, PostEditionActivity.class);
+    i.putExtra(Post.INTENT_EXTRA_KEY, post);
+    startActivity(i);
+  }
 }

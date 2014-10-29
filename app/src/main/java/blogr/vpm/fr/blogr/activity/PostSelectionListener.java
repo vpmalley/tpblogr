@@ -7,9 +7,10 @@ import blogr.vpm.fr.blogr.bean.Post;
  */
 public interface PostSelectionListener {
 
-    /**
-     * Selects a post and calls listener of this event.
-     * @param post selected post
-     */
-    void onPostSelection(Post post);
+  /**
+   * Selects a post and calls listener of this event.
+   *
+   * @param post selected post
+   */
+  void onPostSelection(Post post);
 }

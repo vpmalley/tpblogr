@@ -21,10 +21,10 @@ public class Blog {
   }
 
   public Address getRecipient() throws AddressException {
-      return new InternetAddress(recipientEmail);
+    return new InternetAddress(recipientEmail);
   }
 
   public String getEmailAddress() {
-        return recipientEmail;
-    }
+    return recipientEmail;
+  }
 }

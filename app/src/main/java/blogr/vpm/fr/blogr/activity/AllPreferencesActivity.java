@@ -12,22 +12,22 @@ import blogr.vpm.fr.blogr.R;
  */
 public class AllPreferencesActivity extends PreferenceActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
 
-    @Override
-    public void onBuildHeaders(List<android.preference.PreferenceActivity.Header> target) {
-        loadHeadersFromResource(R.xml.preferenceheaders, target);
-    }
+  @Override
+  public void onBuildHeaders(List<android.preference.PreferenceActivity.Header> target) {
+    loadHeadersFromResource(R.xml.preferenceheaders, target);
+  }
 
-    @Override
-    protected boolean isValidFragment(String fragmentName) {
-        // any preference screen should be implemented as defined in the headers section of doc.
-        if ("blogr.vpm.fr.blogr.activity.PreferenceCategoryFragment".equals(fragmentName)){
-            return true;
-        }
-        return false;
+  @Override
+  protected boolean isValidFragment(String fragmentName) {
+    // any preference screen should be implemented as defined in the headers section of doc.
+    if ("blogr.vpm.fr.blogr.activity.PreferenceCategoryFragment".equals(fragmentName)) {
+      return true;
     }
+    return false;
+  }
 }

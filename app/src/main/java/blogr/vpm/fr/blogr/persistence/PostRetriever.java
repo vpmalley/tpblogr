@@ -9,9 +9,10 @@ import blogr.vpm.fr.blogr.bean.Post;
  */
 public interface PostRetriever {
 
-    /**
-     * Retrieves all persisted blog posts
-     * @return the list of persisted posts
-     */
-    List<Post> retrieveAll();
+  /**
+   * Retrieves all persisted blog posts
+   *
+   * @return the list of persisted posts
+   */
+  List<Post> retrieveAll();
 }
