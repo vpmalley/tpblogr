@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import blogr.vpm.fr.blogr.picture.PictureLoadedListener;
-
 /**
  * Created by vincent on 22/10/14.
  * <p/>

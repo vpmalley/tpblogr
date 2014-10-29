@@ -2,7 +2,6 @@ package blogr.vpm.fr.blogr.apis.flickr;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.googlecode.flickrjandroid.Flickr;
 import com.googlecode.flickrjandroid.FlickrException;
@@ -12,8 +11,6 @@ import com.googlecode.flickrjandroid.photos.PhotoList;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
 
 import blogr.vpm.fr.blogr.R;
 

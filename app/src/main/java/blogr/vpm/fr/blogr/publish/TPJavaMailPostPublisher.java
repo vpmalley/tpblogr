@@ -10,7 +10,6 @@ import javax.mail.internet.MimeMessage;
 
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
-import blogr.vpm.fr.blogr.publish.PostPublisher;
 
 /**
  * Created by vincent on 04/10/14.

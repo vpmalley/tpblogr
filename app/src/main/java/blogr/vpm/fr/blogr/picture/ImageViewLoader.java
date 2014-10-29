@@ -3,7 +3,6 @@ package blogr.vpm.fr.blogr.picture;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

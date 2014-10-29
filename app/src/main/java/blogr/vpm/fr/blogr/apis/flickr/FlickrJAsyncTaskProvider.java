@@ -2,15 +2,11 @@ package blogr.vpm.fr.blogr.apis.flickr;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.graphics.Picture;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.googlecode.flickrjandroid.photos.Photo;
 import com.googlecode.flickrjandroid.photos.PhotoList;
-import com.googlecode.flickrjandroid.photos.PhotoUrl;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.activity.FlickrDialogFragment;

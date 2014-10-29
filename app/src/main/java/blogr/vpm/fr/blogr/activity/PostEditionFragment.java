@@ -30,7 +30,6 @@ import blogr.vpm.fr.blogr.location.LocationProvider;
 import blogr.vpm.fr.blogr.location.PlayServicesLocationProvider;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
-import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.service.PostPublishingPreferencesProvider;

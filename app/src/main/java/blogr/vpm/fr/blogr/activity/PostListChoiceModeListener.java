@@ -1,6 +1,5 @@
 package blogr.vpm.fr.blogr.activity;
 
-import android.app.ListFragment;
 import android.content.Context;
 import android.util.Log;
 import android.view.ActionMode;
