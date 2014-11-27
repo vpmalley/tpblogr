@@ -28,3 +28,4 @@ proguard/
 
 # Api keys must stay private
 app/src/main/res/values/api_keys.xml
+*~
