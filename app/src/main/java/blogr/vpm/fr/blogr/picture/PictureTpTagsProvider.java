@@ -18,6 +18,7 @@ public class PictureTpTagsProvider implements SurroundingTagsProvider {
     StringBuilder startTagBuilder = new StringBuilder();
     startTagBuilder.append("[img=");
     startTagBuilder.append(pictureUrl);
+    startTagBuilder.append(" ");
     return startTagBuilder.toString();
   }
 

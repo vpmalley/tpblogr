@@ -5,11 +5,12 @@ import android.os.Bundle;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
  * Created by vince on 17/10/14.
  */
-public class PostEditionActivity extends Activity {
+public class PostEditionActivity extends Activity implements PicturePickedListener {
 
   private PostEditionFragment postEditionFragment;
 
@@ -25,5 +26,11 @@ public class PostEditionActivity extends Activity {
       Post post = (Post) getIntent().getExtras().get(Post.INTENT_EXTRA_KEY);
       postEditionFragment.editPost(post);
     }
+  }
+
+  @Override
+  public void onPicturePicked(String picUrl) {
+    // This only delegates to the fragment
+    postEditionFragment.onPicturePicked(picUrl);
   }
 }

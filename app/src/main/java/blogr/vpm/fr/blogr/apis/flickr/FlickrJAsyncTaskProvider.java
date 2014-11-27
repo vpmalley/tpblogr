@@ -10,7 +10,6 @@ import com.googlecode.flickrjandroid.photos.PhotoList;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.activity.FlickrDialogFragment;
-import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
  * Created by vincent on 19/10/14.
@@ -21,12 +20,9 @@ public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider
 
   private final Activity activity;
 
-  private final PicturePickedListener picturePickedListener;
-
-  public FlickrJAsyncTaskProvider(Activity activity, FlickrProvider delegate, PicturePickedListener picturePickedListener) {
+  public FlickrJAsyncTaskProvider(Activity activity, FlickrProvider delegate) {
     this.delegate = delegate;
     this.activity = activity;
-    this.picturePickedListener = picturePickedListener;
   }
 
   @Override
@@ -70,7 +66,7 @@ public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider
    * @param pPics the array of parcelable (i.e. serializable) pictures
    */
   private void openFlickrDialog(ParcelableFlickrPhoto[] pPics) {
-    DialogFragment flickrFragment = new FlickrDialogFragment(picturePickedListener);
+    DialogFragment flickrFragment = new FlickrDialogFragment();
     Bundle args = new Bundle();
     args.putParcelableArray(FlickrDialogFragment.ARG_PICS, pPics);
     flickrFragment.setArguments(args);

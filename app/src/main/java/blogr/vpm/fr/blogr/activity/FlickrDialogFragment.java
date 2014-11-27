@@ -24,11 +24,7 @@ public class FlickrDialogFragment extends DialogFragment {
 
   public static final String ARG_PICS = "flickrPics";
 
-  private final PicturePickedListener picturePickedListener;
-
-  // TODO try to keep a no-argument constructor
-  public FlickrDialogFragment(PicturePickedListener picturePickedListener) {
-    this.picturePickedListener = picturePickedListener;
+  public FlickrDialogFragment(){
   }
 
   @Override
@@ -69,7 +65,7 @@ public class FlickrDialogFragment extends DialogFragment {
         .setAdapter(picsAdapter, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialogInterface, int position) {
-            picturePickedListener.onPicturePicked(pPics[position].getMediumSizeUrl());
+            ((PicturePickedListener) getActivity()).onPicturePicked(pPics[position].getMediumSizeUrl());
           }
         })
         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

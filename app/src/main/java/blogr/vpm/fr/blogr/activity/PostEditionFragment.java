@@ -135,7 +135,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
         return true;
       case R.id.action_insert_flickr:
         FlickrProvider flickrD = new FlickrJAndroidProvider(getActivity());
-        FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD, this);
+        FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String flickrUsername = prefs.getString("pref_flickr_username", "");
         int picNb = Integer.valueOf(prefs.getString("pref_flickr_number_pics", "20"));
