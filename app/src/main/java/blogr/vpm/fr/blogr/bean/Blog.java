@@ -1,5 +1,7 @@
 package blogr.vpm.fr.blogr.bean;
 
+import java.io.Serializable;
+
 import javax.mail.Address;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -7,7 +9,7 @@ import javax.mail.internet.InternetAddress;
 /**
  * Created by vincent on 29/08/14.
  */
-public class Blog {
+public class Blog implements Serializable {
 
   private String recipientEmail;
 
@@ -19,6 +21,8 @@ public class Blog {
     this.title = title;
     this.recipientEmail = recipientEmail;
   }
+
+  public String getTitle() { return title;}
 
   public Address getRecipient() throws AddressException {
     return new InternetAddress(recipientEmail);

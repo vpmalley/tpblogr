@@ -19,6 +19,7 @@ import blogr.vpm.fr.blogr.bean.Post;
  */
 public class FilePostSaver implements PostSaver {
 
+  public static final String BLOGS_DIR = "blogs";
   public static final String POSTS_DIR = "posts";
   public static final String APP_DIR = "BlogR";
   private final Context context;
@@ -77,17 +78,19 @@ public class FilePostSaver implements PostSaver {
   }
 
   /**
-   * Returns the file, created if non-existent, for the post
+   * Returns the file (maybe non-existent) for the post
    *
    * @param post the post we want the matching file for
-   * @return an existing file for the post
+   * @return a file for the post
    * @pre the external storage should be writable
    */
   private File getFileForPost(Post post) {
-    File dir = new File(Environment.getExternalStoragePublicDirectory(APP_DIR), POSTS_DIR);
-    dir.mkdirs();
+    File blogsDir = new File(Environment.getExternalStoragePublicDirectory(APP_DIR), BLOGS_DIR);
+    File blogDir = new File(blogsDir, post.getBlog().getTitle());
+    File postDir = new File(blogDir, POSTS_DIR);
+    postDir.mkdirs();
     // create file if non existent
-    File postFile = new File(dir, getFileName(post));
+    File postFile = new File(postDir, getFileName(post));
     return postFile;
   }
 

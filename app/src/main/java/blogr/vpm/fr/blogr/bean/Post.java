@@ -25,10 +25,13 @@ public class Post implements Serializable {
 
   private final ArrayList<Uri> pictures;
 
-  public Post(String title, String content) {
+  private Blog blog;
+
+  public Post(String title, String content, Blog blog) {
     this.title = title;
     this.content = content;
     this.pictures = new ArrayList<Uri>();
+    this.blog = blog;
   }
 
   public String getTitle() {
@@ -51,8 +54,12 @@ public class Post implements Serializable {
     return date;
   }
 
+  public Blog getBlog() {
+    return blog;
+  }
+
   public static Post emptyPost() {
-    return new Post("", "");
+    return new Post("", "", new Blog("noblog", ""));
   }
 
   public void addPicture(Uri pictureUri) {
