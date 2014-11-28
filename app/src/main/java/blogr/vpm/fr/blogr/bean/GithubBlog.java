@@ -1,9 +1,5 @@
 package blogr.vpm.fr.blogr.bean;
 
-import javax.mail.Address;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
 /**
  * Created by vincent on 29/08/14.
  */
@@ -19,6 +15,11 @@ public class GithubBlog implements Blog {
 
   @Override
   public String getTitle() { return username + REPO_SUFFIX;}
+
+  @Override
+  public String getPostsFolder() {
+    return "_posts";
+  }
 
   public String getRepositoryUrl() {
     return GITHUB_DOMAIN + username + "/" + username + REPO_SUFFIX + ".git";

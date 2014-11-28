@@ -21,6 +21,11 @@ public class EmailBlog implements Blog {
   @Override
   public String getTitle() { return title;}
 
+  @Override
+  public String getPostsFolder() {
+    return POSTS_DIR;
+  }
+
   public Address getRecipient() throws AddressException {
     return new InternetAddress(recipientEmail);
   }

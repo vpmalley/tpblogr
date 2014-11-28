@@ -11,5 +11,9 @@ import javax.mail.internet.InternetAddress;
  */
 public interface Blog extends Serializable {
 
+  public static final String POSTS_DIR = "posts";
+
   String getTitle();
+
+  String getPostsFolder();
 }

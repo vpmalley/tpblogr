@@ -24,8 +24,6 @@ public class FilePostRetriever implements PostRetriever {
 
   private static final String BLOGS_DIR = "blogs";
 
-  private static final String POSTS_DIR = "posts";
-
   private static final String APP_DIR = "BlogR";
 
   private final Context context;
@@ -44,7 +42,7 @@ public class FilePostRetriever implements PostRetriever {
       List<EmailBlog> blogs = retrieveBlogs(blogsDir);
       for (EmailBlog blog : blogs) {
         File blogDir = new File(blogsDir, blog.getTitle());
-        File postDir = new File(blogDir, POSTS_DIR);
+        File postDir = new File(blogDir, blog.getPostsFolder());
         posts.addAll(retrievePosts(postDir, blog));
       }
     }

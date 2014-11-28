@@ -20,7 +20,6 @@ import blogr.vpm.fr.blogr.bean.Post;
 public class FilePostSaver implements PostSaver {
 
   public static final String BLOGS_DIR = "blogs";
-  public static final String POSTS_DIR = "posts";
   public static final String APP_DIR = "BlogR";
   private final Context context;
 
@@ -87,7 +86,7 @@ public class FilePostSaver implements PostSaver {
   private File getFileForPost(Post post) {
     File blogsDir = new File(Environment.getExternalStoragePublicDirectory(APP_DIR), BLOGS_DIR);
     File blogDir = new File(blogsDir, post.getBlog().getTitle());
-    File postDir = new File(blogDir, POSTS_DIR);
+    File postDir = new File(blogDir, post.getBlog().getPostsFolder());
     postDir.mkdirs();
     // create file if non existent
     File postFile = new File(postDir, getFileName(post));
