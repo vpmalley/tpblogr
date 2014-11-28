@@ -1,5 +1,11 @@
 package blogr.vpm.fr.blogr.bean;
 
+import android.content.Context;
+
+import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
+import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
+import blogr.vpm.fr.blogr.publish.PostPublisher;
+
 /**
  * Created by vincent on 29/08/14.
  */
@@ -19,6 +25,16 @@ public class GithubBlog implements Blog {
   @Override
   public String getPostsFolder() {
     return "_posts";
+  }
+
+  @Override
+  public PostPublisher getPublisherService(Context context) {
+    return null; // TODO: add a Publisher for Github
+  }
+
+  @Override
+  public SurroundingTagsProvider getPictureTagsProvider(Context context, String pictureUrl) {
+    return new PictureMdTagsProvider(pictureUrl);
   }
 
   public String getRepositoryUrl() {
