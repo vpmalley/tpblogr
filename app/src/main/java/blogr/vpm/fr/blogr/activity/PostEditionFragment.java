@@ -20,7 +20,7 @@ import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrJAndroidProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
-import blogr.vpm.fr.blogr.bean.Blog;
+import blogr.vpm.fr.blogr.bean.EmailBlog;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.insertion.Inserter;
@@ -49,7 +49,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
 
   private LocationProvider locationProvider;
 
-  private Blog currentBlog;
+  private EmailBlog currentBlog;
 
   private Post currentPost;
 
@@ -69,7 +69,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
     locationProvider = new PlayServicesLocationProvider(getActivity());
 
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-    currentBlog = new Blog(prefs.getString("pref_blog_name", ""), prefs.getString("pref_blog_email", ""));
+    currentBlog = new EmailBlog(prefs.getString("pref_blog_name", ""), prefs.getString("pref_blog_email", ""));
   }
 
   @Override

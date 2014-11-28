@@ -9,26 +9,7 @@ import javax.mail.internet.InternetAddress;
 /**
  * Created by vincent on 29/08/14.
  */
-public class Blog implements Serializable {
+public interface Blog extends Serializable {
 
-  private String recipientEmail;
-
-  private String title;
-
-  private String url;
-
-  public Blog(String title, String recipientEmail) {
-    this.title = title;
-    this.recipientEmail = recipientEmail;
-  }
-
-  public String getTitle() { return title;}
-
-  public Address getRecipient() throws AddressException {
-    return new InternetAddress(recipientEmail);
-  }
-
-  public String getEmailAddress() {
-    return recipientEmail;
-  }
+  String getTitle();
 }

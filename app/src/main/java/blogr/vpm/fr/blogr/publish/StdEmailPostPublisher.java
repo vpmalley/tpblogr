@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
 
-import blogr.vpm.fr.blogr.bean.Blog;
+import blogr.vpm.fr.blogr.bean.EmailBlog;
 import blogr.vpm.fr.blogr.bean.Post;
 
 /**
@@ -23,7 +23,7 @@ public class StdEmailPostPublisher implements PostPublisher {
   }
 
   @Override
-  public void publish(Blog blog, Post post) {
+  public void publish(EmailBlog blog, Post post) {
     Intent intent;
     if (!post.getPicturesAsMediaContent().isEmpty()) {
       intent = emailIntentWithAttachments(blog, post);
@@ -42,7 +42,7 @@ public class StdEmailPostPublisher implements PostPublisher {
     intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(content));
   }
 
-  private Intent emailIntentWithAttachments(Blog blog, Post post) {
+  private Intent emailIntentWithAttachments(EmailBlog blog, Post post) {
     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
     intent.putExtra(Intent.EXTRA_EMAIL, new String[]{blog.getEmailAddress()});
     intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, post.getPicturesAsFiles(context));
@@ -55,7 +55,7 @@ public class StdEmailPostPublisher implements PostPublisher {
     return intent;
   }
 
-  private Intent emailIntentWithoutAttachments(Blog blog, Post post) {
+  private Intent emailIntentWithoutAttachments(EmailBlog blog, Post post) {
     Intent intent = new Intent(Intent.ACTION_SENDTO);
 
     intent.setType("text/plain");

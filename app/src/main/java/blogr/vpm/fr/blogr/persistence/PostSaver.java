@@ -1,8 +1,5 @@
 package blogr.vpm.fr.blogr.persistence;
 
-import java.util.List;
-
-import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
 
 /**

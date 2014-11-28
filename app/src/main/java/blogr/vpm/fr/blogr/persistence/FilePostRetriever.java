@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
 
-import com.googlecode.flickrjandroid.blogs.BlogsInterface;
-
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -16,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.bean.Blog;
+import blogr.vpm.fr.blogr.bean.EmailBlog;
 import blogr.vpm.fr.blogr.bean.Post;
 
 /**
@@ -43,8 +41,8 @@ public class FilePostRetriever implements PostRetriever {
 
       File blogsDir = new File(Environment.getExternalStoragePublicDirectory(APP_DIR), BLOGS_DIR);
 
-      List<Blog> blogs = retrieveBlogs(blogsDir);
-      for (Blog blog : blogs) {
+      List<EmailBlog> blogs = retrieveBlogs(blogsDir);
+      for (EmailBlog blog : blogs) {
         File blogDir = new File(blogsDir, blog.getTitle());
         File postDir = new File(blogDir, POSTS_DIR);
         posts.addAll(retrievePosts(postDir, blog));
@@ -58,11 +56,11 @@ public class FilePostRetriever implements PostRetriever {
    * @param blogsDir the directory for the blogs
    * @return the list of blogs for this device
    */
-  private List<Blog> retrieveBlogs(File blogsDir) {
-    List<Blog> blogs = new ArrayList<Blog>();
+  private List<EmailBlog> retrieveBlogs(File blogsDir) {
+    List<EmailBlog> blogs = new ArrayList<EmailBlog>();
     if (blogsDir.exists() && blogsDir.isDirectory()) {
       for (File blogDir : blogsDir.listFiles()) {
-        blogs.add(new Blog(blogDir.getName(), ""));
+        blogs.add(new EmailBlog(blogDir.getName(), ""));
       }
     }
     return blogs;
@@ -74,7 +72,7 @@ public class FilePostRetriever implements PostRetriever {
    * @param blog the blog to list posts for
    * @return the list of posts for this blog
    */
-  private List<Post> retrievePosts(File postDir, Blog blog) {
+  private List<Post> retrievePosts(File postDir, EmailBlog blog) {
     List<Post> posts = new ArrayList<Post>();
     if (postDir.exists() && postDir.isDirectory()) {
       for (File postFile : postDir.listFiles()) {

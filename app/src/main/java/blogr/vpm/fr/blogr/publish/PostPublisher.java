@@ -1,6 +1,6 @@
 package blogr.vpm.fr.blogr.publish;
 
-import blogr.vpm.fr.blogr.bean.Blog;
+import blogr.vpm.fr.blogr.bean.EmailBlog;
 import blogr.vpm.fr.blogr.bean.Post;
 
 /**
@@ -16,7 +16,7 @@ public interface PostPublisher {
    * @param blog the blog to publish on
    * @param post the post to publish
    */
-  void publish(Blog blog, Post post);
+  void publish(EmailBlog blog, Post post);
 
   /**
    * Overrides the default formatter for this publisher
