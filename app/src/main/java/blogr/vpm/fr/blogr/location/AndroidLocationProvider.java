@@ -18,21 +18,22 @@ public class AndroidLocationProvider implements LocationProvider, LocationListen
 
   private Location lastLocation;
 
+  private Criteria locCriteria;
+
   public AndroidLocationProvider(Context context) {
     this.context = context;
+    locCriteria = new Criteria();
+    locCriteria.setAccuracy(Criteria.ACCURACY_COARSE);
+    locCriteria.setSpeedRequired(false);
+    locCriteria.setAltitudeRequired(false);
+    locCriteria.setCostAllowed(false);
+    locCriteria.setVerticalAccuracy(Criteria.ACCURACY_COARSE);
   }
 
   @Override
   public void connect() {
     LocationManager locMan = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-    Criteria locCriteria = new Criteria();
-    locCriteria.setAccuracy(Criteria.ACCURACY_MEDIUM);
-    locCriteria.setSpeedRequired(false);
-    locCriteria.setAltitudeRequired(true);
-    locCriteria.setCostAllowed(false);
-    locCriteria.setVerticalAccuracy(Criteria.ACCURACY_MEDIUM);
-
-    locMan.requestSingleUpdate(locCriteria, this, Looper.myLooper());
+    locMan.requestSingleUpdate(locCriteria, this, Looper.getMainLooper());
     Toast.makeText(context, "providers " + locMan.getProviders(locCriteria, true).toString(), Toast.LENGTH_SHORT).show();
   }
 
@@ -41,7 +42,11 @@ public class AndroidLocationProvider implements LocationProvider, LocationListen
 
     if (lastLocation == null){
       LocationManager locMan = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-      lastLocation = locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+      String provider = locMan.getBestProvider(locCriteria, true);
+      lastLocation = locMan.getLastKnownLocation(provider);
+      if (lastLocation != null) {
+        Toast.makeText(context, String.valueOf(lastLocation.getLatitude()), Toast.LENGTH_SHORT).show();
+      }
     }
     return lastLocation;
   }
