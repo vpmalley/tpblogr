@@ -12,22 +12,18 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.EmailBlog;
-import blogr.vpm.fr.blogr.bean.GithubBlog;
 
 /**
  * Created by vincent on 07/10/14.
  */
-public class BlogEditionFragment extends Fragment {
+public class EmailBlogEditionFragment extends Fragment {
 
-  public static final String BLOG_KEY = "blog";
-
-  private Blog currentBlog;
+  private EmailBlog currentBlog;
 
   private EditText emailField;
 
-  private EditText mainField;
+  private EditText titleField;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -35,21 +31,18 @@ public class BlogEditionFragment extends Fragment {
     setHasOptionsMenu(true);
 
     Bundle args = getArguments();
-    if (args.containsKey(BLOG_KEY)) {
-      currentBlog = args.getParcelable(BLOG_KEY);
+    if (args.containsKey(BlogActivity.BLOG_KEY)) {
+      currentBlog = args.getParcelable(BlogActivity.BLOG_KEY);
     }
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.fragment_blog, container, false);
-    mainField = (EditText) v.findViewById(R.id.main);
-    if (currentBlog instanceof EmailBlog) {
-      emailField = (EditText) v.findViewById(R.id.email);
-      mainField.setHint(getActivity().getString(R.string.hint_blog_name));
-    } else if (currentBlog instanceof GithubBlog) {
-      mainField.setHint(getActivity().getString(R.string.hint_github_username));
-    }
+    titleField = (EditText) v.findViewById(R.id.main);
+    titleField.setHint(getActivity().getString(R.string.hint_blog_name));
+    emailField = (EditText) v.findViewById(R.id.email);
+    emailField.setVisibility(View.VISIBLE);
     return v;
   }
 
@@ -65,13 +58,9 @@ public class BlogEditionFragment extends Fragment {
     switch (item.getItemId()) {
       case R.id.action_save:
         // save blog information
-        String title = mainField.getText().toString();
-        if (currentBlog instanceof GithubBlog) {
-          title += GithubBlog.REPO_SUFFIX;
-        } else if (currentBlog instanceof EmailBlog) {
-          String email = emailField.getText().toString();
-          ((EmailBlog) currentBlog).setRecipientEmail(email);
-        }
+        String title = titleField.getText().toString();
+        String email = emailField.getText().toString();
+        currentBlog.setRecipientEmail(email);
         currentBlog.setTitle(title);
         getActivity().finish();
         return true;

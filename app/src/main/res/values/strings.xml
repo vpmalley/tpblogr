@@ -28,6 +28,7 @@
     <string name="hint_blog_name">My Blog</string>
     <string name="hint_recipient_email">recipient : mum@domain.com</string>
     <string name="hint_github_username">Github username</string>
+    <string name="action_new_blog">New Blog</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>
