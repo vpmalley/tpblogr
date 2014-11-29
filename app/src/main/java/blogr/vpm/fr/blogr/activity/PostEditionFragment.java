@@ -25,6 +25,7 @@ import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.insertion.Inserter;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
+import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
 import blogr.vpm.fr.blogr.location.LatLongTagProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
 import blogr.vpm.fr.blogr.location.PlayServicesLocationProvider;
@@ -66,7 +67,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
     // init services
     publisherProvider = new PostPublishingPreferencesProvider();
     saver = new FilePostSaver(getActivity());
-    locationProvider = new PlayServicesLocationProvider(getActivity());
+    locationProvider = new AndroidLocationProvider(getActivity());
 
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
     currentBlog = new EmailBlog(prefs.getString("pref_blog_name", ""), prefs.getString("pref_blog_email", ""));

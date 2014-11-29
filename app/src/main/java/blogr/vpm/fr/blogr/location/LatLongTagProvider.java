@@ -26,10 +26,13 @@ public class LatLongTagProvider implements SingleTagProvider {
     StringBuilder locationBuilder = new StringBuilder();
     if (currentLocation != null) {
       locationBuilder.append(context.getResources().getString(R.string.latitude));
+      locationBuilder.append(" ");
       locationBuilder.append(currentLocation.getLatitude());
       locationBuilder.append(context.getResources().getString(R.string.longitude));
+      locationBuilder.append(" ");
       locationBuilder.append(currentLocation.getLongitude());
       locationBuilder.append(context.getResources().getString(R.string.altitude));
+      locationBuilder.append(" ");
       locationBuilder.append(currentLocation.getAltitude());
     }
     return locationBuilder.toString();
