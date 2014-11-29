@@ -1,6 +1,9 @@
 package blogr.vpm.fr.blogr.bean;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import javax.mail.Address;
 import javax.mail.internet.AddressException;
@@ -16,6 +19,8 @@ import blogr.vpm.fr.blogr.publish.StdEmailPostPublisher;
  */
 public class EmailBlog implements Blog {
 
+  private static final String TITLE_KEY = "title";
+  private static final String EMAIL_KEY = "email";
   private String recipientEmail;
 
   private String title;
@@ -50,4 +55,36 @@ public class EmailBlog implements Blog {
   public String getEmailAddress() {
     return recipientEmail;
   }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel parcel, int i) {
+    Bundle b = new Bundle();
+    b.putString(TITLE_KEY, title);
+    b.putString(EMAIL_KEY, recipientEmail);
+    parcel.writeBundle(b);
+  }
+
+  private EmailBlog(Parcel in) {
+    Bundle b = in.readBundle(Blog.class.getClassLoader());
+    // without setting the classloader, it fails on BadParcelableException : ClassNotFoundException when
+    // unmarshalling Media class
+    title = b.getString(TITLE_KEY);
+    recipientEmail = b.getString(EMAIL_KEY);
+  }
+
+  public static final Parcelable.Creator<EmailBlog> CREATOR
+          = new Parcelable.Creator<EmailBlog>() {
+    public EmailBlog createFromParcel(Parcel in) {
+      return new EmailBlog(in);
+    }
+
+    public EmailBlog[] newArray(int size) {
+      return new EmailBlog[size];
+    }
+  };
 }

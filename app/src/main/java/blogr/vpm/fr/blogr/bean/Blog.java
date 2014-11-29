@@ -1,6 +1,6 @@
 package blogr.vpm.fr.blogr.bean;
 
-import java.io.Serializable;
+import android.os.Parcelable;
 
 import blogr.vpm.fr.blogr.service.PostPublishingServiceProvider;
 
@@ -9,7 +9,7 @@ import blogr.vpm.fr.blogr.service.PostPublishingServiceProvider;
  *
  * Any kind of blog should implement these methods
  */
-public interface Blog extends Serializable, PostPublishingServiceProvider {
+public interface Blog extends Parcelable, PostPublishingServiceProvider {
 
   /**
    * The default folder to put posts in.

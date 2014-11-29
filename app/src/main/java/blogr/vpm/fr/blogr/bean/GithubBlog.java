@@ -1,6 +1,9 @@
 package blogr.vpm.fr.blogr.bean;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
@@ -13,6 +16,8 @@ public class GithubBlog implements Blog {
 
   public static final String REPO_SUFFIX = ".github.io";
   public static final String GITHUB_DOMAIN = "https://github.com/";
+  private static final String USERNAME_KEY = "username";
+
   private String username;
 
   public GithubBlog(String username) {
@@ -40,4 +45,35 @@ public class GithubBlog implements Blog {
   public String getRepositoryUrl() {
     return GITHUB_DOMAIN + username + "/" + username + REPO_SUFFIX + ".git";
   }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel parcel, int i) {
+    Bundle b = new Bundle();
+    b.putString(USERNAME_KEY, username);
+    parcel.writeBundle(b);
+  }
+
+  private GithubBlog(Parcel in) {
+    Bundle b = in.readBundle(Blog.class.getClassLoader());
+    // without setting the classloader, it fails on BadParcelableException : ClassNotFoundException when
+    // unmarshalling Media class
+    username = b.getString(USERNAME_KEY);
+  }
+
+  public static final Parcelable.Creator<GithubBlog> CREATOR
+          = new Parcelable.Creator<GithubBlog>() {
+    public GithubBlog createFromParcel(Parcel in) {
+      return new GithubBlog(in);
+    }
+
+    public GithubBlog[] newArray(int size) {
+      return new GithubBlog[size];
+    }
+  };
+
 }
