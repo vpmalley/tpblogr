@@ -25,6 +25,9 @@
     <string name="no_location_provider">No precise provider is available for the location. Please enable your GPS or your phone network.</string>
     <string name="location_in_progress">Location is getting acquired, you will be notified when available.</string>
     <string name="location_available">location available, you can now insert it.</string>
+    <string name="hint_blog_name">My Blog</string>
+    <string name="hint_recipient_email">recipient : mum@domain.com</string>
+    <string name="hint_github_username">Github username</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>

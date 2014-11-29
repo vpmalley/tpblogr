@@ -13,6 +13,8 @@ import android.widget.EditText;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Blog;
+import blogr.vpm.fr.blogr.bean.EmailBlog;
+import blogr.vpm.fr.blogr.bean.GithubBlog;
 
 /**
  * Created by vincent on 07/10/14.
@@ -25,7 +27,7 @@ public class BlogEditionFragment extends Fragment {
 
   private EditText emailField;
 
-  private EditText titleField;
+  private EditText mainField;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -41,8 +43,13 @@ public class BlogEditionFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.fragment_blog, container, false);
-    emailField = (EditText) v.findViewById(R.id.email);
-    titleField = (EditText) v.findViewById(R.id.title);
+    mainField = (EditText) v.findViewById(R.id.main);
+    if (currentBlog instanceof EmailBlog) {
+      emailField = (EditText) v.findViewById(R.id.email);
+      mainField.setHint(getActivity().getString(R.string.hint_blog_name));
+    } else if (currentBlog instanceof GithubBlog) {
+      mainField.setHint(getActivity().getString(R.string.hint_github_username));
+    }
     return v;
   }
 
@@ -58,7 +65,13 @@ public class BlogEditionFragment extends Fragment {
     switch (item.getItemId()) {
       case R.id.action_save:
         // save blog information
-        String title = titleField.getText().toString();
+        String title = mainField.getText().toString();
+        if (currentBlog instanceof GithubBlog) {
+          title += GithubBlog.REPO_SUFFIX;
+        } else if (currentBlog instanceof EmailBlog) {
+          String email = emailField.getText().toString();
+          ((EmailBlog) currentBlog).setRecipientEmail(email);
+        }
         currentBlog.setTitle(title);
         getActivity().finish();
         return true;

@@ -61,6 +61,10 @@ public class EmailBlog implements Blog {
     return recipientEmail;
   }
 
+  public void setRecipientEmail(String email) {
+    this.recipientEmail = email;
+  }
+
   @Override
   public int describeContents() {
     return 0;
