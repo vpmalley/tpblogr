@@ -28,6 +28,16 @@ public class GithubBlog implements Blog {
   public String getTitle() { return username + REPO_SUFFIX;}
 
   @Override
+  public void setTitle(String title) {
+    int suffixStart = title.indexOf(REPO_SUFFIX);
+    if (suffixStart > -1) {
+      this.username = title.substring(0, suffixStart);
+    } else {
+      this.username = title;
+    }
+  }
+
+  @Override
   public String getPostsFolder() {
     return "_posts";
   }

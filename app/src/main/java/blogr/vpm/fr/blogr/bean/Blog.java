@@ -22,6 +22,8 @@ public interface Blog extends Parcelable, PostPublishingServiceProvider {
    */
   String getTitle();
 
+  void setTitle(String title);
+
   /**
    * Where the posts are stored. Use {@link Blog#POSTS_DIR} if none specific
    * @return which folder posts are stored

@@ -34,6 +34,11 @@ public class EmailBlog implements Blog {
   public String getTitle() { return title;}
 
   @Override
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  @Override
   public String getPostsFolder() {
     return POSTS_DIR;
   }

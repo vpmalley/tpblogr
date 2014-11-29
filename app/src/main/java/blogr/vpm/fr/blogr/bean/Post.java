@@ -114,7 +114,9 @@ public class Post implements Parcelable {
     Bundle b = new Bundle();
     b.putString(TITLE_KEY, title);
     b.putString(CONTENT_KEY, content);
-    b.putString(DATE_KEY, new SimpleDateFormat(DATE_PATTERN).format(date));
+    if (date != null) {
+      b.putString(DATE_KEY, new SimpleDateFormat(DATE_PATTERN).format(date));
+    }
     b.putParcelableArrayList(PICTURES_KEY, pictures);
     b.putParcelable(BLOG_KEY, blog);
     parcel.writeBundle(b);
@@ -127,7 +129,10 @@ public class Post implements Parcelable {
     title = b.getString(TITLE_KEY);
     content = b.getString(CONTENT_KEY);
     try {
-      date = new SimpleDateFormat(DATE_PATTERN).parse(b.getString(DATE_KEY));
+      String unparsedDate = b.getString(DATE_KEY);
+      if (unparsedDate != null) {
+        date = new SimpleDateFormat(DATE_PATTERN).parse(unparsedDate);
+      }
     } catch (ParseException e) {
       date = Calendar.getInstance().getTime();
     }
