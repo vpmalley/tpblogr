@@ -2,6 +2,8 @@ package blogr.vpm.fr.blogr.bean;
 
 import android.os.Parcelable;
 
+import java.util.Properties;
+
 import blogr.vpm.fr.blogr.service.PostPublishingServiceProvider;
 
 /**
@@ -29,4 +31,14 @@ public interface Blog extends Parcelable, PostPublishingServiceProvider {
    * @return which folder posts are stored
    */
   String getPostsFolder();
+
+  public interface Storage {
+
+    public static final String TYPE_KEY = "type";
+
+    Properties marshall(Blog blog);
+
+    Blog unmarshall(Properties props);
+
+  }
 }

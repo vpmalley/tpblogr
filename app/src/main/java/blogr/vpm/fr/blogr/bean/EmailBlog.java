@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Properties;
+
 import javax.mail.Address;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -96,4 +98,24 @@ public class EmailBlog implements Blog {
       return new EmailBlog[size];
     }
   };
+
+
+  public class Storer implements Storage {
+
+    @Override
+    public Properties marshall(Blog blog) {
+      Properties props = new Properties();
+      props.setProperty(TITLE_KEY, blog.getTitle());
+      props.setProperty(EMAIL_KEY, ((EmailBlog) blog).getEmailAddress());
+      props.setProperty(TYPE_KEY, EmailBlog.class.getName());
+      return props;
+    }
+
+    @Override
+    public Blog unmarshall(Properties props) {
+      String title = props.getProperty(TITLE_KEY);
+      String email = props.getProperty(EMAIL_KEY);
+      return new EmailBlog(title, email);
+    }
+  }
 }

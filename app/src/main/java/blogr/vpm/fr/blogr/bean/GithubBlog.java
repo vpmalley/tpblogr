@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Properties;
+
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
@@ -85,5 +87,23 @@ public class GithubBlog implements Blog {
       return new GithubBlog[size];
     }
   };
+
+
+  public class Storer implements Storage {
+
+    @Override
+    public Properties marshall(Blog blog) {
+      Properties props = new Properties();
+      props.setProperty(USERNAME_KEY, blog.getTitle().replace(REPO_SUFFIX, ""));
+      props.setProperty(TYPE_KEY, GithubBlog.class.getName());
+      return props;
+    }
+
+    @Override
+    public Blog unmarshall(Properties props) {
+      String username = props.getProperty(USERNAME_KEY);
+      return new GithubBlog(username);
+    }
+  }
 
 }
