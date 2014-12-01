@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.EmailBlog;
 import blogr.vpm.fr.blogr.bean.Post;
 
@@ -39,11 +40,16 @@ public class FilePostRetriever implements PostRetriever {
 
       File blogsDir = new File(Environment.getExternalStoragePublicDirectory(APP_DIR), BLOGS_DIR);
 
-      List<EmailBlog> blogs = retrieveBlogs(blogsDir);
-      for (EmailBlog blog : blogs) {
-        File blogDir = new File(blogsDir, blog.getTitle());
-        File postDir = new File(blogDir, blog.getPostsFolder());
-        posts.addAll(retrievePosts(postDir, blog));
+      List<Blog> blogs = null;
+      try {
+        blogs = new FileBlogManager().retrieveAll();
+        for (Blog blog : blogs) {
+          File blogDir = new File(blogsDir, blog.getTitle());
+          File postDir = new File(blogDir, blog.getPostsFolder());
+          posts.addAll(retrievePosts(postDir, blog));
+        }
+      } catch (IOException e) {
+        Toast.makeText(context, context.getResources().getString(R.string.cannotgepost), Toast.LENGTH_SHORT).show();
       }
     }
     return posts;
@@ -70,7 +76,7 @@ public class FilePostRetriever implements PostRetriever {
    * @param blog the blog to list posts for
    * @return the list of posts for this blog
    */
-  private List<Post> retrievePosts(File postDir, EmailBlog blog) {
+  private List<Post> retrievePosts(File postDir, Blog blog) {
     List<Post> posts = new ArrayList<Post>();
     if (postDir.exists() && postDir.isDirectory()) {
       for (File postFile : postDir.listFiles()) {

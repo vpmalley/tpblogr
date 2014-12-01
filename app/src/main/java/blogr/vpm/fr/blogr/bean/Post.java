@@ -42,9 +42,9 @@ public class Post implements Parcelable {
 
   private final ArrayList<Uri> pictures;
 
-  private EmailBlog blog;
+  private Blog blog;
 
-  public Post(String title, String content, EmailBlog blog) {
+  public Post(String title, String content, Blog blog) {
     this.title = title;
     this.content = content;
     this.pictures = new ArrayList<Uri>();
@@ -71,7 +71,7 @@ public class Post implements Parcelable {
     return date;
   }
 
-  public EmailBlog getBlog() {
+  public Blog getBlog() {
     return blog;
   }
 

@@ -89,7 +89,7 @@ public class GithubBlog implements Blog {
   };
 
 
-  public class Storer implements Storage {
+  public static class Storer implements Storage {
 
     @Override
     public Properties marshall(Blog blog) {
