@@ -44,6 +44,7 @@ public class FileBlogManager implements BlogRetriever, BlogSaver {
     Properties blogProps = getBlogProperties(blog);
     FileOutputStream blogStream = new FileOutputStream(getBlogFile(blog));
     blogProps.store(blogStream, "updating blog metadata");
+    blogStream.close();
     return true;
   }
 
@@ -69,6 +70,7 @@ public class FileBlogManager implements BlogRetriever, BlogSaver {
     FileInputStream blogStream = new FileInputStream(blogFile);
     Properties props = new Properties();
     props.load(blogStream);
+    blogStream.close();
 
     // create blog from properties
     String type = props.getProperty(Blog.Storage.TYPE_KEY);

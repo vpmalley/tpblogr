@@ -10,9 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import java.io.IOException;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.EmailBlog;
+import blogr.vpm.fr.blogr.persistence.FileBlogManager;
 
 /**
  * Created by vincent on 07/10/14.
@@ -62,6 +66,11 @@ public class EmailBlogEditionFragment extends Fragment {
         String email = emailField.getText().toString();
         currentBlog.setRecipientEmail(email);
         currentBlog.setTitle(title);
+        try {
+          new FileBlogManager().persist(currentBlog);
+        } catch (IOException e) {
+          Toast.makeText(getActivity(), getActivity().getString(R.string.cannotsaveblog), Toast.LENGTH_SHORT).show();
+        }
         getActivity().finish();
         return true;
       case R.id.action_settings:
