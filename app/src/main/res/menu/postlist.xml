@@ -7,8 +7,28 @@
         android:showAsAction="always"
         android:icon="@drawable/ic_action_new"/>
     <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_settings"/> />
+          android:title="@string/action_settings"
+          android:orderInCategory="100"
+          android:showAsAction="ifRoom"
+          android:icon="@drawable/ic_action_settings"/>
+
+    <item android:id="@+id/action_new_blog"
+          android:title="@string/action_new_blog"
+          android:orderInCategory="80"
+          android:showAsAction="ifRoom">
+        <menu>
+            <item android:id="@+id/action_new_email_blog"
+                  android:title="@string/email_blog"
+                  android:orderInCategory="10"
+                  android:showAsAction="ifRoom"/>
+            <item android:id="@+id/action_new_tp_blog"
+                  android:title="@string/tp_blog"
+                  android:orderInCategory="20"
+                  android:showAsAction="ifRoom"/>
+            <item android:id="@+id/action_new_github_blog"
+                  android:title="@string/github_blog"
+                  android:orderInCategory="30"
+                  android:showAsAction="ifRoom"/>
+        </menu>
+    </item>
 </menu>

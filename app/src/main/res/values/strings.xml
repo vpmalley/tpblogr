@@ -29,6 +29,9 @@
     <string name="hint_recipient_email">recipient : mum@domain.com</string>
     <string name="hint_github_username">Github username</string>
     <string name="action_new_blog">New Blog</string>
+    <string name="github_blog">Github Pages</string>
+    <string name="tp_blog">Traveller\'s Point</string>
+    <string name="email_blog">Emails</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>

@@ -21,11 +21,15 @@ import blogr.vpm.fr.blogr.publish.StdEmailPostPublisher;
  */
 public class EmailBlog implements Blog {
 
-  private static final String TITLE_KEY = "title";
-  private static final String EMAIL_KEY = "email";
-  private String recipientEmail;
+  protected static final String TITLE_KEY = "title";
+  protected static final String EMAIL_KEY = "email";
 
-  private String title;
+  protected String recipientEmail;
+
+  protected String title;
+
+  protected EmailBlog(){
+  }
 
   public EmailBlog(String title, String recipientEmail) {
     this.title = title;

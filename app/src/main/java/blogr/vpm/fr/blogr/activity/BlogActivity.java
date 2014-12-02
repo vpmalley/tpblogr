@@ -9,6 +9,7 @@ import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.EmailBlog;
 import blogr.vpm.fr.blogr.bean.GithubBlog;
+import blogr.vpm.fr.blogr.bean.TPBlog;
 
 /**
  * Created by vince on 17/10/14.
@@ -36,12 +37,15 @@ public class BlogActivity extends Activity {
     }
 
     if (blog != null) {
-      if (blog instanceof EmailBlog) {
+      if (blog instanceof TPBlog) {
         blogEditionFragment = new EmailBlogEditionFragment();
-        setTitle("Email Blog");
+        setTitle(getString(R.string.tp_blog));
+      } else if (blog instanceof EmailBlog) {
+        blogEditionFragment = new EmailBlogEditionFragment();
+        setTitle(getString(R.string.email_blog));
       } else if (blog instanceof GithubBlog) {
         blogEditionFragment = new GithubBlogEditionFragment();
-        setTitle("Github Pages");
+        setTitle(getString(R.string.github_blog));
       }
       Bundle args = new Bundle();
       args.putParcelable(BLOG_KEY, blog);

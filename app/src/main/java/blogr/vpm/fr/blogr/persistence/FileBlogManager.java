@@ -13,6 +13,7 @@ import java.util.Properties;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.EmailBlog;
 import blogr.vpm.fr.blogr.bean.GithubBlog;
+import blogr.vpm.fr.blogr.bean.TPBlog;
 
 /**
  * Manages the files for the blogs
@@ -50,7 +51,9 @@ public class FileBlogManager implements BlogRetriever, BlogSaver {
 
   private Properties getBlogProperties(Blog blog) {
     Blog.Storage blogPropCreator = null;
-    if (blog instanceof EmailBlog){
+    if (blog instanceof TPBlog){
+      blogPropCreator = new TPBlog.Storer();
+    } else if (blog instanceof EmailBlog){
       blogPropCreator = new EmailBlog.Storer();
     } else if (blog instanceof GithubBlog){
       blogPropCreator = new GithubBlog.Storer();
@@ -79,6 +82,8 @@ public class FileBlogManager implements BlogRetriever, BlogSaver {
       blog = new EmailBlog.Storer().unmarshall(props);
     } else if (GithubBlog.class.getName().equals(type)) {
       blog = new GithubBlog.Storer().unmarshall(props);
+    } else if (TPBlog.class.getName().equals(type)) {
+      blog = new TPBlog.Storer().unmarshall(props);
     }
     return blog;
   }

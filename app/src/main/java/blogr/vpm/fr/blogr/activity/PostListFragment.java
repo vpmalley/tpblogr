@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.bean.EmailBlog;
+import blogr.vpm.fr.blogr.bean.GithubBlog;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.bean.TPBlog;
 import blogr.vpm.fr.blogr.persistence.FilePostRetriever;
 import blogr.vpm.fr.blogr.persistence.PostRetriever;
 
@@ -62,6 +65,21 @@ public class PostListFragment extends ListFragment implements InvalidatedModelLi
       return true;
     } else if (id == R.id.action_new) {
       postSelectionListener.onPostSelection(Post.emptyPost());
+      return true;
+    } else if (id == R.id.action_new_email_blog) {
+      Intent i = new Intent(getActivity(), BlogActivity.class);
+      i.putExtra(BlogActivity.BLOG_KEY, new EmailBlog("", ""));
+      startActivity(i);
+      return true;
+    } else if (id == R.id.action_new_tp_blog) {
+      Intent i = new Intent(getActivity(), BlogActivity.class);
+      i.putExtra(BlogActivity.BLOG_KEY, new TPBlog("", ""));
+      startActivity(i);
+      return true;
+    } else if (id == R.id.action_new_github_blog) {
+      Intent i = new Intent(getActivity(), BlogActivity.class);
+      i.putExtra(BlogActivity.BLOG_KEY, new GithubBlog(""));
+      startActivity(i);
       return true;
     }
     return super.onOptionsItemSelected(item);
