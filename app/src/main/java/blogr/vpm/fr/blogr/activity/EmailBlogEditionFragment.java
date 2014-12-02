@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.EmailBlog;
+import blogr.vpm.fr.blogr.bean.TPBlog;
 import blogr.vpm.fr.blogr.persistence.FileBlogManager;
 
 /**
@@ -45,8 +46,10 @@ public class EmailBlogEditionFragment extends Fragment {
     View v = inflater.inflate(R.layout.fragment_blog, container, false);
     titleField = (EditText) v.findViewById(R.id.main);
     titleField.setHint(getActivity().getString(R.string.hint_blog_name));
+    titleField.setText(currentBlog.getTitle());
     emailField = (EditText) v.findViewById(R.id.email);
     emailField.setVisibility(View.VISIBLE);
+    emailField.setText(currentBlog.getEmailAddress());
     return v;
   }
 
@@ -64,10 +67,14 @@ public class EmailBlogEditionFragment extends Fragment {
         // save blog information
         String title = titleField.getText().toString();
         String email = emailField.getText().toString();
-        currentBlog.setRecipientEmail(email);
-        currentBlog.setTitle(title);
+        EmailBlog newBlog = null;
+        if (currentBlog instanceof TPBlog){
+          newBlog = new TPBlog(title, email);
+        } else {
+          newBlog = new EmailBlog(title, email);
+        }
         try {
-          new FileBlogManager().persist(currentBlog);
+          new FileBlogManager().update(currentBlog, newBlog);
         } catch (IOException e) {
           Toast.makeText(getActivity(), getActivity().getString(R.string.cannotsaveblog), Toast.LENGTH_SHORT).show();
         }

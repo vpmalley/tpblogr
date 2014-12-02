@@ -49,6 +49,15 @@ public class FileBlogManager implements BlogRetriever, BlogSaver {
     return true;
   }
 
+  @Override
+  public boolean update(Blog oldBlog, Blog newBlog) throws IOException {
+    File oldBlogFile = getBlogFile(oldBlog);
+    if (oldBlogFile.exists()){
+      oldBlogFile.delete();
+    }
+    return persist(newBlog);
+  }
+
   private Properties getBlogProperties(Blog blog) {
     Blog.Storage blogPropCreator = null;
     if (blog instanceof TPBlog){

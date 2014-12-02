@@ -43,6 +43,7 @@ public class GithubBlogEditionFragment extends Fragment {
     View v = inflater.inflate(R.layout.fragment_blog, container, false);
     usernameField = (EditText) v.findViewById(R.id.main);
     usernameField.setHint(getActivity().getString(R.string.hint_github_username));
+    usernameField.setText(currentBlog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""));
     return v;
   }
 
@@ -58,14 +59,10 @@ public class GithubBlogEditionFragment extends Fragment {
     switch (item.getItemId()) {
       case R.id.action_save:
         // save blog information
-        String title = "";
         String username = usernameField.getText().toString();
-        if (!username.contains(GithubBlog.REPO_SUFFIX)) {
-          title = username + GithubBlog.REPO_SUFFIX;
-        }
-        currentBlog.setTitle(title);
+        GithubBlog newBlog = new GithubBlog(username);
         try {
-          new FileBlogManager().persist(currentBlog);
+          new FileBlogManager().update(currentBlog, newBlog);
         } catch (IOException e) {
           Toast.makeText(getActivity(), getActivity().getString(R.string.cannotsaveblog), Toast.LENGTH_SHORT).show();
         }
