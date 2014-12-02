@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
+import android.util.Log;
 
+import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.EmailBlog;
 import blogr.vpm.fr.blogr.bean.Post;
 
@@ -23,12 +25,17 @@ public class StdEmailPostPublisher implements PostPublisher {
   }
 
   @Override
-  public void publish(EmailBlog blog, Post post) {
+  public void publish(Blog blog, Post post) {
     Intent intent;
+    if (!(blog instanceof EmailBlog)) {
+      Log.e("publisher", "Cannot publish a non-email blog as an email");
+      return;
+    }
+    EmailBlog emailBlog = (EmailBlog) blog;
     if (!post.getPicturesAsMediaContent().isEmpty()) {
-      intent = emailIntentWithAttachments(blog, post);
+      intent = emailIntentWithAttachments(emailBlog, post);
     } else {
-      intent = emailIntentWithoutAttachments(blog, post);
+      intent = emailIntentWithoutAttachments(emailBlog, post);
     }
     context.startActivity(intent);
   }

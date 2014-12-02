@@ -8,12 +8,6 @@
     </header>
     <header
         android:fragment="blogr.vpm.fr.blogr.activity.PreferenceCategoryFragment"
-        android:title="@string/prefs_category_blog"
-        android:summary="@string/prefs_summ_category_blog" >
-        <extra android:name="category" android:value="blog" />
-    </header>
-    <header
-        android:fragment="blogr.vpm.fr.blogr.activity.PreferenceCategoryFragment"
         android:title="@string/prefs_category_flickr"
         android:summary="@string/prefs_summ_category_flickr" >
         <extra android:name="category" android:value="flickr" />
