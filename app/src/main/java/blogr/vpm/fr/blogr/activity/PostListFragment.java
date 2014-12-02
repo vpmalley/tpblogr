@@ -65,7 +65,11 @@ public class PostListFragment extends ListFragment implements InvalidatedModelLi
       startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
       return true;
     } else if (id == R.id.action_new) {
-      postSelectionListener.onPostSelection(Post.emptyPost());
+      DialogFragment pickBlogFragment = new BlogListDialogFragment();
+      Bundle args = new Bundle();
+      args.putInt(BlogListDialogFragment.REQUEST_CODE, PostListActivity.NEW_POST_REQ);
+      pickBlogFragment.setArguments(args);
+      pickBlogFragment.show(getFragmentManager(), "blogPicker");
       return true;
     } else if (id == R.id.action_new_email_blog) {
       Intent i = new Intent(getActivity(), BlogActivity.class);
@@ -84,6 +88,9 @@ public class PostListFragment extends ListFragment implements InvalidatedModelLi
       return true;
     } else if (id == R.id.action_manage_blog) {
       DialogFragment pickBlogFragment = new BlogListDialogFragment();
+      Bundle args = new Bundle();
+      args.putInt(BlogListDialogFragment.REQUEST_CODE, PostListActivity.NEW_BLOG_REQ);
+      pickBlogFragment.setArguments(args);
       pickBlogFragment.show(getFragmentManager(), "blogPicker");
       return true;
     }

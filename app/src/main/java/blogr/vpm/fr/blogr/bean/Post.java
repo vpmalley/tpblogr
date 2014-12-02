@@ -75,8 +75,8 @@ public class Post implements Parcelable {
     return blog;
   }
 
-  public static Post emptyPost() {
-    return new Post("", "", new EmailBlog("noblog", ""));
+  public static Post emptyPost(Blog blog) {
+    return new Post("", "", blog);
   }
 
   public void addPicture(Uri pictureUri) {
