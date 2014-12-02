@@ -32,6 +32,8 @@
     <string name="github_blog">Github Pages</string>
     <string name="tp_blog">Traveller\'s Point</string>
     <string name="email_blog">Emails</string>
+    <string name="action_manage_blog">Manage blog</string>
+    <string name="pick_blog">Pick a blog</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>

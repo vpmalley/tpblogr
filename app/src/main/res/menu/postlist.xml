@@ -1,20 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".PostActivity" >
-    <item android:id="@+id/action_new"
-        android:title="@string/action_new"
-        android:orderInCategory="90"
-        android:showAsAction="always"
-        android:icon="@drawable/ic_action_new"/>
-    <item android:id="@+id/action_settings"
-          android:title="@string/action_settings"
-          android:orderInCategory="100"
-          android:showAsAction="ifRoom"
-          android:icon="@drawable/ic_action_settings"/>
-
     <item android:id="@+id/action_new_blog"
           android:title="@string/action_new_blog"
-          android:orderInCategory="80"
+          android:orderInCategory="70"
           android:showAsAction="ifRoom">
         <menu>
             <item android:id="@+id/action_new_email_blog"
@@ -31,4 +20,21 @@
                   android:showAsAction="ifRoom"/>
         </menu>
     </item>
+    <item android:id="@+id/action_new"
+        android:title="@string/action_new"
+        android:orderInCategory="80"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_new"/>
+    <item android:id="@+id/action_manage_blog"
+          android:title="@string/action_manage_blog"
+          android:orderInCategory="90"
+          android:showAsAction="ifRoom"
+          android:icon="@android:drawable/ic_menu_manage" >
+    </item>
+    <item android:id="@+id/action_settings"
+          android:title="@string/action_settings"
+          android:orderInCategory="100"
+          android:showAsAction="ifRoom"
+          android:icon="@drawable/ic_action_settings"/>
+
 </menu>

@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.activity;
 
+import android.app.DialogFragment;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -80,6 +81,10 @@ public class PostListFragment extends ListFragment implements InvalidatedModelLi
       Intent i = new Intent(getActivity(), BlogActivity.class);
       i.putExtra(BlogActivity.BLOG_KEY, new GithubBlog(""));
       startActivity(i);
+      return true;
+    } else if (id == R.id.action_manage_blog) {
+      DialogFragment pickBlogFragment = new BlogListDialogFragment();
+      pickBlogFragment.show(getFragmentManager(), "blogPicker");
       return true;
     }
     return super.onOptionsItemSelected(item);

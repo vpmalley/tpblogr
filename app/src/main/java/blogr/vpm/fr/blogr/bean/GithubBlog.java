@@ -59,6 +59,11 @@ public class GithubBlog implements Blog {
   }
 
   @Override
+  public String toString() {
+    return getTitle();
+  }
+
+  @Override
   public int describeContents() {
     return 0;
   }
