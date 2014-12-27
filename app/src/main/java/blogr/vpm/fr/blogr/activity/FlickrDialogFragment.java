@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.picture.AsyncPictureLoader;
 import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
+import blogr.vpm.fr.blogr.picture.AsyncPictureLoader;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
