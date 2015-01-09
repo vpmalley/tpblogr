@@ -116,15 +116,6 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
   }
 
   @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    super.onPrepareOptionsMenu(menu);
-    MenuItem align = menu.findItem(R.id.action_align);
-    if (!(currentBlog instanceof TPBlog)) {
-      align.setVisible(false);
-    }
-  }
-
-  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
 
     Inserter tagsInserter = new DefaultInserter(getActivity());
