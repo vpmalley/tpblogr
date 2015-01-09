@@ -22,6 +22,10 @@ import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.bean.TPBlog;
+import blogr.vpm.fr.blogr.format.AlignCenterTagsProvider;
+import blogr.vpm.fr.blogr.format.AlignLeftTagsProvider;
+import blogr.vpm.fr.blogr.format.AlignRightTagsProvider;
 import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.insertion.Inserter;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
@@ -112,8 +116,18 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
   }
 
   @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    super.onPrepareOptionsMenu(menu);
+    MenuItem align = menu.findItem(R.id.action_align);
+    if (!(currentBlog instanceof TPBlog)) {
+      align.setVisible(false);
+    }
+  }
+
+  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
 
+    Inserter tagsInserter = new DefaultInserter(getActivity());
     switch (item.getItemId()) {
       case R.id.action_settings:
         startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
@@ -124,8 +138,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
         publisher.publish(currentBlog, currentPost);
         return true;
       case R.id.action_insert_location:
-        Inserter locationInserter = new DefaultInserter(getActivity());
-        locationInserter.insert(contentField, new LatLongTagProvider(getActivity(), locationProvider));
+        tagsInserter.insert(contentField, new LatLongTagProvider(getActivity(), locationProvider));
         return true;
       case R.id.action_insert_picture:
         Intent i = new Intent(Intent.ACTION_PICK);
@@ -139,6 +152,15 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
         String flickrUsername = prefs.getString("pref_flickr_username", "");
         int picNb = Integer.valueOf(prefs.getString("pref_flickr_number_pics", "20"));
         flickrP.getUserPhotos(flickrUsername, picNb);
+        return true;
+      case R.id.action_align_left:
+        tagsInserter.insert(contentField, new AlignLeftTagsProvider());
+        return true;
+      case R.id.action_align_center:
+        tagsInserter.insert(contentField, new AlignCenterTagsProvider());
+        return true;
+      case R.id.action_align_right:
+        tagsInserter.insert(contentField, new AlignRightTagsProvider());
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -174,6 +196,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
     currentPost = post;
     currentBlog = post.getBlog();
     refreshViewFromPost();
+    getActivity().invalidateOptionsMenu();
   }
 
   /**

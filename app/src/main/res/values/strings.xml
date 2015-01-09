@@ -34,6 +34,10 @@
     <string name="email_blog">Emails</string>
     <string name="action_manage_blog">Manage blog</string>
     <string name="pick_blog">Pick a blog</string>
+    <string name="action_align">Align</string>
+    <string name="action_align_left">Left</string>
+    <string name="action_align_center">Center</string>
+    <string name="action_align_right">Right</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>

@@ -26,6 +26,25 @@
                 android:showAsAction="ifRoom"/>
         </menu>
     </item>
+    <item android:id="@+id/action_align"
+          android:title="@string/action_align"
+          android:orderInCategory="90"
+          android:showAsAction="ifRoom">
+        <menu>
+            <item android:id="@+id/action_align_left"
+                  android:title="@string/action_align_left"
+                  android:orderInCategory="10"
+                  android:showAsAction="ifRoom"/>
+            <item android:id="@+id/action_align_center"
+                  android:title="@string/action_align_center"
+                  android:orderInCategory="20"
+                  android:showAsAction="ifRoom"/>
+            <item android:id="@+id/action_align_right"
+                  android:title="@string/action_align_right"
+                  android:orderInCategory="30"
+                  android:showAsAction="ifRoom"/>
+        </menu>
+    </item>
     <item android:id="@+id/action_publish"
         android:title="@string/action_publish"
         android:orderInCategory="90"
