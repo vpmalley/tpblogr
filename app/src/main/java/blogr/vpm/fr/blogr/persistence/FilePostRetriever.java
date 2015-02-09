@@ -23,10 +23,6 @@ import blogr.vpm.fr.blogr.bean.Post;
  */
 public class FilePostRetriever implements PostRetriever {
 
-  private static final String BLOGS_DIR = "blogs";
-
-  private static final String APP_DIR = "BlogR";
-
   private final Context context;
 
   public FilePostRetriever(Context context) {
@@ -38,7 +34,7 @@ public class FilePostRetriever implements PostRetriever {
     List<Post> posts = new ArrayList<Post>();
     if (isExternalStorageReadable()) {
 
-      File blogsDir = new File(Environment.getExternalStoragePublicDirectory(APP_DIR), BLOGS_DIR);
+      File blogsDir = new FileBlogManager().getBlogsDir();
 
       List<Blog> blogs = null;
       try {

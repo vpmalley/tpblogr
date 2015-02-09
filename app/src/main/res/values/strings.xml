@@ -38,6 +38,8 @@
     <string name="action_align_left">Left</string>
     <string name="action_align_center">Center</string>
     <string name="action_align_right">Right</string>
+    <string name="not_connected">Your device does not seem connected to the Internet</string>
+    <string name="disabled_download">Connection to the server is currently disabled. Please enable it in the settings and try again</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>

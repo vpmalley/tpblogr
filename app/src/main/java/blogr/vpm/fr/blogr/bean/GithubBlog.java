@@ -41,7 +41,7 @@ public class GithubBlog implements Blog {
 
   @Override
   public String getPostsFolder() {
-    return "_posts";
+    return "_drafts";
   }
 
   @Override
@@ -92,7 +92,6 @@ public class GithubBlog implements Blog {
       return new GithubBlog[size];
     }
   };
-
 
   public static class Storer implements Storage {
 

@@ -116,7 +116,7 @@ public class FileBlogManager implements BlogRetriever, BlogSaver {
    * Determines (and create if non-existent) the directory file where blog metadata files are
    * @return an existing file and directory
    */
-  private File getBlogsDir() {
+  public File getBlogsDir() {
     File blogsDir = new File(Environment.getExternalStoragePublicDirectory(APP_DIR), BLOGS_DIR);
     blogsDir.mkdirs();
     return blogsDir;

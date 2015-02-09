@@ -22,7 +22,6 @@ import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
-import blogr.vpm.fr.blogr.bean.TPBlog;
 import blogr.vpm.fr.blogr.format.AlignCenterTagsProvider;
 import blogr.vpm.fr.blogr.format.AlignLeftTagsProvider;
 import blogr.vpm.fr.blogr.format.AlignRightTagsProvider;
