@@ -41,6 +41,11 @@ public class FileBlogManager implements BlogRetriever, BlogSaver {
   }
 
   @Override
+  public boolean exists(Blog blog) throws IOException {
+    return getBlogFile(blog).exists();
+  }
+
+  @Override
   public boolean persist(Blog blog) throws IOException {
     Properties blogProps = getBlogProperties(blog);
     FileOutputStream blogStream = new FileOutputStream(getBlogFile(blog));

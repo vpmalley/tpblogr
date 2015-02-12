@@ -123,7 +123,9 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
         startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
         return true;
       case R.id.action_publish:
-        PostPublisher publisher = publisherProvider.getPublisherService(getActivity());
+        refreshPostFromView();
+        saveCurrentPost();
+        PostPublisher publisher = currentBlog.getPublisherService(getActivity());
         refreshPostFromView();
         publisher.publish(currentBlog, currentPost);
         return true;

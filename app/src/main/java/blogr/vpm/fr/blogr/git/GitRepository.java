@@ -11,11 +11,12 @@ import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.IOException;
 
 import blogr.vpm.fr.blogr.bean.GithubBlog;
-import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.persistence.FileManager;
 
 /**
@@ -44,6 +45,14 @@ public class GitRepository implements GitInteraction {
       Log.w("git", "Issue cloning " + blog.getRepositoryUrl() + " due to " + e.toString());
       result = false;
     }
+    StoredConfig config = git.getRepository().getConfig();
+    config.setString("user", null, "name", "vpmalley");
+    config.setString("user", null, "email", "vpmalley@gmail.com");
+    try {
+      config.save();
+    } catch (IOException e) {
+      Log.w("git", "Could not save user config");
+    }
     return result;
   }
 
@@ -66,16 +75,16 @@ public class GitRepository implements GitInteraction {
   }
 
   @Override
-  public boolean add(GithubBlog blog, Post post, Context context) {
+  public boolean add(GithubBlog blog, String postPath, Context context) {
     boolean result = true;
     if (git == null) {
       initGit(blog);
     }
-    AddCommand add = git.add().addFilepattern(new FileManager().getFileForPost(context, post).getAbsolutePath());
+    AddCommand add = git.add().addFilepattern(postPath);
     try {
       add.call();
     } catch (GitAPIException e) {
-      Log.w("git", "Issue adding " + blog.getRepositoryUrl() + " due to " + e.toString());
+      Log.w("git", "Issue adding " + postPath + " due to " + e.toString());
       result = false;
     }
     return result;
@@ -104,6 +113,7 @@ public class GitRepository implements GitInteraction {
       initGit(blog);
     }
     PushCommand push = git.push();
+    push.setCredentialsProvider(new UsernamePasswordCredentialsProvider(blog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""), "password"));
     try {
       push.call();
     } catch (GitAPIException e) {

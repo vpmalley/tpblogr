@@ -66,6 +66,7 @@ public class GithubBlogEditionFragment extends Fragment {
         } catch (IOException e) {
           Toast.makeText(getActivity(), getActivity().getString(R.string.cannotsaveblog), Toast.LENGTH_SHORT).show();
         }
+        newBlog.cloneRepository(getActivity());
         getActivity().finish();
         return true;
       case R.id.action_settings:

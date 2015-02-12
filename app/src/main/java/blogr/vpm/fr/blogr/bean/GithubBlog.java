@@ -1,14 +1,22 @@
 package blogr.vpm.fr.blogr.bean;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.Properties;
 
+import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.git.AsyncGithubBlogCloner;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
+import blogr.vpm.fr.blogr.persistence.FileBlogManager;
 import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
+import blogr.vpm.fr.blogr.publish.GithubPublisher;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 
 /**
@@ -46,7 +54,7 @@ public class GithubBlog implements Blog {
 
   @Override
   public PostPublisher getPublisherService(Context context) {
-    return null; // TODO: add a Publisher for Github
+    return new GithubPublisher(context);
   }
 
   @Override
@@ -56,6 +64,25 @@ public class GithubBlog implements Blog {
 
   public String getRepositoryUrl() {
     return GITHUB_DOMAIN + username + "/" + username + REPO_SUFFIX + ".git";
+  }
+
+  /**
+   * Clones the repository associated with the github account.
+   * The Github Pages repository should be created before.
+   * This is to be done when creating the blog
+   */
+  public void cloneRepository(Context context){
+    boolean exists = false;
+    try {
+      exists = new FileBlogManager().exists(this);
+    } catch (IOException e) {
+      Log.w("blog", "Could not access the blog metadata");
+    }
+      if (exists) {
+        Toast.makeText(context, context.getString(R.string.blog_already_exists), Toast.LENGTH_SHORT).show();
+      } else {
+        new AsyncGithubBlogCloner(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
+      }
   }
 
   @Override
