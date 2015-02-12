@@ -17,11 +17,14 @@ public class AsyncGithubBlogCommitter extends AsyncTask<GithubBlog, Integer, Boo
 
   private final String message;
 
+  private final AsyncGithubBlogPusher nextTask;
+
   private GithubBlog[] blogs;
 
-  public AsyncGithubBlogCommitter(Context context, String message) {
+  public AsyncGithubBlogCommitter(Context context, String message, AsyncGithubBlogPusher nextTask) {
     this.context = context;
     this.message = message;
+    this.nextTask = nextTask;
   }
 
   @Override
@@ -44,7 +47,8 @@ public class AsyncGithubBlogCommitter extends AsyncTask<GithubBlog, Integer, Boo
   protected void onPostExecute(Boolean result) {
     if (result) {
       for (GithubBlog blog : blogs) {
-        new AsyncGithubBlogPusher(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
+        nextTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
+        //new AsyncGithubBlogPusher(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
       }
     }
   }

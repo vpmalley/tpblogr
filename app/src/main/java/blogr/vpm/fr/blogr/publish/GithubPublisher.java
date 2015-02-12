@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.publish;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -7,10 +8,12 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import blogr.vpm.fr.blogr.activity.GithubPublicationDialogFragment;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.GithubBlog;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.git.AsyncGithubBlogCommitter;
+import blogr.vpm.fr.blogr.git.AsyncGithubBlogPusher;
 import blogr.vpm.fr.blogr.git.GitInteraction;
 import blogr.vpm.fr.blogr.git.GitRepository;
 import blogr.vpm.fr.blogr.persistence.FileBlogManager;
@@ -24,12 +27,33 @@ public class GithubPublisher implements PostPublisher {
   private final Context context;
   private static final String PUBLISHED_POSTS_DIR = "_posts";;
 
+  private Blog blog;
+
+  private Post post;
+
   public GithubPublisher(Context context) {
     this.context = context;
   }
 
   @Override
   public void publish(Blog blog, Post post) {
+    this.blog = blog;
+    this.post = post;
+    GithubPublicationDialogFragment fragment = GithubPublicationDialogFragment.newInstance(this, blog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""));
+    fragment.show(((Activity)context).getFragmentManager(), "credentialInput"); // try to remove this ugly cast
+  }
+
+  @Override
+  public void setFormatter(Formatter formatter) {
+    // do nothing
+  }
+
+  /**
+   * Publishes once the dialog asking for username and password is dismissed.
+   * @param username
+   * @param password
+   */
+  public void publish(String username, String password) {
     // move draft to posts with right name
     File newFileForPost = getFileForPost(post);
     boolean result = new FileManager().getFileForPost(context, post).renameTo(newFileForPost);
@@ -41,15 +65,10 @@ public class GithubPublisher implements PostPublisher {
       result = gitClient.add(githubBlog, PUBLISHED_POSTS_DIR + "/" + getFileName(post), context);
     }
     if (result) {
-      new AsyncGithubBlogCommitter(context, "published " + post.getTitle()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
+      AsyncGithubBlogPusher pusher = new AsyncGithubBlogPusher(context, username, password);
+      new AsyncGithubBlogCommitter(context, "published " + post.getTitle(), pusher).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
     }
   }
-
-  @Override
-  public void setFormatter(Formatter formatter) {
-    // do nothing
-  }
-
 
   /**
    * Returns the file (maybe non-existent) for the post

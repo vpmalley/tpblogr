@@ -20,6 +20,6 @@ public interface GitInteraction {
 
   boolean commit(GithubBlog blog, String message);
 
-  boolean push(GithubBlog blog);
+  boolean push(GithubBlog blog, String username, String password);
 
 }

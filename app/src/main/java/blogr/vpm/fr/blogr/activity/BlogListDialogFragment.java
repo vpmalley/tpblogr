@@ -21,7 +21,6 @@ import blogr.vpm.fr.blogr.persistence.FileBlogManager;
  */
 public class BlogListDialogFragment extends DialogFragment {
 
-  public static final String ARG_PICS = "flickrPics";
   public static final String REQUEST_CODE = "request_code";
 
   private int requestCode;

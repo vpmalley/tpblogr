@@ -107,13 +107,13 @@ public class GitRepository implements GitInteraction {
   }
 
   @Override
-  public boolean push(GithubBlog blog) {
+  public boolean push(GithubBlog blog, String username, String password) {
     boolean result = true;
     if (git == null) {
       initGit(blog);
     }
     PushCommand push = git.push();
-    push.setCredentialsProvider(new UsernamePasswordCredentialsProvider(blog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""), "password"));
+    push.setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password));
     try {
       push.call();
     } catch (GitAPIException e) {

@@ -42,6 +42,7 @@
     <string name="disabled_download">Connection to the server is currently disabled. Please enable it in the settings and try again</string>
     <string name="toast_cannot_clone">The git repository for your Github Pages blog could not be retrieved. Please make sure you have created an account on github.com and try again</string>
     <string name="blog_already_exists">This blog already exists</string>
+    <string name="git_credentials">Git credentials :</string>
 
     <item name="activity_newpost_title" type="id">New Post</item>
 </resources>
