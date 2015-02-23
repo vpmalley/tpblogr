@@ -61,12 +61,12 @@ public class GithubBlogEditionFragment extends Fragment {
         // save blog information
         String username = usernameField.getText().toString();
         GithubBlog newBlog = new GithubBlog(username);
+        newBlog.cloneRepository(getActivity());
         try {
           new FileBlogManager().update(currentBlog, newBlog);
         } catch (IOException e) {
           Toast.makeText(getActivity(), getActivity().getString(R.string.cannotsaveblog), Toast.LENGTH_SHORT).show();
         }
-        newBlog.cloneRepository(getActivity());
         getActivity().finish();
         return true;
       case R.id.action_settings:

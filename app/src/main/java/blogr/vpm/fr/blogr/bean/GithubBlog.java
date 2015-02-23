@@ -78,11 +78,11 @@ public class GithubBlog implements Blog {
     } catch (IOException e) {
       Log.w("blog", "Could not access the blog metadata");
     }
-      if (exists) {
-        Toast.makeText(context, context.getString(R.string.blog_already_exists), Toast.LENGTH_SHORT).show();
-      } else {
-        new AsyncGithubBlogCloner(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
-      }
+    if (exists) {
+      Toast.makeText(context, context.getString(R.string.blog_already_exists), Toast.LENGTH_SHORT).show();
+    } else {
+      new AsyncGithubBlogCloner(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
+    }
   }
 
   @Override

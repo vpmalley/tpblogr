@@ -103,7 +103,7 @@ public class FileBlogManager implements BlogRetriever, BlogSaver {
   }
 
   /**
-   * Determines (and create is non-existent) the file for a blog (a text file "<BlogTitle>.properties" in the blogs directory)
+   * Determines the file for a blog (a text file "<BlogTitle>.properties" in the blogs directory)
    * @param blog the blog to get the file for
    * @return a property file to store metadata
    * @throws IOException if there is any issue related to I/O
@@ -111,9 +111,6 @@ public class FileBlogManager implements BlogRetriever, BlogSaver {
   private File getBlogFile(Blog blog) throws IOException {
     File blogsDir = getBlogsDir();
     File blogMetadataFile = new File(blogsDir, blog.getTitle() + EXT_PROPS);
-    if (!blogMetadataFile.exists()){
-      blogMetadataFile.createNewFile();
-    }
     return blogMetadataFile;
   }
 
