@@ -2,6 +2,7 @@ package blogr.vpm.fr.blogr.git;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import blogr.vpm.fr.blogr.bean.GithubBlog;
 import blogr.vpm.fr.blogr.network.DefaultNetworkChecker;
@@ -45,6 +46,7 @@ public class AsyncGithubBlogCommitter extends AsyncTask<GithubBlog, Integer, Boo
   // for now we commit only just before pushing. Move this if commits without pushes are allowed
   @Override
   protected void onPostExecute(Boolean result) {
+    Log.d("committer", "success : " + result);
     if (result) {
       for (GithubBlog blog : blogs) {
         nextTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);

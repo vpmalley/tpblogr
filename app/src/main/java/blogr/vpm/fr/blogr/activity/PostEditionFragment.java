@@ -173,7 +173,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
 
   @Override
   public void onPicturePicked(String picUrl) {
-    SurroundingTagsProvider pictureTagProvider = publisherProvider.getPictureTagsProvider(getActivity(), picUrl);
+    SurroundingTagsProvider pictureTagProvider = currentBlog.getPictureTagsProvider(getActivity(), picUrl);
     String updatedPostContent = new DefaultInserter(getActivity()).insert(contentField, pictureTagProvider);
     // the currentPost must be updated because this may be called before onResume
     currentPost.setContent(updatedPostContent);

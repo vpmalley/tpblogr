@@ -12,6 +12,7 @@ import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.IOException;
@@ -66,6 +67,7 @@ public class GitRepository implements GitInteraction {
     PullResult pullResult = null;
     try {
       pullResult = pull.call();
+      Log.d("pull", "success : " + pullResult.isSuccessful());
       result = pullResult.isSuccessful();
     } catch (GitAPIException e) {
       Log.w("git", "Issue pulling " + blog.getRepositoryUrl() + " due to " + e.toString());
@@ -115,11 +117,15 @@ public class GitRepository implements GitInteraction {
     PushCommand push = git.push();
     push.setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password));
     try {
-      push.call();
+      Iterable<PushResult> results = push.call();
+      for (PushResult pr : results) {
+        Log.d("push", pr.getMessages());
+      }
     } catch (GitAPIException e) {
       Log.w("git", "Issue pushing to " + blog.getRepositoryUrl() + " due to " + e.toString());
       result = false;
     }
+    Log.d("push", "success : " + result);
     return result;
   }
 }

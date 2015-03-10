@@ -13,6 +13,7 @@ import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.GithubBlog;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.git.AsyncGithubBlogCommitter;
+import blogr.vpm.fr.blogr.git.AsyncGithubBlogPuller;
 import blogr.vpm.fr.blogr.git.AsyncGithubBlogPusher;
 import blogr.vpm.fr.blogr.git.GitInteraction;
 import blogr.vpm.fr.blogr.git.GitRepository;
@@ -39,6 +40,9 @@ public class GithubPublisher implements PostPublisher {
   public void publish(Blog blog, Post post) {
     this.blog = blog;
     this.post = post;
+
+    new AsyncGithubBlogPuller(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
+
     GithubPublicationDialogFragment fragment = GithubPublicationDialogFragment.newInstance(this, blog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""));
     fragment.show(((Activity)context).getFragmentManager(), "credentialInput"); // try to remove this ugly cast
   }
@@ -54,6 +58,7 @@ public class GithubPublisher implements PostPublisher {
    * @param password
    */
   public void publish(String username, String password) {
+
     // move draft to posts with right name
     File newFileForPost = getFileForPost(post);
     boolean result = new FileManager().getFileForPost(context, post).renameTo(newFileForPost);
