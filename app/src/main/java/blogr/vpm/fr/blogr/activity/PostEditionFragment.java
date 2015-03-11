@@ -21,7 +21,9 @@ import blogr.vpm.fr.blogr.apis.flickr.FlickrJAndroidProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
 import blogr.vpm.fr.blogr.bean.Blog;
+import blogr.vpm.fr.blogr.bean.GithubBlog;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.bean.PostMetadata;
 import blogr.vpm.fr.blogr.format.AlignCenterTagsProvider;
 import blogr.vpm.fr.blogr.format.AlignLeftTagsProvider;
 import blogr.vpm.fr.blogr.format.AlignRightTagsProvider;
@@ -31,6 +33,7 @@ import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
 import blogr.vpm.fr.blogr.location.LatLongTagProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
+import blogr.vpm.fr.blogr.metadata.YamlMetadataProvider;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
@@ -123,10 +126,13 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
         startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
         return true;
       case R.id.action_publish:
+        if (currentBlog.hasMetadataProvider()) {
+          tagsInserter.insert(contentField, currentBlog.getMetadataProvider(currentPost));
+        }
+        // new YamlMetadataProvider(new PostMetadata(currentPost, "ladate", "leresume"))
         refreshPostFromView();
         saveCurrentPost();
         PostPublisher publisher = currentBlog.getPublisherService(getActivity());
-        refreshPostFromView();
         publisher.publish(currentBlog, currentPost);
         return true;
       case R.id.action_insert_location:

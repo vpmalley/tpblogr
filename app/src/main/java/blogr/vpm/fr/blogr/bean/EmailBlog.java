@@ -11,6 +11,7 @@ import javax.mail.Address;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
@@ -57,6 +58,16 @@ public class EmailBlog implements Blog {
   @Override
   public SurroundingTagsProvider getPictureTagsProvider(Context context, String pictureUrl) {
     return new PictureMdTagsProvider(pictureUrl);
+  }
+
+  @Override
+  public boolean hasMetadataProvider() {
+    return false;
+  }
+
+  @Override
+  public SingleTagProvider getMetadataProvider(Post post) {
+    throw new UnsupportedOperationException();
   }
 
   public Address getRecipient() throws AddressException {

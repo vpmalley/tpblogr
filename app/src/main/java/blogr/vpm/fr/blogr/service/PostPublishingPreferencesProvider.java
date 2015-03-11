@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
 import blogr.vpm.fr.blogr.picture.PictureTpTagsProvider;
@@ -53,6 +55,16 @@ public class PostPublishingPreferencesProvider implements PostPublishingServiceP
       throw new IllegalStateException("Unexpected publication service specified");
     }
     return serviceInstance;
+  }
+
+  @Override
+  public boolean hasMetadataProvider() {
+    return false;
+  }
+
+  @Override
+  public SingleTagProvider getMetadataProvider(Post post) {
+    throw new UnsupportedOperationException();
   }
 
   /**
