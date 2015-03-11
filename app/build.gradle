@@ -40,7 +40,7 @@ dependencies {
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '3.6.2.201501210735-r'
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit-parent', version: '3.6.2.201501210735-r'
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit.http.apache', version: '3.6.2.201501210735-r'
-
+    compile group: 'com.esotericsoftware.yamlbeans', name: 'yamlbeans', version: '1.09'
 }
 
 apply plugin: "android-unit-test"

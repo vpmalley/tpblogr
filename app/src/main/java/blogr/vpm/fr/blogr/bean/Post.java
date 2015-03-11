@@ -9,11 +9,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by vincent on 29/08/14.
@@ -26,8 +22,6 @@ public class Post implements Parcelable {
 
   private static final String CONTENT_KEY = "content";
 
-  private static final String DATE_KEY = "date";
-
   private static final String PICTURES_KEY = "pictures";
 
   private static final String BLOG_KEY = "blog";
@@ -37,8 +31,6 @@ public class Post implements Parcelable {
   private String title;
 
   private String content;
-
-  private Date date;
 
   private final ArrayList<Uri> pictures;
 
@@ -65,10 +57,6 @@ public class Post implements Parcelable {
 
   public void setContent(String content) {
     this.content = content;
-  }
-
-  public Date getDate() {
-    return date;
   }
 
   public Blog getBlog() {
@@ -114,9 +102,6 @@ public class Post implements Parcelable {
     Bundle b = new Bundle();
     b.putString(TITLE_KEY, title);
     b.putString(CONTENT_KEY, content);
-    if (date != null) {
-      b.putString(DATE_KEY, new SimpleDateFormat(DATE_PATTERN).format(date));
-    }
     b.putParcelableArrayList(PICTURES_KEY, pictures);
     b.putParcelable(BLOG_KEY, blog);
     parcel.writeBundle(b);
@@ -128,14 +113,6 @@ public class Post implements Parcelable {
     // unmarshalling Media class
     title = b.getString(TITLE_KEY);
     content = b.getString(CONTENT_KEY);
-    try {
-      String unparsedDate = b.getString(DATE_KEY);
-      if (unparsedDate != null) {
-        date = new SimpleDateFormat(DATE_PATTERN).parse(unparsedDate);
-      }
-    } catch (ParseException e) {
-      date = Calendar.getInstance().getTime();
-    }
     pictures = b.getParcelableArrayList(PICTURES_KEY);
     blog = b.getParcelable(BLOG_KEY);
   }
