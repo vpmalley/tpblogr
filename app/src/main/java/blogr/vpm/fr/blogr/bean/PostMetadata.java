@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by vince on 10/03/15.
@@ -20,7 +21,7 @@ public class PostMetadata implements Parcelable{
 
   private static final String DATE_PATTERN = "yyyy-MM-dd-HH:mm:ss-ZZZ";
 
-  public String postTitle;
+  public String title;
 
   public String travelDate;
 
@@ -28,8 +29,7 @@ public class PostMetadata implements Parcelable{
 
   public ArrayList<String> tags;
 
-  public HashMap<String, Parcelable> otherData;
-
+  private HashMap<String, Parcelable> otherData;
 
   public PostMetadata() {
     this.tags = new ArrayList<>();
@@ -37,11 +37,19 @@ public class PostMetadata implements Parcelable{
   }
 
   public PostMetadata(Post post, String travelDate, String excerpt) {
-    this.postTitle = post.getTitle();
+    this.title = post.getTitle();
     this.travelDate = travelDate;
     this.excerpt = excerpt;
     this.tags = new ArrayList<>();
     this.otherData = new HashMap<>();
+  }
+
+  public PostMetadata(Map<String, Parcelable> md) {
+    this.title = String.valueOf(md.get(TITLE_KEY));
+    this.travelDate = String.valueOf(md.get(TRAVEL_DATE_KEY));
+    this.excerpt = String.valueOf(md.get(EXCERPT_KEY));
+    this.tags = (ArrayList<String>) md.get(TAGS_KEY);
+    this.otherData = new HashMap<>(md);
   }
 
   public void addTag(String tag) {
@@ -52,6 +60,18 @@ public class PostMetadata implements Parcelable{
     otherData.put(key, value);
   }
 
+  public HashMap<String, ?> getAsMap() {
+    HashMap<String, Object> allMD = new HashMap<>();
+    allMD.putAll(otherData);
+    allMD.put(TITLE_KEY, title);
+    allMD.put(TRAVEL_DATE_KEY, travelDate);
+    allMD.put(EXCERPT_KEY, excerpt);
+    if (!tags.isEmpty()) {
+      allMD.put(TAGS_KEY, tags);
+    }
+    return allMD;
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -60,7 +80,7 @@ public class PostMetadata implements Parcelable{
   @Override
   public void writeToParcel(Parcel parcel, int i) {
     Bundle b = new Bundle();
-    b.putString(TITLE_KEY, postTitle);
+    b.putString(TITLE_KEY, title);
     b.putString(TRAVEL_DATE_KEY, travelDate);
     b.putString(EXCERPT_KEY, excerpt);
     b.putStringArrayList(TAGS_KEY, tags);
@@ -72,7 +92,7 @@ public class PostMetadata implements Parcelable{
     Bundle b = in.readBundle(PostMetadata.class.getClassLoader());
     // without setting the classloader, it fails on BadParcelableException : ClassNotFoundException when
     // unmarshalling class
-    postTitle = b.getString(TITLE_KEY);
+    title = b.getString(TITLE_KEY);
     travelDate = b.getString(TRAVEL_DATE_KEY);
     excerpt = b.getString(EXCERPT_KEY);
     tags = b.getStringArrayList(TAGS_KEY);

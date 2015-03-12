@@ -31,7 +31,7 @@ public class YamlMetadataProvider implements SingleTagProvider {
     yamlWriter.getConfig().setPropertyElementType(PostMetadata.class, "tags", String.class);
     yamlWriter.getConfig().setClassTag("gen'd by BlogR app", PostMetadata.class);
     try {
-      yamlWriter.write(postMD);
+      yamlWriter.write(postMD.getAsMap());
       yamlWriter.close();
     } catch (YamlException e) {
       Log.w("yaml", e.toString());

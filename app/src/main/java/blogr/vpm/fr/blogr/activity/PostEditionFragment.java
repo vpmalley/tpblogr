@@ -129,7 +129,6 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
         if (currentBlog.hasMetadataProvider()) {
           tagsInserter.insert(contentField, currentBlog.getMetadataProvider(currentPost));
         }
-        // new YamlMetadataProvider(new PostMetadata(currentPost, "ladate", "leresume"))
         refreshPostFromView();
         saveCurrentPost();
         PostPublisher publisher = currentBlog.getPublisherService(getActivity());
