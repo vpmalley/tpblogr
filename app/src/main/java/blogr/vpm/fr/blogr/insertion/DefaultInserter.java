@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.EditText;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.bean.Post;
 
 /**
  * Created by vincent on 08/10/14.
@@ -57,5 +58,20 @@ public class DefaultInserter implements Inserter {
     contentField.setSelection(startPosition, startPosition + tagProvider.getStartTag().length() +
         contentBetweenTags.length() + tagProvider.getEndTag().length());
     return contentBuilder.toString();
+  }
+
+  @Override
+  public void prepend(Post post, SingleTagProvider tagProvider) {
+    post.setContent(tagProvider.getTag() + post.getContent());
+  }
+
+  @Override
+  public void append(Post post, SingleTagProvider tagProvider) {
+    post.setContent(post.getContent() + tagProvider.getTag());
+  }
+
+  @Override
+  public void surround(Post post, SurroundingTagsProvider tagProvider) {
+    post.setContent(tagProvider.getStartTag() + post.getContent() + tagProvider.getEndTag());
   }
 }
