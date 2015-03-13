@@ -17,6 +17,7 @@ import blogr.vpm.fr.blogr.git.AsyncGithubBlogPuller;
 import blogr.vpm.fr.blogr.git.AsyncGithubBlogPusher;
 import blogr.vpm.fr.blogr.git.GitInteraction;
 import blogr.vpm.fr.blogr.git.GitRepository;
+import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.persistence.FileBlogManager;
 import blogr.vpm.fr.blogr.persistence.FileManager;
 
@@ -42,6 +43,10 @@ public class GithubPublisher implements PostPublisher {
     this.post = post;
 
     new AsyncGithubBlogPuller(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
+
+    if (blog.hasMetadataProvider()) {
+      new DefaultInserter(context).prepend(post, blog.getMetadataProvider(post));
+    }
 
     GithubPublicationDialogFragment fragment = GithubPublicationDialogFragment.newInstance(this, blog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""));
     fragment.show(((Activity)context).getFragmentManager(), "credentialInput"); // try to remove this ugly cast

@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.insertion.Extracter;
 import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
@@ -64,6 +65,16 @@ public class PostPublishingPreferencesProvider implements PostPublishingServiceP
 
   @Override
   public SingleTagProvider getMetadataProvider(Post post) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean hasMetadataExtracter() {
+    return false;
+  }
+
+  @Override
+  public Extracter getMetadataExtracter() {
     throw new UnsupportedOperationException();
   }
 

@@ -26,6 +26,8 @@ public class Post implements Parcelable {
 
   private static final String BLOG_KEY = "blog";
 
+  private static final String MD_KEY = "metadata";
+
   private static final String DATE_PATTERN = "yyyy-MM-dd-HH:mm:ss-ZZZZZ";
 
   private String title;
@@ -36,11 +38,14 @@ public class Post implements Parcelable {
 
   private Blog blog;
 
+  private PostMetadata md;
+
   public Post(String title, String content, Blog blog) {
     this.title = title;
     this.content = content;
     this.pictures = new ArrayList<Uri>();
     this.blog = blog;
+    this.md = new PostMetadata(title, "", "");
   }
 
   public String getTitle() {
@@ -92,6 +97,14 @@ public class Post implements Parcelable {
     return pictureFiles;
   }
 
+  public PostMetadata getMd() {
+    return md;
+  }
+
+  public void setMd(PostMetadata md) {
+    this.md = md;
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -104,6 +117,7 @@ public class Post implements Parcelable {
     b.putString(CONTENT_KEY, content);
     b.putParcelableArrayList(PICTURES_KEY, pictures);
     b.putParcelable(BLOG_KEY, blog);
+    b.putParcelable(MD_KEY, md);
     parcel.writeBundle(b);
   }
 
@@ -115,6 +129,7 @@ public class Post implements Parcelable {
     content = b.getString(CONTENT_KEY);
     pictures = b.getParcelableArrayList(PICTURES_KEY);
     blog = b.getParcelable(BLOG_KEY);
+    md = b.getParcelable(MD_KEY);
   }
 
   public static final Parcelable.Creator<Post> CREATOR

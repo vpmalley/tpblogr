@@ -36,8 +36,8 @@ public class PostMetadata implements Parcelable{
     this.otherData = new HashMap<>();
   }
 
-  public PostMetadata(Post post, String travelDate, String excerpt) {
-    this.title = post.getTitle();
+  public PostMetadata(String postTitle, String travelDate, String excerpt) {
+    this.title = postTitle;
     this.travelDate = travelDate;
     this.excerpt = excerpt;
     this.tags = new ArrayList<>();
@@ -66,7 +66,7 @@ public class PostMetadata implements Parcelable{
     allMD.put(TITLE_KEY, title);
     allMD.put(TRAVEL_DATE_KEY, travelDate);
     allMD.put(EXCERPT_KEY, excerpt);
-    if (!tags.isEmpty()) {
+    if ((tags != null) && (!tags.isEmpty())) {
       allMD.put(TAGS_KEY, tags);
     }
     return allMD;

@@ -13,6 +13,7 @@ import java.io.StringReader;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 
 /**
  * Created by vincent on 06/10/14.
@@ -49,6 +50,9 @@ public class FilePostSaver implements PostSaver {
       FileOutputStream postFileOut = null;
       try {
         postFileOut = new FileOutputStream(postFile);
+        if (post.getBlog().hasMetadataProvider()) {
+          new DefaultInserter(context).prepend(post, post.getBlog().getMetadataProvider(post));
+        }
         IOUtils.copy(new StringReader(post.getContent()), postFileOut, "UTF-8");
         saved = true;
       } catch (IOException e) {

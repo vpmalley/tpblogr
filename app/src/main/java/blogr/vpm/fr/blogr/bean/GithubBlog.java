@@ -13,8 +13,10 @@ import java.util.Properties;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.git.AsyncGithubBlogCloner;
+import blogr.vpm.fr.blogr.insertion.Extracter;
 import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
+import blogr.vpm.fr.blogr.metadata.YamlMetadataExtracter;
 import blogr.vpm.fr.blogr.metadata.YamlMetadataProvider;
 import blogr.vpm.fr.blogr.persistence.FileBlogManager;
 import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
@@ -71,7 +73,17 @@ public class GithubBlog implements Blog {
 
   @Override
   public SingleTagProvider getMetadataProvider(Post post) {
-    return new YamlMetadataProvider(new PostMetadata(post, "", ""));
+    return new YamlMetadataProvider(post.getMd());
+  }
+
+  @Override
+  public boolean hasMetadataExtracter() {
+    return true;
+  }
+
+  @Override
+  public Extracter getMetadataExtracter() {
+    return new YamlMetadataExtracter();
   }
 
   public String getRepositoryUrl() {

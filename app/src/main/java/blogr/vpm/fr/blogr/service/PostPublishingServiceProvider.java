@@ -3,6 +3,7 @@ package blogr.vpm.fr.blogr.service;
 import android.content.Context;
 
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.insertion.Extracter;
 import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
@@ -43,4 +44,16 @@ public interface PostPublishingServiceProvider {
    * @return the provider for metadata
    */
   SingleTagProvider getMetadataProvider(Post post);
+
+  /**
+   * Whether this service provider has a tool to extract metadata out of a post
+   * @return whether this service provider has a tool to extract metadata out of a post
+   */
+  boolean hasMetadataExtracter();
+
+  /**
+   * Gets the metadata extracter for this service provider
+   * @return a metadata extracter for this service provider
+   */
+  Extracter getMetadataExtracter();
 }

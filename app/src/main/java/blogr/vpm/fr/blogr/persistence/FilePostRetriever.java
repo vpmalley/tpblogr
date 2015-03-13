@@ -92,7 +92,11 @@ public class FilePostRetriever implements PostRetriever {
             }
           }
         }
-        posts.add(new Post(postFile.getName().replace(".txt", "").replace('_', ' '), postWriter.toString(), blog));
+        Post post = new Post(postFile.getName().replace(".txt", "").replace('_', ' '), postWriter.toString(), blog);
+        if (blog.hasMetadataExtracter()) {
+          blog.getMetadataExtracter().extract(blog, post);
+        }
+        posts.add(post);
       }
     }
     return posts;
