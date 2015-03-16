@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -151,7 +150,10 @@ public class PostMetadataFragment extends Fragment {
     private final int resource;
 
     private final Map<String, Object> mds;
-    private Map<String, Parcelable> MD;
+
+    // the views currently in focus
+    private EditText focusedKeyView;
+    private EditText focusedValueView;
 
     public MetadataAdapter(Context context, Map<String, Object> mds) {
       super(context, R.layout.metadata_item, new ArrayList<Map.Entry<String, ?>>(mds.entrySet()));
@@ -160,6 +162,9 @@ public class PostMetadataFragment extends Fragment {
     }
 
     public Map<String, Object> getMd() {
+      if ((focusedKeyView != null) && (focusedValueView != null)) {
+        mds.put(focusedKeyView.getText().toString(), focusedValueView.getText().toString());
+      }
       return mds;
     }
 
@@ -211,10 +216,13 @@ public class PostMetadataFragment extends Fragment {
         View.OnFocusChangeListener onPairChanged = new View.OnFocusChangeListener() {
           @Override
           public void onFocusChange(View view, boolean focused) {
-            if (!focused) {
-              Log.d("changed", mdKeyView.getText().toString() + " => " + mdValueView.getText().toString());
-              // TODO if we leave the fragment, this is not triggered
+            if (focused) {
+              focusedKeyView = mdKeyView;
+              focusedValueView = mdValueView;
+            } else {
               mds.put(mdKeyView.getText().toString(), mdValueView.getText().toString());
+              focusedKeyView = null;
+              focusedValueView = null;
             }
           }
         };
