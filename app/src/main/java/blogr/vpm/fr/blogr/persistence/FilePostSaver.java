@@ -2,6 +2,7 @@ package blogr.vpm.fr.blogr.persistence;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.commons.io.IOUtils;
@@ -36,6 +37,7 @@ public class FilePostSaver implements PostSaver {
 
   @Override
   public boolean persist(Post post) {
+    post = new Post(post);
     boolean saved = false;
     if (isExternalStorageWritable()) {
       File postFile = new FileManager().getFileForPost(context, post);
@@ -53,6 +55,7 @@ public class FilePostSaver implements PostSaver {
         if (post.getBlog().hasMetadataProvider()) {
           new DefaultInserter(context).prepend(post, post.getBlog().getMetadataProvider(post));
         }
+        Log.d("saving post (file)", post.getContent());
         IOUtils.copy(new StringReader(post.getContent()), postFileOut, "UTF-8");
         saved = true;
       } catch (IOException e) {

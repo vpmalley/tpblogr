@@ -21,9 +21,7 @@ import blogr.vpm.fr.blogr.apis.flickr.FlickrJAndroidProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
 import blogr.vpm.fr.blogr.bean.Blog;
-import blogr.vpm.fr.blogr.bean.GithubBlog;
 import blogr.vpm.fr.blogr.bean.Post;
-import blogr.vpm.fr.blogr.bean.PostMetadata;
 import blogr.vpm.fr.blogr.format.AlignCenterTagsProvider;
 import blogr.vpm.fr.blogr.format.AlignLeftTagsProvider;
 import blogr.vpm.fr.blogr.format.AlignRightTagsProvider;
@@ -33,7 +31,6 @@ import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
 import blogr.vpm.fr.blogr.location.LatLongTagProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
-import blogr.vpm.fr.blogr.metadata.YamlMetadataProvider;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
@@ -47,6 +44,7 @@ import blogr.vpm.fr.blogr.service.PostPublishingServiceProvider;
 public class PostEditionFragment extends Fragment implements PicturePickedListener {
 
   public static final int PICK_PIC_REQ_CODE = 32;
+  public static final int UPDATE_MD_REQ_CODE = 33;
   public static final int MAX_NEW_POST_FILES = 100;
 
   private PostPublishingServiceProvider publisherProvider;
@@ -156,6 +154,12 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
       case R.id.action_align_right:
         tagsInserter.insert(contentField, new AlignRightTagsProvider());
         return true;
+      case R.id.action_metadata:
+        refreshPostFromView();
+        Intent intent = new Intent(getActivity(), PostMetadataActivity.class);
+        intent.putExtra(Post.INTENT_EXTRA_KEY, currentPost);
+        startActivityForResult(intent, UPDATE_MD_REQ_CODE);
+        return true;
       default:
         return super.onOptionsItemSelected(item);
     }
@@ -168,6 +172,9 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
       Uri pictureUri = data.getData();
       currentPost.addPicture(pictureUri);
       onPicturePicked(pictureUri.toString());
+    } else if ((UPDATE_MD_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
+      currentPost = data.getParcelableExtra(Post.INTENT_EXTRA_KEY);
+      Log.d("md return ", (String) currentPost.getMd().getAsMap().get("excerpt"));
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }

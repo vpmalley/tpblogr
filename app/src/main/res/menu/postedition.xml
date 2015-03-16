@@ -45,6 +45,11 @@
                   android:showAsAction="ifRoom"/>
         </menu>
     </item>
+    <item android:id="@+id/action_metadata"
+          android:title="@string/action_metadata"
+          android:orderInCategory="30"
+          android:showAsAction="always"
+          android:icon="@drawable/ic_action_settings"/>
     <item android:id="@+id/action_publish"
         android:title="@string/action_publish"
         android:orderInCategory="90"

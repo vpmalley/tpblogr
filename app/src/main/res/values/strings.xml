@@ -43,6 +43,6 @@
     <string name="toast_cannot_clone">The git repository for your Github Pages blog could not be retrieved. Please make sure you have created an account on github.com and try again</string>
     <string name="blog_already_exists">This blog already exists</string>
     <string name="git_credentials">Git credentials :</string>
-
     <item name="activity_newpost_title" type="id">New Post</item>
+    <string name="action_metadata" type="id">update_metadata</string>
 </resources>

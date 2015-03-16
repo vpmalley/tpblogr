@@ -48,6 +48,15 @@ public class Post implements Parcelable {
     this.md = new PostMetadata(title, "", "");
   }
 
+  public Post(Post post) {
+    this.title = post.getTitle();
+    this.content = post.getContent();
+    this.pictures = post.getPicturesAsMediaContent();
+    this.blog = post.getBlog();
+    this.md = post.getMd();
+
+  }
+
   public String getTitle() {
     return title;
   }

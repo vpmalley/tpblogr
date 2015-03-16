@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +23,8 @@ public class PostMetadata implements Parcelable{
 
   private static final String DATE_PATTERN = "yyyy-MM-dd-HH:mm:ss-ZZZ";
 
+  public static final List<String> IMMUTABLE_KEYS = Arrays.asList(TITLE_KEY, TRAVEL_DATE_KEY, EXCERPT_KEY, TAGS_KEY);
+
   public String title;
 
   public String travelDate;
@@ -29,7 +33,7 @@ public class PostMetadata implements Parcelable{
 
   public ArrayList<String> tags;
 
-  private HashMap<String, Parcelable> otherData;
+  private HashMap<String, Object> otherData;
 
   public PostMetadata() {
     this.tags = new ArrayList<>();
@@ -44,7 +48,7 @@ public class PostMetadata implements Parcelable{
     this.otherData = new HashMap<>();
   }
 
-  public PostMetadata(Map<String, Parcelable> md) {
+  public PostMetadata(Map<String, Object> md) {
     this.title = String.valueOf(md.get(TITLE_KEY));
     this.travelDate = String.valueOf(md.get(TRAVEL_DATE_KEY));
     this.excerpt = String.valueOf(md.get(EXCERPT_KEY));
@@ -96,7 +100,7 @@ public class PostMetadata implements Parcelable{
     travelDate = b.getString(TRAVEL_DATE_KEY);
     excerpt = b.getString(EXCERPT_KEY);
     tags = b.getStringArrayList(TAGS_KEY);
-    otherData = (HashMap<String, Parcelable>) b.getSerializable(DATA_KEY);
+    otherData = (HashMap<String, Object>) b.getSerializable(DATA_KEY);
   }
 
   public static final Parcelable.Creator<PostMetadata> CREATOR
