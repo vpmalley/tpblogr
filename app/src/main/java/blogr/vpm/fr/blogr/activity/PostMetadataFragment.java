@@ -17,6 +17,7 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -87,8 +88,9 @@ public class PostMetadataFragment extends Fragment {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.action_settings:
-        startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
+      case R.id.action_new:
+        Map.Entry<String, Object> newEntry = new AbstractMap.SimpleEntry<String, Object>("", "");
+        metadataAdapter.add(newEntry);
         return true;
       case R.id.action_save:
         refreshPostFromView();
@@ -96,6 +98,9 @@ public class PostMetadataFragment extends Fragment {
         i.putExtra(Post.INTENT_EXTRA_KEY, currentPost);
         getActivity().setResult(Activity.RESULT_OK, i);
         getActivity().finish();
+        return true;
+      case R.id.action_settings:
+        startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -163,8 +168,14 @@ public class PostMetadataFragment extends Fragment {
 
     public Map<String, Object> getMd() {
       if ((focusedKeyView != null) && (focusedValueView != null)) {
-        mds.put(focusedKeyView.getText().toString(), focusedValueView.getText().toString());
+        String key = focusedKeyView.getText().toString();
+        String value = focusedValueView.getText().toString();
+        if (!key.isEmpty()) {
+          Log.d("md", "put(" + key + "=>" + value + ")");
+          mds.put(key, value);
+        }
       }
+      Log.d("md", mds.toString());
       return mds;
     }
 
@@ -217,10 +228,20 @@ public class PostMetadataFragment extends Fragment {
           @Override
           public void onFocusChange(View view, boolean focused) {
             if (focused) {
+              String key = mdKeyView.getText().toString();
+              if (!key.isEmpty()) {
+                mds.remove(key);
+              }
               focusedKeyView = mdKeyView;
               focusedValueView = mdValueView;
             } else {
-              mds.put(mdKeyView.getText().toString(), mdValueView.getText().toString());
+              String key = mdKeyView.getText().toString();
+              String value = mdValueView.getText().toString();
+              Log.d("md", "value is null : " + (mdValueView.getText() == null));
+              if (!key.isEmpty()) {
+                Log.d("md", "put(" + key + "=>" + value + ")");
+                mds.put(key, value);
+              }
               focusedKeyView = null;
               focusedValueView = null;
             }
