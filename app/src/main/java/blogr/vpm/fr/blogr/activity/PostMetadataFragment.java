@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,19 +25,32 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.apis.flickr.FlickrJAndroidProvider;
+import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
+import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.bean.PostMetadata;
+import blogr.vpm.fr.blogr.insertion.MetadataProvider;
+import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
+import blogr.vpm.fr.blogr.location.LatLongTagProvider;
+import blogr.vpm.fr.blogr.location.LocationProvider;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
+import blogr.vpm.fr.blogr.picture.PictureMetadataProvider;
+import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
  * Created by vince on 13/03/15.
  */
-public class PostMetadataFragment extends Fragment {
+public class PostMetadataFragment extends Fragment implements PicturePickedListener {
+
+  public static final int PICK_PIC_REQ_CODE = 32;
 
   private PostSaver saver;
 
   private Post currentPost;
+
+  private LocationProvider locationProvider;
 
   private AbsListView metadataList;
 
@@ -48,6 +64,7 @@ public class PostMetadataFragment extends Fragment {
     Log.d("postMDF", "creating fragment");
     // init services
     saver = new FilePostSaver(getActivity());
+    locationProvider = new AndroidLocationProvider(getActivity());
   }
 
   @Override
@@ -71,6 +88,7 @@ public class PostMetadataFragment extends Fragment {
     super.onResume();
     getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
     refreshViewFromPost();
+    locationProvider.connect();
   }
 
   @Override
@@ -78,6 +96,7 @@ public class PostMetadataFragment extends Fragment {
     super.onPause();
     refreshPostFromView();
     saveCurrentPost();
+    locationProvider.disconnect();
   }
 
   @Override
@@ -94,10 +113,30 @@ public class PostMetadataFragment extends Fragment {
         return true;
       case R.id.action_save:
         refreshPostFromView();
-        Intent i = new Intent();
-        i.putExtra(Post.INTENT_EXTRA_KEY, currentPost);
-        getActivity().setResult(Activity.RESULT_OK, i);
+        Intent saveIntent = new Intent();
+        saveIntent.putExtra(Post.INTENT_EXTRA_KEY, currentPost);
+        getActivity().setResult(Activity.RESULT_OK, saveIntent);
         getActivity().finish();
+        return true;
+      case R.id.action_insert_location:
+        refreshPostFromView();
+        Map<String, String> locationMappings = new LatLongTagProvider(getActivity(), locationProvider).getMappings();
+        currentPost.getMd().putData(locationMappings);
+        refreshViewFromPost();
+        return true;
+      case R.id.action_insert_picture:
+        refreshPostFromView();
+        Intent picIntent = new Intent(Intent.ACTION_PICK);
+        picIntent.setType("image/*");
+        startActivityForResult(picIntent, PICK_PIC_REQ_CODE);
+        return true;
+      case R.id.action_insert_flickr:
+        FlickrProvider flickrD = new FlickrJAndroidProvider(getActivity());
+        FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String flickrUsername = prefs.getString("pref_flickr_username", "");
+        int picNb = Integer.valueOf(prefs.getString("pref_flickr_number_pics", "20"));
+        flickrP.getUserPhotos(flickrUsername, picNb);
         return true;
       case R.id.action_settings:
         startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
@@ -105,6 +144,25 @@ public class PostMetadataFragment extends Fragment {
       default:
         return super.onOptionsItemSelected(item);
     }
+  }
+
+  // called before onResume
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
+      Uri pictureUri = data.getData();
+      currentPost.addPicture(pictureUri);
+      onPicturePicked(pictureUri.toString());
+    } else {
+      super.onActivityResult(requestCode, resultCode, data);
+    }
+  }
+
+  @Override
+  public void onPicturePicked(String picUrl) {
+    MetadataProvider picProvider = new PictureMetadataProvider(picUrl);
+    currentPost.getMd().putData(picProvider.getMappings());
+    refreshViewFromPost();
   }
 
 

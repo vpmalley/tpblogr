@@ -64,6 +64,10 @@ public class PostMetadata implements Parcelable{
     otherData.put(key, value);
   }
 
+  public void putData(Map<String, String> allData) {
+    otherData.putAll(allData);
+  }
+
   public HashMap<String, ?> getAsMap() {
     HashMap<String, Object> allMD = new HashMap<>();
     allMD.putAll(otherData);
