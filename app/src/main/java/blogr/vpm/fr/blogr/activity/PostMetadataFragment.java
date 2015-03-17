@@ -206,6 +206,11 @@ public class PostMetadataFragment extends Fragment {
         itemHolder.mdKeyView.setInputType(InputType.TYPE_NULL);
       }
       itemHolder.mdValueView.setText(md.getValue().toString());
+      if (PostMetadata.TRAVEL_DATE_KEY.equals(md.getKey())) {
+        itemHolder.mdValueView.setHint("yyyy-MM-dd");
+      } else {
+        itemHolder.mdValueView.setHint("type a " + md.getKey());
+      }
 
       return convertView;
     }

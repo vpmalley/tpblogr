@@ -16,12 +16,12 @@ import java.util.Map;
 public class PostMetadata implements Parcelable{
 
   private static final String TITLE_KEY = "title";
-  private static final String TRAVEL_DATE_KEY = "travelDate";
+  public static final String TRAVEL_DATE_KEY = "travelDate";
   private static final String EXCERPT_KEY = "excerpt";
   private static final String TAGS_KEY = "tags";
   private static final String DATA_KEY = "otherData";
 
-  private static final String DATE_PATTERN = "yyyy-MM-dd-HH:mm:ss-ZZZ";
+  private static final String DATE_PATTERN = "yyyy-MM-dd";
 
   public static final List<String> IMMUTABLE_KEYS = Arrays.asList(TITLE_KEY, TRAVEL_DATE_KEY, EXCERPT_KEY, TAGS_KEY);
 
