@@ -31,11 +31,18 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
     this.currentPost = currentPost;
   }
 
+  void refreshViewFromPost() {
+    ((PostEditionFragment) postEditionFragment).refreshViewFromPost();
+    ((PostMetadataFragment) postMetadataFragment).refreshViewFromPost();
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_post_edition);
     viewPager = (ViewPager) findViewById(R.id.pager);
+    postEditionFragment = new PostEditionFragment();
+    postMetadataFragment = new PostMetadataFragment();
     setTitle("");
     getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -67,9 +74,9 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
     public Fragment getItem(int position) {
       Fragment f = null;
       if (0 == position) {
-        f = new PostEditionFragment();
+        f = postEditionFragment;
       } else if (1 == position) {
-        f = new PostMetadataFragment();
+        f = postMetadataFragment;
       }
       return f;
     }

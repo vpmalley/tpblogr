@@ -167,7 +167,7 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
   /**
    * Refreshes the view with the current Post
    */
-  private void refreshViewFromPost() {
+  void refreshViewFromPost() {
     if (getCurrentPost() != null) {
       getCurrentPost().getMd().addKeys(getCurrentPost().getBlog().getMdKeys());
       getActivity().setTitle(getCurrentPost().getTitle());
@@ -194,17 +194,6 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
     if ((getCurrentPost() != null) ) {
       saver.persist(getCurrentPost());
     }
-  }
-
-  /**
-   * Updates the current post with given instance and refreshes the view
-   *
-   * @param post The new post to edit
-   */
-  public void editPost(Post post) {
-    setCurrentPost(post);
-    refreshViewFromPost();
-    getActivity().invalidateOptionsMenu();
   }
 
   public class MetadataAdapter extends ArrayAdapter<Map.Entry<String, ?>> {
@@ -303,11 +292,12 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
               String value = mdValueView.getText().toString();
               Log.d("md", "value is null : " + (mdValueView.getText() == null));
               if (!key.isEmpty()) {
-                Log.d("md", "put(" + key + "=>" + value + ")");
+                Log.d("md (focus)", "put(" + key + "=>" + value + ")");
                 mds.put(key, value);
               }
               focusedKeyView = null;
               focusedValueView = null;
+              refreshPostFromView();
             }
           }
         };

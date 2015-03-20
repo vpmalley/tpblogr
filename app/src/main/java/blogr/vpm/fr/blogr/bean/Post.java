@@ -45,7 +45,7 @@ public class Post implements Parcelable {
     this.content = content;
     this.pictures = new ArrayList<Uri>();
     this.blog = blog;
-    this.md = new PostMetadata(title, new ArrayList<String>());
+    this.md = new PostMetadata(new ArrayList<String>());
   }
 
   public Post(Post post) {
@@ -62,7 +62,6 @@ public class Post implements Parcelable {
 
   public void setTitle(String title) {
     this.title = title;
-    md.putData(PostMetadata.TITLE_KEY, title);
   }
 
   public String getContent() {

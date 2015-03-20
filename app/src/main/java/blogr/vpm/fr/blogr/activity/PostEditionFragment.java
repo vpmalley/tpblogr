@@ -84,6 +84,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.fragment_post, container, false);
     contentField = (EditText) v.findViewById(R.id.postContent);
+    contentField.setOnFocusChangeListener(new OnFocusChanged());
     refreshViewFromPost();
     return v;
   }
@@ -117,6 +118,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.postedition, menu);
     titleField = (EditText) menu.findItem(R.id.action_title).getActionView();
+    titleField.setOnFocusChangeListener(new OnFocusChanged());
     refreshViewFromPost();
   }
 
@@ -200,7 +202,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
   /**
    * Refreshes the view with the current Post
    */
-  private void refreshViewFromPost() {
+  void refreshViewFromPost() {
     if (getCurrentPost() != null) {
       if (titleField != null) {
         titleField.setText(getCurrentPost().getTitle());
@@ -258,4 +260,15 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
   private boolean isPostTitleEmpty() {
     return ("".equals(getCurrentPost().getTitle()));
   }
+
+  private class OnFocusChanged implements View.OnFocusChangeListener {
+    @Override
+    public void onFocusChange(View view, boolean focused) {
+      if (!focused) {
+        refreshPostFromView();
+        ((PostEditionActivity) getActivity()).refreshViewFromPost();
+      }
+    }
+  }
+
 }
