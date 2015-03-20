@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -49,6 +50,11 @@ public class EmailBlog implements Blog {
   @Override
   public String getPostsFolder() {
     return POSTS_DIR;
+  }
+
+  @Override
+  public List<String> getMdKeys() {
+    throw new UnsupportedOperationException();
   }
 
   @Override

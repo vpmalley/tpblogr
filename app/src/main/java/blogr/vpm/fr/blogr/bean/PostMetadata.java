@@ -15,9 +15,10 @@ import java.util.Map;
  */
 public class PostMetadata implements Parcelable{
 
-  private static final String TITLE_KEY = "title";
+  public static final String TITLE_KEY = "title";
   public static final String TRAVEL_DATE_KEY = "travelDate";
   private static final String EXCERPT_KEY = "excerpt";
+  private static final String LAYOUT_KEY = "layout";
   private static final String TAGS_KEY = "tags";
   private static final String DATA_KEY = "otherData";
 
@@ -31,6 +32,8 @@ public class PostMetadata implements Parcelable{
 
   public String excerpt;
 
+  public String layout;
+
   public ArrayList<String> tags;
 
   private HashMap<String, Object> otherData;
@@ -40,18 +43,23 @@ public class PostMetadata implements Parcelable{
     this.otherData = new HashMap<>();
   }
 
-  public PostMetadata(String postTitle, String travelDate, String excerpt) {
+  public PostMetadata(String postTitle, List<String> mdKeys) {
     this.title = postTitle;
-    this.travelDate = travelDate;
-    this.excerpt = excerpt;
+    this.travelDate = "";
+    this.excerpt = "";
+    this.layout = "";
     this.tags = new ArrayList<>();
     this.otherData = new HashMap<>();
+    for (String key : mdKeys) {
+      this.otherData.put(key, "");
+    }
   }
 
   public PostMetadata(Map<String, Object> md) {
     this.title = String.valueOf(md.get(TITLE_KEY));
     this.travelDate = String.valueOf(md.get(TRAVEL_DATE_KEY));
     this.excerpt = String.valueOf(md.get(EXCERPT_KEY));
+    this.layout = String.valueOf(md.get(LAYOUT_KEY));
     this.tags = (ArrayList<String>) md.get(TAGS_KEY);
     this.otherData = new HashMap<>(md);
   }
@@ -60,8 +68,16 @@ public class PostMetadata implements Parcelable{
     tags.add(tag);
   }
 
-  public void putData(String key, Parcelable value) {
+  public void putData(String key, Object value) {
     otherData.put(key, value);
+  }
+
+  public void addKeys(List<String> keys){
+    for (String key : keys) {
+      if (!otherData.containsKey(key)){
+        otherData.put(key, "");
+      }
+    }
   }
 
   public void putData(Map<String, String> allData) {

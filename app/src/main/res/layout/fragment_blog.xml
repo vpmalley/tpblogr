@@ -33,4 +33,18 @@
         android:visibility="invisible"
         />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:padding="7dp"
+        android:ems="10"
+        android:id="@+id/md_keys"
+        android:layout_margin="2dp"
+        android:hint="@string/hint_md_keys"
+        android:imeOptions="flagNoExtractUi"
+        android:layout_below="@+id/main"
+        android:visibility="invisible"
+        />
+
 </RelativeLayout>

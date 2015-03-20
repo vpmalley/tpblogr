@@ -9,6 +9,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import blogr.vpm.fr.blogr.R;
@@ -31,8 +33,11 @@ public class GithubBlog implements Blog {
   public static final String REPO_SUFFIX = ".github.io";
   public static final String GITHUB_DOMAIN = "https://github.com/";
   private static final String USERNAME_KEY = "username";
+  private static final String MD_KEY = "mdKeys";
 
   private String username;
+
+  private List<String> mdKeys = new ArrayList<>();
 
   public GithubBlog(String username) {
     this.username = username;
@@ -54,6 +59,34 @@ public class GithubBlog implements Blog {
   @Override
   public String getPostsFolder() {
     return "_drafts";
+  }
+
+  /**
+   * Adds comma-separated keys
+   * @param keys comma-separated keys
+   */
+  public void addMdKeys(String keys){
+    if ((keys != null) && (!keys.isEmpty())) {
+      for (String key : keys.split(",")) {
+        mdKeys.add(key);
+      }
+    }
+  }
+
+  @Override
+  public List<String> getMdKeys() {
+    return mdKeys;
+  }
+
+  public String getKeysAsString(){
+    StringBuilder keys = new StringBuilder();
+    if (!mdKeys.isEmpty()) {
+      for (String key : mdKeys) {
+        keys.append(key);
+        keys.append(",");
+      }
+    }
+    return keys.toString();
   }
 
   @Override
@@ -123,6 +156,7 @@ public class GithubBlog implements Blog {
   public void writeToParcel(Parcel parcel, int i) {
     Bundle b = new Bundle();
     b.putString(USERNAME_KEY, username);
+    b.putString(MD_KEY, getKeysAsString());
     parcel.writeBundle(b);
   }
 
@@ -131,6 +165,7 @@ public class GithubBlog implements Blog {
     // without setting the classloader, it fails on BadParcelableException : ClassNotFoundException when
     // unmarshalling Media class
     username = b.getString(USERNAME_KEY);
+    addMdKeys(b.getString(MD_KEY));
   }
 
   public static final Parcelable.Creator<GithubBlog> CREATOR
@@ -151,13 +186,17 @@ public class GithubBlog implements Blog {
       Properties props = new Properties();
       props.setProperty(USERNAME_KEY, blog.getTitle().replace(REPO_SUFFIX, ""));
       props.setProperty(TYPE_KEY, GithubBlog.class.getName());
+      props.setProperty(MD_KEY, ((GithubBlog)blog).getKeysAsString());
       return props;
     }
 
     @Override
     public Blog unmarshall(Properties props) {
       String username = props.getProperty(USERNAME_KEY);
-      return new GithubBlog(username);
+      String mdKeys = props.getProperty(MD_KEY);
+      GithubBlog b = new GithubBlog(username);
+      b.addMdKeys(mdKeys);
+      return b;
     }
   }
 

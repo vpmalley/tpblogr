@@ -32,4 +32,9 @@ public class PostMetadataActivity extends Activity implements PicturePickedListe
     // This only delegates to the fragment
     postMetadataFragment.onPicturePicked(picUrl);
   }
+
+  @Override
+  public void onBackPressed() {
+    postMetadataFragment.saveAndFinish();
+  }
 }

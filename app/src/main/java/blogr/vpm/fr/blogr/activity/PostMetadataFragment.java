@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -86,7 +85,7 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
   @Override
   public void onResume() {
     super.onResume();
-    getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+    getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     refreshViewFromPost();
     locationProvider.connect();
   }
@@ -112,11 +111,7 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
         metadataAdapter.add(newEntry);
         return true;
       case R.id.action_save:
-        refreshPostFromView();
-        Intent saveIntent = new Intent();
-        saveIntent.putExtra(Post.INTENT_EXTRA_KEY, currentPost);
-        getActivity().setResult(Activity.RESULT_OK, saveIntent);
-        getActivity().finish();
+        saveAndFinish();
         return true;
       case R.id.action_insert_location:
         refreshPostFromView();
@@ -146,6 +141,14 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
     }
   }
 
+  void saveAndFinish() {
+    refreshPostFromView();
+    Intent saveIntent = new Intent();
+    saveIntent.putExtra(Post.INTENT_EXTRA_KEY, currentPost);
+    getActivity().setResult(Activity.RESULT_OK, saveIntent);
+    getActivity().finish();
+  }
+
   // called before onResume
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -165,12 +168,12 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
     refreshViewFromPost();
   }
 
-
   /**
    * Refreshes the view with the current Post
    */
   private void refreshViewFromPost() {
     if (currentPost != null) {
+      currentPost.getMd().addKeys(currentPost.getBlog().getMdKeys());
       getActivity().setTitle(currentPost.getTitle());
       Map<String, Object> postMd = (Map<String, Object>) currentPost.getMd().getAsMap();
       metadataAdapter = new MetadataAdapter(getActivity(), postMd);
@@ -259,10 +262,12 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
 
       // setting the view
       itemHolder.mdKeyView.setText(md.getKey());
+      /*
       if (PostMetadata.IMMUTABLE_KEYS.contains(md.getKey())) {
         Log.d("key", "immutable");
         itemHolder.mdKeyView.setInputType(InputType.TYPE_NULL);
       }
+      */
       itemHolder.mdValueView.setText(md.getValue().toString());
       if (PostMetadata.TRAVEL_DATE_KEY.equals(md.getKey())) {
         itemHolder.mdValueView.setHint("yyyy-MM-dd");

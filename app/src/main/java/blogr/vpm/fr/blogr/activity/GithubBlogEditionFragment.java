@@ -3,6 +3,7 @@ package blogr.vpm.fr.blogr.activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,8 @@ public class GithubBlogEditionFragment extends Fragment {
 
   private EditText usernameField;
 
+  private EditText mdKeysField;
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -44,6 +47,13 @@ public class GithubBlogEditionFragment extends Fragment {
     usernameField = (EditText) v.findViewById(R.id.main);
     usernameField.setHint(getActivity().getString(R.string.hint_github_username));
     usernameField.setText(currentBlog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""));
+
+    mdKeysField = (EditText) v.findViewById(R.id.md_keys);
+    mdKeysField.setVisibility(View.VISIBLE);
+    String keysAsString = currentBlog.getKeysAsString();
+    if (!keysAsString.isEmpty()) {
+      mdKeysField.setText(keysAsString);
+    }
     return v;
   }
 
@@ -60,8 +70,16 @@ public class GithubBlogEditionFragment extends Fragment {
       case R.id.action_save:
         // save blog information
         String username = usernameField.getText().toString();
+        String keys = mdKeysField.getText().toString();
         GithubBlog newBlog = new GithubBlog(username);
-        newBlog.cloneRepository(getActivity());
+        newBlog.addMdKeys(keys);
+        try {
+          if (!new FileBlogManager().exists(currentBlog)) {
+            newBlog.cloneRepository(getActivity());
+          }
+        } catch (IOException e) {
+          Log.w("file", e.toString());
+        }
         try {
           new FileBlogManager().update(currentBlog, newBlog);
         } catch (IOException e) {

@@ -219,8 +219,12 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
    */
   private void refreshPostFromView() {
     if ((titleField != null) && (contentField != null)) {
-      currentPost.setTitle(titleField.getText().toString());
-      currentPost.setContent(contentField.getText().toString());
+      if (titleField.getText() != null) {
+        currentPost.setTitle(titleField.getText().toString());
+      }
+      if (contentField.getText() != null) {
+        currentPost.setContent(contentField.getText().toString());
+      }
     }
   }
 

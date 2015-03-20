@@ -45,4 +45,5 @@
     <string name="git_credentials">Git credentials :</string>
     <item name="activity_newpost_title" type="id">New Post</item>
     <string name="action_metadata" type="id">update_metadata</string>
+    <string name="hint_md_keys">Metadata keys (e.g. title, layout)</string>
 </resources>
