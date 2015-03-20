@@ -28,6 +28,8 @@ public class Post implements Parcelable {
 
   private static final String MD_KEY = "metadata";
 
+  private static final String PLACES_KEY = "places";
+
   private static final String DATE_PATTERN = "yyyy-MM-dd-HH:mm:ss-ZZZZZ";
 
   private String title;
@@ -40,10 +42,13 @@ public class Post implements Parcelable {
 
   private PostMetadata md;
 
+  private final ArrayList<Parcelable> places;
+
   public Post(String title, String content, Blog blog) {
     this.title = title;
     this.content = content;
     this.pictures = new ArrayList<Uri>();
+    this.places = new ArrayList<>();
     this.blog = blog;
     this.md = new PostMetadata(new ArrayList<String>());
   }
@@ -54,6 +59,7 @@ public class Post implements Parcelable {
     this.pictures = post.getPicturesAsMediaContent();
     this.blog = post.getBlog();
     this.md = post.getMd();
+    this.places = post.getPlaces();
   }
 
   public String getTitle() {
@@ -113,6 +119,18 @@ public class Post implements Parcelable {
     this.md = md;
   }
 
+  public ArrayList<Parcelable> getPlaces() {
+    return places;
+  }
+
+  /**
+   * Adds a place to the list associated with this post
+   * @param place this should either be a {@link android.location.Address} or a {@link android.location.Location}
+   */
+  public void addPlace(Parcelable place) {
+    places.add(place);
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -126,6 +144,7 @@ public class Post implements Parcelable {
     b.putParcelableArrayList(PICTURES_KEY, pictures);
     b.putParcelable(BLOG_KEY, blog);
     b.putParcelable(MD_KEY, md);
+    b.putParcelableArrayList(PLACES_KEY, places);
     parcel.writeBundle(b);
   }
 
@@ -138,6 +157,7 @@ public class Post implements Parcelable {
     pictures = b.getParcelableArrayList(PICTURES_KEY);
     blog = b.getParcelable(BLOG_KEY);
     md = b.getParcelable(MD_KEY);
+    places = b.getParcelableArrayList(PLACES_KEY);
   }
 
   public static final Parcelable.Creator<Post> CREATOR
