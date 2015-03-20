@@ -6,11 +6,6 @@
           android:orderInCategory="80"
           android:showAsAction="always"
           android:icon="@drawable/ic_action_new"/>
-    <item android:id="@+id/action_save"
-        android:title="@string/action_save"
-        android:orderInCategory="90"
-        android:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_save"/>
     <item android:id="@+id/action_insert"
           android:title="@string/action_insert"
           android:orderInCategory="100"

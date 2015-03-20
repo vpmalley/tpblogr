@@ -1,12 +1,12 @@
 package blogr.vpm.fr.blogr.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,7 +44,6 @@ import blogr.vpm.fr.blogr.service.PostPublishingServiceProvider;
 public class PostEditionFragment extends Fragment implements PicturePickedListener {
 
   public static final int PICK_PIC_REQ_CODE = 32;
-  public static final int UPDATE_MD_REQ_CODE = 33;
   public static final int MAX_NEW_POST_FILES = 100;
 
   private PostPublishingServiceProvider publisherProvider;
@@ -55,11 +54,17 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
 
   private Blog currentBlog;
 
-  private Post currentPost;
-
   private EditText contentField;
 
   private EditText titleField;
+
+  private Post getCurrentPost() {
+    return ((PostEditionActivity) getActivity()).getCurrentPost();
+  }
+
+  private void setCurrentPost(Post currentPost) {
+    ((PostEditionActivity) getActivity()).setCurrentPost(currentPost);
+  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -127,7 +132,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
         refreshPostFromView();
         saveCurrentPost();
         PostPublisher publisher = currentBlog.getPublisherService(getActivity());
-        publisher.publish(currentBlog, currentPost);
+        publisher.publish(currentBlog, getCurrentPost());
         return true;
       case R.id.action_insert_location:
         tagsInserter.insert(contentField, new LatLongTagProvider(getActivity(), locationProvider));
@@ -154,12 +159,6 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
       case R.id.action_align_right:
         tagsInserter.insert(contentField, new AlignRightTagsProvider());
         return true;
-      case R.id.action_metadata:
-        refreshPostFromView();
-        Intent intent = new Intent(getActivity(), PostMetadataActivity.class);
-        intent.putExtra(Post.INTENT_EXTRA_KEY, currentPost);
-        startActivityForResult(intent, UPDATE_MD_REQ_CODE);
-        return true;
       default:
         return super.onOptionsItemSelected(item);
     }
@@ -168,13 +167,11 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
   // called before onResume
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    Log.d("onActResult", "RQCODE: " + requestCode);
     if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
       Uri pictureUri = data.getData();
-      currentPost.addPicture(pictureUri);
+      getCurrentPost().addPicture(pictureUri);
       onPicturePicked(pictureUri.toString());
-    } else if ((UPDATE_MD_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
-      currentPost = data.getParcelableExtra(Post.INTENT_EXTRA_KEY);
-      Log.d("md return ", (String) currentPost.getMd().getAsMap().get("excerpt"));
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
@@ -184,8 +181,8 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
   public void onPicturePicked(String picUrl) {
     SurroundingTagsProvider pictureTagProvider = currentBlog.getPictureTagsProvider(getActivity(), picUrl);
     String updatedPostContent = new DefaultInserter(getActivity()).insert(contentField, pictureTagProvider);
-    // the currentPost must be updated because this may be called before onResume
-    currentPost.setContent(updatedPostContent);
+    // the getCurrentPost must be updated because this may be called before onResume
+    getCurrentPost().setContent(updatedPostContent);
   }
 
   /**
@@ -194,7 +191,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
    * @param post The new post to edit
    */
   public void editPost(Post post) {
-    currentPost = post;
+    setCurrentPost(post);
     currentBlog = post.getBlog();
     refreshViewFromPost();
     getActivity().invalidateOptionsMenu();
@@ -204,12 +201,12 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
    * Refreshes the view with the current Post
    */
   private void refreshViewFromPost() {
-    if (currentPost != null) {
+    if (getCurrentPost() != null) {
       if (titleField != null) {
-        titleField.setText(currentPost.getTitle());
+        titleField.setText(getCurrentPost().getTitle());
       }
       if (contentField != null) {
-        contentField.setText(currentPost.getContent());
+        contentField.setText(getCurrentPost().getContent());
       }
     }
   }
@@ -220,24 +217,24 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
   private void refreshPostFromView() {
     if ((titleField != null) && (contentField != null)) {
       if (titleField.getText() != null) {
-        currentPost.setTitle(titleField.getText().toString());
+        getCurrentPost().setTitle(titleField.getText().toString());
       }
       if (contentField.getText() != null) {
-        currentPost.setContent(contentField.getText().toString());
+        getCurrentPost().setContent(contentField.getText().toString());
       }
     }
   }
 
   /**
-   * Saves the post built from the view
+   * Saves the Post built from the view
    */
   private void saveCurrentPost() {
     // save only if post has content or title
-    if ((currentPost != null) && (!isPostTitleEmpty() || !isPostContentEmpty())) {
+    if ((getCurrentPost() != null) && (!isPostTitleEmpty() || !isPostContentEmpty())) {
       if (isPostTitleEmpty()) {
         determineAvailablePostTitle();
       }
-      saver.persist(currentPost);
+      saver.persist(getCurrentPost());
     }
   }
 
@@ -246,19 +243,19 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
    */
   private void determineAvailablePostTitle() {
     String newPostTitle = getActivity().getResources().getString(R.string.newpost);
-    currentPost.setTitle(newPostTitle);
-    if (saver.exists(currentPost)) {
-      for (int i = 1; saver.exists(currentPost) && (i < MAX_NEW_POST_FILES); i++) {
-        currentPost.setTitle(newPostTitle + " " + i);
+    getCurrentPost().setTitle(newPostTitle);
+    if (saver.exists(getCurrentPost())) {
+      for (int i = 1; saver.exists(getCurrentPost()) && (i < MAX_NEW_POST_FILES); i++) {
+        getCurrentPost().setTitle(newPostTitle + " " + i);
       }
     }
   }
 
   private boolean isPostContentEmpty() {
-    return ("".equals(currentPost.getContent()));
+    return ("".equals(getCurrentPost().getContent()));
   }
 
   private boolean isPostTitleEmpty() {
-    return ("".equals(currentPost.getTitle()));
+    return ("".equals(getCurrentPost().getTitle()));
   }
 }

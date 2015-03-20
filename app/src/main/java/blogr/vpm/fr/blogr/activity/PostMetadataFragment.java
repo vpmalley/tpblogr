@@ -1,13 +1,13 @@
 package blogr.vpm.fr.blogr.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,13 +47,20 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
 
   private PostSaver saver;
 
-  private Post currentPost;
-
   private LocationProvider locationProvider;
 
   private AbsListView metadataList;
 
   private MetadataAdapter metadataAdapter;
+
+
+  private Post getCurrentPost() {
+    return ((PostEditionActivity) getActivity()).getCurrentPost();
+  }
+
+  private void setCurrentPost(Post currentPost) {
+    ((PostEditionActivity) getActivity()).setCurrentPost(currentPost);
+  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -110,13 +117,10 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
         Map.Entry<String, Object> newEntry = new AbstractMap.SimpleEntry<String, Object>("", "");
         metadataAdapter.add(newEntry);
         return true;
-      case R.id.action_save:
-        saveAndFinish();
-        return true;
       case R.id.action_insert_location:
         refreshPostFromView();
         Map<String, String> locationMappings = new LatLongTagProvider(getActivity(), locationProvider).getMappings();
-        currentPost.getMd().putData(locationMappings);
+        getCurrentPost().getMd().putData(locationMappings);
         refreshViewFromPost();
         return true;
       case R.id.action_insert_picture:
@@ -141,20 +145,12 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
     }
   }
 
-  void saveAndFinish() {
-    refreshPostFromView();
-    Intent saveIntent = new Intent();
-    saveIntent.putExtra(Post.INTENT_EXTRA_KEY, currentPost);
-    getActivity().setResult(Activity.RESULT_OK, saveIntent);
-    getActivity().finish();
-  }
-
   // called before onResume
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
       Uri pictureUri = data.getData();
-      currentPost.addPicture(pictureUri);
+      getCurrentPost().addPicture(pictureUri);
       onPicturePicked(pictureUri.toString());
     } else {
       super.onActivityResult(requestCode, resultCode, data);
@@ -164,7 +160,7 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
   @Override
   public void onPicturePicked(String picUrl) {
     MetadataProvider picProvider = new PictureMetadataProvider(picUrl);
-    currentPost.getMd().putData(picProvider.getMappings());
+    getCurrentPost().getMd().putData(picProvider.getMappings());
     refreshViewFromPost();
   }
 
@@ -172,10 +168,10 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
    * Refreshes the view with the current Post
    */
   private void refreshViewFromPost() {
-    if (currentPost != null) {
-      currentPost.getMd().addKeys(currentPost.getBlog().getMdKeys());
-      getActivity().setTitle(currentPost.getTitle());
-      Map<String, Object> postMd = (Map<String, Object>) currentPost.getMd().getAsMap();
+    if (getCurrentPost() != null) {
+      getCurrentPost().getMd().addKeys(getCurrentPost().getBlog().getMdKeys());
+      getActivity().setTitle(getCurrentPost().getTitle());
+      Map<String, Object> postMd = (Map<String, Object>) getCurrentPost().getMd().getAsMap();
       metadataAdapter = new MetadataAdapter(getActivity(), postMd);
       metadataList.setAdapter(metadataAdapter);
     }
@@ -185,8 +181,8 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
    * Refreshes the Post with the current view elements
    */
   private void refreshPostFromView() {
-    if (currentPost != null) {
-      currentPost.setMd(new PostMetadata(metadataAdapter.getMd()));
+    if (getCurrentPost() != null) {
+      getCurrentPost().setMd(new PostMetadata(metadataAdapter.getMd()));
     }
   }
 
@@ -195,8 +191,8 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
    */
   private void saveCurrentPost() {
     // save only if post has content or title
-    if ((currentPost != null) ) {
-      saver.persist(currentPost);
+    if ((getCurrentPost() != null) ) {
+      saver.persist(getCurrentPost());
     }
   }
 
@@ -206,7 +202,7 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
    * @param post The new post to edit
    */
   public void editPost(Post post) {
-    currentPost = post;
+    setCurrentPost(post);
     refreshViewFromPost();
     getActivity().invalidateOptionsMenu();
   }
