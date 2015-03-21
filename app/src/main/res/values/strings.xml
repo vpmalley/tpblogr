@@ -46,4 +46,5 @@
     <item name="activity_newpost_title" type="id">New Post</item>
     <string name="action_metadata" type="id">update_metadata</string>
     <string name="hint_md_keys">Metadata keys (e.g. title, layout)</string>
+    <string name="pick_address">Please pick an address</string>
 </resources>
