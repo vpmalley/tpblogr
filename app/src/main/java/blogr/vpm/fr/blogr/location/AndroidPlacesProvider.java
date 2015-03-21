@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import blogr.vpm.fr.blogr.activity.RefreshListener;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.network.DefaultNetworkChecker;
 
@@ -29,11 +30,14 @@ public class AndroidPlacesProvider implements PlacesProvider {
 
   private final Context context;
 
-  private final AddressesListener listener;
+  private final AddressesListener addressesListener;
 
-  public AndroidPlacesProvider(Context context, AddressesListener listener) {
+  private final RefreshListener refreshListener;
+
+  public AndroidPlacesProvider(Context context, AddressesListener addressesListener, RefreshListener refreshListener) {
     this.context = context;
-    this.listener = listener;
+    this.addressesListener = addressesListener;
+    this.refreshListener = refreshListener;
   }
 
   @Override
@@ -97,18 +101,27 @@ public class AndroidPlacesProvider implements PlacesProvider {
       searchAndInsertAddress(post, lastLocation);
     } else {
       post.addPlace(lastLocation);
+      refreshListener.refreshViewFromPost();
       Toast.makeText(context, "Position acquired and inserted.", Toast.LENGTH_SHORT).show();
     }
   }
 
   private boolean canSearchAddress() {
-    return (Geocoder.isPresent()) && (new DefaultNetworkChecker().checkNetworkForDownload(context, true));
+    boolean canSearch = false;
+    if (!Geocoder.isPresent()) {
+      Toast.makeText(context, "Searching for places is not possible on this device", Toast.LENGTH_SHORT).show();
+    } else if (!new DefaultNetworkChecker().checkNetworkForDownload(context, true)) {
+      Toast.makeText(context, "You are offline. Please check your connection", Toast.LENGTH_SHORT).show();
+    } else {
+      canSearch = true;
+    }
+    return canSearch;
   }
 
   private void searchAndInsertAddress(Post post, Location location) {
     List<Address> nearbyAddresses = new ArrayList<>();
     try {
-        nearbyAddresses = new Geocoder(context).getFromLocation(location.getLatitude(), location.getLongitude(), DEFAULT_MAX_RESULTS);
+      nearbyAddresses = new Geocoder(context).getFromLocation(location.getLatitude(), location.getLongitude(), DEFAULT_MAX_RESULTS);
     } catch (IOException e) {
       Log.w("location", e.toString());
       Toast.makeText(context, "Failed to find addresses. Please try again.", Toast.LENGTH_SHORT).show();
@@ -119,15 +132,15 @@ public class AndroidPlacesProvider implements PlacesProvider {
   @Override
   public void searchAndInsertAddress(Post post, String placeName) {
     List<Address> nearbyAddresses = new ArrayList<>();
-    try {
-      if (canSearchAddress()) {
+    if (canSearchAddress()) {
+      try {
         nearbyAddresses = new Geocoder(context).getFromLocationName(placeName, DEFAULT_MAX_RESULTS);
+      } catch (IOException e) {
+        Log.w("location", e.toString());
+        Toast.makeText(context, "Failed to find addresses. Please try again.", Toast.LENGTH_SHORT).show();
       }
-    } catch (IOException e) {
-      Log.w("location", e.toString());
-      Toast.makeText(context, "Failed to find addresses. Please try again.", Toast.LENGTH_SHORT).show();
+      onAddressesFound(post, nearbyAddresses);
     }
-    onAddressesFound(post, nearbyAddresses);
   }
 
   private void onAddressesFound(Post post, List<Address> nearbyAddresses) {
@@ -135,8 +148,9 @@ public class AndroidPlacesProvider implements PlacesProvider {
       Toast.makeText(context, "No place found with that name", Toast.LENGTH_SHORT).show();
     } else if (nearbyAddresses.size() == 1){
       post.addPlace(nearbyAddresses.get(0));
+      refreshListener.refreshViewFromPost();
     } else {
-      listener.onAddressesFound(new ArrayList<>(nearbyAddresses), post);
+      addressesListener.onAddressesFound(new ArrayList<>(nearbyAddresses), post);
     }
   }
 }

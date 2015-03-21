@@ -2,6 +2,8 @@ package blogr.vpm.fr.blogr.bean;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -10,6 +12,9 @@ import android.provider.MediaStore;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+
+import blogr.vpm.fr.blogr.activity.AddressPickerFragment;
 
 /**
  * Created by vincent on 29/08/14.
@@ -170,4 +175,16 @@ public class Post implements Parcelable {
       return new Post[size];
     }
   };
+
+  public List<String> getPlacesNames() {
+    List<String> placesNames = new ArrayList<>();
+    for (Parcelable p : places) {
+      if (p instanceof Location) {
+        placesNames.add("Lat. " + ((Location)p).getLatitude() + ", Lon. " + ((Location)p).getLongitude());
+      } else if (p instanceof Address) {
+        placesNames.add(AddressPickerFragment.getAddressLines((Address) p));
+      }
+    }
+    return placesNames;
+  }
 }

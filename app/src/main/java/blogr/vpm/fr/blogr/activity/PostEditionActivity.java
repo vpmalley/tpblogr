@@ -14,11 +14,13 @@ import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 /**
  * Created by vince on 17/10/14.
  */
-public class PostEditionActivity extends FragmentActivity implements PicturePickedListener {
+public class PostEditionActivity extends FragmentActivity implements PicturePickedListener, RefreshListener {
 
   private PostEditionFragment postEditionFragment;
 
   private PostMetadataFragment postMetadataFragment;
+
+  private PostPlacesFragment postPlacesFragment;
 
   private ViewPager viewPager;
   private Post currentPost;
@@ -31,9 +33,11 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
     this.currentPost = currentPost;
   }
 
-  void refreshViewFromPost() {
-    ((PostEditionFragment) postEditionFragment).refreshViewFromPost();
-    ((PostMetadataFragment) postMetadataFragment).refreshViewFromPost();
+  @Override
+  public void refreshViewFromPost() {
+    postEditionFragment.refreshViewFromPost();
+    postMetadataFragment.refreshViewFromPost();
+    postPlacesFragment.refreshViewFromPost();
   }
 
   @Override
@@ -43,6 +47,7 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
     viewPager = (ViewPager) findViewById(R.id.pager);
     postEditionFragment = new PostEditionFragment();
     postMetadataFragment = new PostMetadataFragment();
+    postPlacesFragment = new PostPlacesFragment();
     setTitle("");
     getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -77,13 +82,15 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
         f = postEditionFragment;
       } else if (1 == position) {
         f = postMetadataFragment;
+      } else if (2 == position) {
+        f = postPlacesFragment;
       }
       return f;
     }
 
     @Override
     public int getCount() {
-      return 2;
+      return 3;
     }
 
     @Override
@@ -93,6 +100,8 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
         title = "Free text";
       } else if (1 == position) {
         title = "Metadata";
+      } else if (2 == position) {
+        title = "Places";
       }
       return title;
     }

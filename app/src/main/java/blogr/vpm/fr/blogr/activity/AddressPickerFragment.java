@@ -45,6 +45,7 @@ public class AddressPickerFragment extends DialogFragment {
               @Override
               public void onClick(DialogInterface dialogInterface, int position) {
                 post.addPlace(allAddresses.get(position));
+                ((RefreshListener) getActivity()).refreshViewFromPost();
               }
             })
             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -69,8 +70,6 @@ public class AddressPickerFragment extends DialogFragment {
     setArguments(args);
     show(activity.getFragmentManager(), "addressPicker");
   }
-
-
 
   /**
    * Transforms a list of addresses to a list of strings for display purposes. The order stays the same
