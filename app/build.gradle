@@ -11,13 +11,13 @@ buildscript {
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "blogr.vpm.fr.blogr"
         minSdkVersion 15
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -32,15 +32,16 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('../libs/mail.jar')
-    compile group: 'commons-io', name: 'commons-io', version: '2.4'
-    compile group: 'com.google.android.gms', name: 'play-services', version: '6.5.87'
-    compile group: 'org.markdownj', name: 'markdownj-core', version: '0.4'
-    compile group: 'com.googlecode.flickrj-android', name: 'flickrj-android', version: '2.1.0'
-    compile group: 'org.slf4j', name: 'slf4j-android', version: '1.7.9'
-    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '3.6.2.201501210735-r'
-    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit-parent', version: '3.6.2.201501210735-r'
-    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit.http.apache', version: '3.6.2.201501210735-r'
-    compile group: 'com.esotericsoftware.yamlbeans', name: 'yamlbeans', version: '1.09'
+    compile 'commons-io:commons-io:2.4'
+    compile 'org.markdownj:markdownj-core:0.4'
+    compile 'com.googlecode.flickrj-android:flickrj-android:2.1.0'
+    compile 'org.slf4j:slf4j-android:1.7.9'
+    compile 'com.android.support:support-v4:22.0.0'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:3.6.2.201501210735-r'
+    compile 'org.eclipse.jgit:org.eclipse.jgit-parent:3.6.2.201501210735-r'
+    compile 'org.eclipse.jgit:org.eclipse.jgit.http.apache:3.6.2.201501210735-r'
+    compile 'com.esotericsoftware.yamlbeans:yamlbeans:1.09'
+    //compile 'com.google.android.gms:play-services:7.0.0'
 }
 
 apply plugin: "android-unit-test"
