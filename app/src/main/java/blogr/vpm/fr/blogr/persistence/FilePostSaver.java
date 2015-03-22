@@ -2,8 +2,9 @@ package blogr.vpm.fr.blogr.persistence;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.apache.commons.io.IOUtils;
 
@@ -14,7 +15,6 @@ import java.io.StringReader;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
-import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 
 /**
  * Created by vincent on 06/10/14.
@@ -48,25 +48,41 @@ public class FilePostSaver implements PostSaver {
           Toast.makeText(context, context.getResources().getString(R.string.cannotsavepost), Toast.LENGTH_SHORT).show();
         }
       }
-      // fill file
-      FileOutputStream postFileOut = null;
+      saved = fillFile(postFile, post.getContent());
+      saved &= persistPlaces(post);
+    }
+    return saved;
+  }
+
+  private boolean persistPlaces(Post post) {
+    File postFile = new FileManager().getDataFileForPost(context, post);
+    if (!postFile.exists()) {
       try {
-        postFileOut = new FileOutputStream(postFile);
-        if (post.getBlog().hasMetadataProvider()) {
-          new DefaultInserter(context).prepend(post, post.getBlog().getMetadataProvider(post));
-        }
-        Log.d("saving post (file)", post.getContent());
-        IOUtils.copy(new StringReader(post.getContent()), postFileOut, "UTF-8");
-        saved = true;
+        postFile.createNewFile();
       } catch (IOException e) {
         Toast.makeText(context, context.getResources().getString(R.string.cannotsavepost), Toast.LENGTH_SHORT).show();
-      } finally {
-        if (postFileOut != null) {
-          try {
-            postFileOut.close();
-          } catch (IOException e) {
-            Toast.makeText(context, context.getResources().getString(R.string.mightnotsavepost), Toast.LENGTH_SHORT).show();
-          }
+      }
+    }
+    Gson gson = new Gson();
+    String serializedPlaces = gson.toJson(post.getPlaces());
+    return fillFile(postFile, serializedPlaces);
+  }
+
+  private boolean fillFile(File postFile, String serializedPlaces) {
+    boolean saved = false;
+    FileOutputStream postFileOut = null;
+    try {
+      postFileOut = new FileOutputStream(postFile);
+      IOUtils.copy(new StringReader(serializedPlaces), postFileOut, "UTF-8");
+      saved = true;
+    } catch (IOException e) {
+      Toast.makeText(context, context.getResources().getString(R.string.cannotsavepost), Toast.LENGTH_SHORT).show();
+    } finally {
+      if (postFileOut != null) {
+        try {
+          postFileOut.close();
+        } catch (IOException e) {
+          Toast.makeText(context, context.getResources().getString(R.string.mightnotsavepost), Toast.LENGTH_SHORT).show();
         }
       }
     }

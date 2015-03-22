@@ -18,9 +18,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.bean.Place;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.location.AddressesListener;
 import blogr.vpm.fr.blogr.location.AndroidPlacesProvider;
@@ -41,7 +41,7 @@ public class PostPlacesFragment extends Fragment implements AddressesListener {
 
   private ImageButton locateButton;
 
-  private ArrayAdapter<String> placesAdapter;
+  private ArrayAdapter<Place> placesAdapter;
 
   private Post getCurrentPost() {
     return ((PostEditionActivity) getActivity()).getCurrentPost();
@@ -68,8 +68,7 @@ public class PostPlacesFragment extends Fragment implements AddressesListener {
     searchButton = (ImageButton) v.findViewById(R.id.searchButton);
     locateButton = (ImageButton) v.findViewById(R.id.locateButton);
 
-    List<String> placesNames = getCurrentPost().getPlacesNames();
-    placesAdapter = new ArrayAdapter<String>(getActivity(), R.layout.post_item, placesNames);
+    placesAdapter = new ArrayAdapter<Place>(getActivity(), R.layout.post_item, R.id.postItem, getCurrentPost().getPlaces());
     placesList.setAdapter(placesAdapter);
     refreshViewFromPost();
 
@@ -127,12 +126,7 @@ public class PostPlacesFragment extends Fragment implements AddressesListener {
   }
 
   void refreshViewFromPost() {
-    if (placesAdapter != null) {
-      Log.d("refresh", "postPlacesFragment");
-      placesAdapter.clear();
-      placesAdapter.addAll(getCurrentPost().getPlacesNames());
-      placesAdapter.notifyDataSetChanged();
-    }
+    placesAdapter.notifyDataSetChanged();
   }
 
   @Override

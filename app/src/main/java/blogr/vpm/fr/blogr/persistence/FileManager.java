@@ -54,4 +54,19 @@ public class FileManager {
     return postTitle.replace(' ', '_') + ".txt";
   }
 
+  /**
+   * Returns the file (maybe non-existent) for the post
+   *
+   * @param post the post we want the matching file for
+   * @return a file to store data about the post
+   * @pre the external storage should be writable
+   */
+  public File getDataFileForPost(Context context, Post post){
+    File blogsDir = new FileBlogManager().getBlogsDir();
+    File blogDir = new File(blogsDir, post.getBlog().getTitle());
+    File postDir = new File(blogDir, post.getBlog().getPostsFolder());
+    postDir.mkdirs();
+    File postFile = new File(postDir, getFileName(context, post).replace(".txt", ".json"));
+    return postFile;
+  }
 }

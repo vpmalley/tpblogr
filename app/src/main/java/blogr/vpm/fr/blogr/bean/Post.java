@@ -12,9 +12,7 @@ import android.provider.MediaStore;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-
-import blogr.vpm.fr.blogr.activity.AddressPickerFragment;
+import java.util.Collection;
 
 /**
  * Created by vincent on 29/08/14.
@@ -47,14 +45,15 @@ public class Post implements Parcelable {
 
   private PostMetadata md;
 
-  private final ArrayList<Parcelable> places;
+  private ArrayList<Place> places;
+
 
   public Post(String title, String content, Blog blog) {
     this.title = title;
     this.content = content;
     this.pictures = new ArrayList<Uri>();
-    this.places = new ArrayList<>();
     this.blog = blog;
+    this.places = new ArrayList<>();
     this.md = new PostMetadata(new ArrayList<String>());
   }
 
@@ -63,8 +62,8 @@ public class Post implements Parcelable {
     this.content = post.getContent();
     this.pictures = post.getPicturesAsMediaContent();
     this.blog = post.getBlog();
-    this.md = post.getMd();
     this.places = post.getPlaces();
+    this.md = post.getMd();
   }
 
   public String getTitle() {
@@ -124,16 +123,28 @@ public class Post implements Parcelable {
     this.md = md;
   }
 
-  public ArrayList<Parcelable> getPlaces() {
-    return places;
+  /**
+   * Adds a place to the list associated with this post
+   * @param place a {@link android.location.Location} representing a place
+   */
+  public void addPlace(Location place) {
+    places.add(new Place(place));
   }
 
   /**
    * Adds a place to the list associated with this post
-   * @param place this should either be a {@link android.location.Address} or a {@link android.location.Location}
+   * @param place a {@link android.location.Address} representing a place
    */
-  public void addPlace(Parcelable place) {
-    places.add(place);
+  public void addPlace(Address place) {
+    places.add(new Place(place));
+  }
+
+  public ArrayList<Place> getPlaces() {
+    return places;
+  }
+
+  public void setPlaces(Collection<Place> places) {
+    this.places = new ArrayList<>(places);
   }
 
   @Override
@@ -149,8 +160,8 @@ public class Post implements Parcelable {
     b.putParcelableArrayList(PICTURES_KEY, pictures);
     b.putParcelable(BLOG_KEY, blog);
     b.putParcelable(MD_KEY, md);
-    b.putParcelableArrayList(PLACES_KEY, places);
     parcel.writeBundle(b);
+    parcel.writeTypedList(places);
   }
 
   private Post(Parcel in) {
@@ -162,7 +173,8 @@ public class Post implements Parcelable {
     pictures = b.getParcelableArrayList(PICTURES_KEY);
     blog = b.getParcelable(BLOG_KEY);
     md = b.getParcelable(MD_KEY);
-    places = b.getParcelableArrayList(PLACES_KEY);
+    places = new ArrayList<>();
+    in.readTypedList(places, Place.CREATOR);
   }
 
   public static final Parcelable.Creator<Post> CREATOR
@@ -175,16 +187,4 @@ public class Post implements Parcelable {
       return new Post[size];
     }
   };
-
-  public List<String> getPlacesNames() {
-    List<String> placesNames = new ArrayList<>();
-    for (Parcelable p : places) {
-      if (p instanceof Location) {
-        placesNames.add("Lat. " + ((Location)p).getLatitude() + ", Lon. " + ((Location)p).getLongitude());
-      } else if (p instanceof Address) {
-        placesNames.add(AddressPickerFragment.getAddressLines((Address) p));
-      }
-    }
-    return placesNames;
-  }
 }

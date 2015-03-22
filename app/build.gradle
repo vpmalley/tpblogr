@@ -41,6 +41,7 @@ dependencies {
     compile 'org.eclipse.jgit:org.eclipse.jgit-parent:3.6.2.201501210735-r'
     compile 'org.eclipse.jgit:org.eclipse.jgit.http.apache:3.6.2.201501210735-r'
     compile 'com.esotericsoftware.yamlbeans:yamlbeans:1.09'
+    compile 'com.google.code.gson:gson:2.3.1'
     //compile 'com.google.android.gms:play-services:7.0.0'
 }
 
