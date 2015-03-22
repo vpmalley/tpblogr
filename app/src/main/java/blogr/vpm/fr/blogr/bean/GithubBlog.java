@@ -21,7 +21,7 @@ import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.metadata.YamlMetadataExtracter;
 import blogr.vpm.fr.blogr.metadata.YamlMetadataProvider;
 import blogr.vpm.fr.blogr.persistence.FileBlogManager;
-import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
+import blogr.vpm.fr.blogr.picture.PictureTextileTagsProvider;
 import blogr.vpm.fr.blogr.publish.GithubPublisher;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 
@@ -96,7 +96,7 @@ public class GithubBlog implements Blog {
 
   @Override
   public SurroundingTagsProvider getPictureTagsProvider(Context context, String pictureUrl) {
-    return new PictureMdTagsProvider(pictureUrl);
+    return new PictureTextileTagsProvider(pictureUrl);
   }
 
   @Override
