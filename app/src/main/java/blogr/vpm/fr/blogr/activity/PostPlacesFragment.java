@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,13 +35,13 @@ public class PostPlacesFragment extends Fragment implements AddressesListener {
 
   private PostSaver saver;
 
-  private AbsListView placesList;
-
   private EditText searchField;
 
   private ImageButton searchButton;
 
   private ImageButton locateButton;
+
+  private ArrayAdapter<String> placesAdapter;
 
   private Post getCurrentPost() {
     return ((PostEditionActivity) getActivity()).getCurrentPost();
@@ -62,10 +63,14 @@ public class PostPlacesFragment extends Fragment implements AddressesListener {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.fragment_post_places, container, false);
-    placesList = (AbsListView) v.findViewById(R.id.places);
+    AbsListView placesList = (AbsListView) v.findViewById(R.id.places);
     searchField = (EditText) v.findViewById(R.id.searchField);
     searchButton = (ImageButton) v.findViewById(R.id.searchButton);
     locateButton = (ImageButton) v.findViewById(R.id.locateButton);
+
+    List<String> placesNames = getCurrentPost().getPlacesNames();
+    placesAdapter = new ArrayAdapter<String>(getActivity(), R.layout.post_item, placesNames);
+    placesList.setAdapter(placesAdapter);
     refreshViewFromPost();
 
     locateButton.setOnClickListener(new View.OnClickListener() {
@@ -122,8 +127,12 @@ public class PostPlacesFragment extends Fragment implements AddressesListener {
   }
 
   void refreshViewFromPost() {
-    List<String> placesNames = getCurrentPost().getPlacesNames();
-    placesList.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.post_item, placesNames));
+    if (placesAdapter != null) {
+      Log.d("refresh", "postPlacesFragment");
+      placesAdapter.clear();
+      placesAdapter.addAll(getCurrentPost().getPlacesNames());
+      placesAdapter.notifyDataSetChanged();
+    }
   }
 
   @Override

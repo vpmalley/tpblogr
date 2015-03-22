@@ -35,8 +35,7 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
 
   @Override
   public void refreshViewFromPost() {
-    postEditionFragment.refreshViewFromPost();
-    postMetadataFragment.refreshViewFromPost();
+    setTitle(currentPost.getTitle());
     postPlacesFragment.refreshViewFromPost();
   }
 
