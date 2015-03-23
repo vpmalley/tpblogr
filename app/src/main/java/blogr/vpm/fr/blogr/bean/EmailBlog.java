@@ -16,7 +16,7 @@ import javax.mail.internet.InternetAddress;
 import blogr.vpm.fr.blogr.insertion.Extracter;
 import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
-import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
+import blogr.vpm.fr.blogr.picture.PictureMarkdownTagsProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.publish.StdEmailPostPublisher;
 
@@ -65,7 +65,7 @@ public class EmailBlog implements Blog {
 
   @Override
   public SurroundingTagsProvider getPictureTagsProvider(Context context, String pictureUrl) {
-    return new PictureMdTagsProvider(pictureUrl);
+    return new PictureMarkdownTagsProvider(pictureUrl);
   }
 
   @Override

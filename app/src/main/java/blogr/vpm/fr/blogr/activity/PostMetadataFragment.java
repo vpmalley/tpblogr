@@ -31,7 +31,6 @@ import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.bean.PostMetadata;
 import blogr.vpm.fr.blogr.insertion.MetadataProvider;
 import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
-import blogr.vpm.fr.blogr.location.LatLongTagProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
@@ -119,8 +118,7 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
         return true;
       case R.id.action_insert_location:
         refreshPostFromView();
-        Map<String, String> locationMappings = new LatLongTagProvider(getActivity(), locationProvider).getMappings();
-        getCurrentPost().getMd().putData(locationMappings);
+        new PlacePickerFragment().openPlacesPicker(getActivity(), getCurrentPost().getPlaces(), PostEditionActivity.REQ_MD);
         refreshViewFromPost();
         return true;
       case R.id.action_insert_picture:
@@ -168,12 +166,15 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
    * Refreshes the view with the current Post
    */
   void refreshViewFromPost() {
-    if (getCurrentPost() != null) {
+    if (metadataAdapter == null) {
       getCurrentPost().getMd().addKeys(getCurrentPost().getBlog().getMdKeys());
       getActivity().setTitle(getCurrentPost().getTitle());
       Map<String, Object> postMd = (Map<String, Object>) getCurrentPost().getMd().getAsMap();
       metadataAdapter = new MetadataAdapter(getActivity(), postMd);
       metadataList.setAdapter(metadataAdapter);
+    } else {
+      metadataAdapter.clear();
+      metadataAdapter.addAll(new ArrayList<Map.Entry<String, ?>>(getCurrentPost().getMd().getAsMap().entrySet()));
     }
   }
 

@@ -21,14 +21,14 @@ public class Place implements Parcelable {
   private float speed;
 
   private boolean hasAddress = false;
-  private String addressDisplay;
-  private String adminArea;
-  private String countryCode;
-  private String countryName;
+  private String addressDisplay = "";
+  private String adminArea = "";
+  private String countryCode = "";
+  private String countryName = "";
   private Locale locale;
-  private String featureName;
-  private String locality;
-  private String url;
+  private String featureName = "";
+  private String locality = "";
+  private String url = "";
 
   public Place(Location location) {
     if (location.hasAccuracy()) {

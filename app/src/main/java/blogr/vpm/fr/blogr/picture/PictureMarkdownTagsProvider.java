@@ -5,11 +5,11 @@ import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 /**
  * Created by vincent on 19/10/14.
  */
-public class PictureMdTagsProvider implements SurroundingTagsProvider {
+public class PictureMarkdownTagsProvider implements SurroundingTagsProvider {
 
   private final String pictureUrl;
 
-  public PictureMdTagsProvider(String pictureUrl) {
+  public PictureMarkdownTagsProvider(String pictureUrl) {
     this.pictureUrl = pictureUrl;
   }
 

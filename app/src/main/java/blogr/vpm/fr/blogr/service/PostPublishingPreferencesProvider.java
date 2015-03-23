@@ -9,7 +9,7 @@ import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.insertion.Extracter;
 import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
-import blogr.vpm.fr.blogr.picture.PictureMdTagsProvider;
+import blogr.vpm.fr.blogr.picture.PictureMarkdownTagsProvider;
 import blogr.vpm.fr.blogr.picture.PictureTpTagsProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.publish.StdEmailPostPublisher;
@@ -51,7 +51,7 @@ public class PostPublishingPreferencesProvider implements PostPublishingServiceP
     if (tpBlog.equals(prefValue)) {
       serviceInstance = new PictureTpTagsProvider(pictureUrl);
     } else if (stdEmail.equals(prefValue)) {
-      serviceInstance = new PictureMdTagsProvider(pictureUrl);
+      serviceInstance = new PictureMarkdownTagsProvider(pictureUrl);
     } else {
       throw new IllegalStateException("Unexpected publication service specified");
     }

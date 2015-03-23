@@ -1,7 +1,6 @@
 package blogr.vpm.fr.blogr.activity;
 
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -10,13 +9,15 @@ import android.support.v4.view.ViewPager;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
  * Created by vince on 17/10/14.
  */
-public class PostEditionActivity extends FragmentActivity implements PicturePickedListener, RefreshListener {
+public class PostEditionActivity extends FragmentActivity implements PicturePickedListener, RefreshListener, PlacePickedListener {
 
+  public static final int REQ_MD = 41;
   private PostEditionFragment postEditionFragment;
 
   private PostMetadataFragment postMetadataFragment;
@@ -38,6 +39,7 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
   public void refreshViewFromPost() {
     setTitle(currentPost.getTitle());
     postPlacesFragment.refreshViewFromPost();
+    postMetadataFragment.refreshViewFromPost();
   }
 
   @Override
@@ -67,6 +69,14 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
   public void onPicturePicked(String picUrl) {
     // This only delegates to the fragment
     postEditionFragment.onPicturePicked(picUrl);
+  }
+
+  @Override
+  public void onPlacePicked(PlaceTagMdProvider provider, int request) {
+    if (REQ_MD == request) {
+      currentPost.getMd().putData(provider.getMappings());
+    }
+    refreshViewFromPost();
   }
 
   private class PostPagerAdapter extends FragmentPagerAdapter {
