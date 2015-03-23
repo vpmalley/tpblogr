@@ -126,7 +126,9 @@ public class PostPlacesFragment extends Fragment implements AddressesListener {
   }
 
   void refreshViewFromPost() {
-    placesAdapter.notifyDataSetChanged();
+    if (placesAdapter != null) {
+      placesAdapter.notifyDataSetChanged();
+    }
   }
 
   @Override

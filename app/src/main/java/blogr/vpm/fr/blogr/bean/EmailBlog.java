@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -54,7 +55,7 @@ public class EmailBlog implements Blog {
 
   @Override
   public List<String> getMdKeys() {
-    throw new UnsupportedOperationException();
+    return new ArrayList<>();
   }
 
   @Override
