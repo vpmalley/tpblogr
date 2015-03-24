@@ -12,6 +12,8 @@ import java.util.Map;
 
 /**
  * Created by vince on 10/03/15.
+ *
+ * TODO should it just be a map ?
  */
 public class PostMetadata implements Parcelable{
 
@@ -69,7 +71,23 @@ public class PostMetadata implements Parcelable{
   }
 
   public void putData(String key, Object value) {
-    otherData.put(key, value);
+    switch (key) {
+      case TITLE_KEY:
+        this.title = String.valueOf(value);
+        break;
+      case TRAVEL_DATE_KEY:
+        this.travelDate = String.valueOf(value);
+        break;
+      case EXCERPT_KEY:
+        this.excerpt = String.valueOf(value);
+        break;
+      case LAYOUT_KEY:
+        this.layout = String.valueOf(value);
+        break;
+      default:
+        otherData.put(key, value);
+        break;
+    }
   }
 
   public void addKeys(List<String> keys){
@@ -82,6 +100,12 @@ public class PostMetadata implements Parcelable{
 
   public void putData(Map<String, String> allData) {
     otherData.putAll(allData);
+  }
+
+  public void remove(String key) {
+    if (otherData.containsKey(key)) {
+      otherData.remove(key);
+    }
   }
 
   public HashMap<String, ?> getAsMap() {
@@ -136,5 +160,4 @@ public class PostMetadata implements Parcelable{
       return new PostMetadata[size];
     }
   };
-
 }

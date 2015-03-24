@@ -163,7 +163,7 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
    */
   void refreshPostFromView() {
     if (getCurrentPost() != null) {
-      getCurrentPost().setMd(new PostMetadata(metadataAdapter.getMd()));
+      metadataAdapter.updatePostMd();
     }
   }
 
@@ -171,29 +171,24 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
 
     private final int resource;
 
-    private final Map<String, Object> mds;
-
     // the views currently in focus
     private EditText focusedKeyView;
     private EditText focusedValueView;
 
     public MetadataAdapter(Context context, Map<String, Object> mds) {
       super(context, R.layout.metadata_item, new ArrayList<Map.Entry<String, ?>>(mds.entrySet()));
-      this.mds = mds;
       this.resource = R.layout.metadata_item;
     }
 
-    public Map<String, Object> getMd() {
+    public void updatePostMd() {
       if ((focusedKeyView != null) && (focusedValueView != null)) {
         String key = focusedKeyView.getText().toString();
         String value = focusedValueView.getText().toString();
         if (!key.isEmpty()) {
-          Log.d("md", "put(" + key + "=>" + value + ")");
-          mds.put(key, value);
+          Log.d("md mappings", "put(" + key + "=>" + value + ")");
+          getCurrentPost().getMd().putData(key, value);
         }
       }
-      Log.d("md", mds.toString());
-      return mds;
     }
 
     @Override
@@ -254,17 +249,16 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
             if (focused) {
               String key = mdKeyView.getText().toString();
               if (!key.isEmpty()) {
-                mds.remove(key);
+                getCurrentPost().getMd().remove(key);
               }
               focusedKeyView = mdKeyView;
               focusedValueView = mdValueView;
             } else {
               String key = mdKeyView.getText().toString();
               String value = mdValueView.getText().toString();
-              Log.d("md", "value is null : " + (mdValueView.getText() == null));
               if (!key.isEmpty()) {
                 Log.d("md (focus)", "put(" + key + "=>" + value + ")");
-                mds.put(key, value);
+                getCurrentPost().getMd().putData(key, value);
               }
               focusedKeyView = null;
               focusedValueView = null;
