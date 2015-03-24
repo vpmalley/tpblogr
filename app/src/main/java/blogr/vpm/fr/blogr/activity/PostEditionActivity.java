@@ -10,6 +10,8 @@ import android.support.v4.view.ViewPager;
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
+import blogr.vpm.fr.blogr.persistence.FilePostSaver;
+import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
@@ -18,6 +20,8 @@ import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 public class PostEditionActivity extends FragmentActivity implements PicturePickedListener, RefreshListener, PlacePickedListener {
 
   public static final int REQ_MD = 41;
+  public static final int MAX_NEW_POST_FILES = 100;
+
   private PostEditionFragment postEditionFragment;
 
   private PostMetadataFragment postMetadataFragment;
@@ -27,19 +31,14 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
   private ViewPager viewPager;
   private Post currentPost;
 
+  private PostSaver saver;
+
   public Post getCurrentPost() {
     return currentPost;
   }
 
   public void setCurrentPost(Post currentPost) {
     this.currentPost = currentPost;
-  }
-
-  @Override
-  public void refreshViewFromPost() {
-    setTitle(currentPost.getTitle());
-    postPlacesFragment.refreshViewFromPost();
-    postMetadataFragment.refreshViewFromPost();
   }
 
   @Override
@@ -63,6 +62,60 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
       viewPager.setCurrentItem(0);
     }
 
+    saver = new FilePostSaver(this);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    refreshPostFromView();
+    saveCurrentPost();
+  }
+
+  @Override
+  public void refreshViewFromPost() {
+    setTitle(currentPost.getTitle());
+    postPlacesFragment.refreshViewFromPost();
+    postMetadataFragment.refreshViewFromPost();
+  }
+
+  public void refreshPostFromView() {
+    postEditionFragment.refreshPostFromView();
+    postMetadataFragment.refreshPostFromView();
+  }
+
+  /**
+   * Saves the post built from the view
+   */
+  void saveCurrentPost() {
+    // save only if post has content or title
+    if ((getCurrentPost() != null) && (!isPostTitleEmpty() || !isPostContentEmpty())) {
+      if (isPostTitleEmpty()) {
+        determineAvailablePostTitle();
+      }
+      saver.persist(getCurrentPost());
+    }
+  }
+
+  /**
+   * Determines a title for the post that does not exist yet - in order not to override written post.
+   */
+  private void determineAvailablePostTitle() {
+    String newPostTitle = getString(R.string.newpost);
+    getCurrentPost().setTitle(newPostTitle);
+    if (saver.exists(getCurrentPost())) {
+      for (int i = 1; saver.exists(getCurrentPost()) && (i < MAX_NEW_POST_FILES); i++) {
+        getCurrentPost().setTitle(newPostTitle + " " + i);
+      }
+    }
+  }
+
+  private boolean isPostContentEmpty() {
+    return ("".equals(getCurrentPost().getContent()));
+  }
+
+  private boolean isPostTitleEmpty() {
+    return ("".equals(getCurrentPost().getTitle()));
   }
 
   @Override

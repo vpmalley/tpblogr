@@ -31,8 +31,6 @@ import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
 import blogr.vpm.fr.blogr.location.LatLongTagProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
-import blogr.vpm.fr.blogr.persistence.FilePostSaver;
-import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.service.PostPublishingPreferencesProvider;
@@ -44,11 +42,8 @@ import blogr.vpm.fr.blogr.service.PostPublishingServiceProvider;
 public class PostEditionFragment extends Fragment implements PicturePickedListener {
 
   public static final int PICK_PIC_REQ_CODE = 32;
-  public static final int MAX_NEW_POST_FILES = 100;
 
   private PostPublishingServiceProvider publisherProvider;
-
-  private PostSaver saver;
 
   private LocationProvider locationProvider;
 
@@ -74,7 +69,6 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
     Log.d("postF", "creating fragment");
     // init services
     publisherProvider = new PostPublishingPreferencesProvider();
-    saver = new FilePostSaver(getActivity());
     locationProvider = new AndroidLocationProvider(getActivity());
 
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -108,8 +102,6 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
   @Override
   public void onPause() {
     super.onPause();
-    refreshPostFromView();
-    saveCurrentPost();
     locationProvider.disconnect();
   }
 
@@ -132,7 +124,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
         return true;
       case R.id.action_publish:
         refreshPostFromView();
-        saveCurrentPost();
+        ((PostEditionActivity) getActivity()).saveCurrentPost();
         PostPublisher publisher = currentBlog.getPublisherService(getActivity());
         publisher.publish(currentBlog, getCurrentPost());
         return true;
@@ -216,7 +208,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
   /**
    * Refreshes the Post with the current view elements
    */
-  private void refreshPostFromView() {
+  void refreshPostFromView() {
     if ((titleField != null) && (contentField != null)) {
       if (titleField.getText() != null) {
         getCurrentPost().setTitle(titleField.getText().toString());
@@ -225,40 +217,6 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
         getCurrentPost().setContent(contentField.getText().toString());
       }
     }
-  }
-
-  /**
-   * Saves the Post built from the view
-   */
-  private void saveCurrentPost() {
-    // save only if post has content or title
-    if ((getCurrentPost() != null) && (!isPostTitleEmpty() || !isPostContentEmpty())) {
-      if (isPostTitleEmpty()) {
-        determineAvailablePostTitle();
-      }
-      saver.persist(getCurrentPost());
-    }
-  }
-
-  /**
-   * Determines a title for the post that does not exist yet - in order not to override written post.
-   */
-  private void determineAvailablePostTitle() {
-    String newPostTitle = getActivity().getResources().getString(R.string.newpost);
-    getCurrentPost().setTitle(newPostTitle);
-    if (saver.exists(getCurrentPost())) {
-      for (int i = 1; saver.exists(getCurrentPost()) && (i < MAX_NEW_POST_FILES); i++) {
-        getCurrentPost().setTitle(newPostTitle + " " + i);
-      }
-    }
-  }
-
-  private boolean isPostContentEmpty() {
-    return ("".equals(getCurrentPost().getContent()));
-  }
-
-  private boolean isPostTitleEmpty() {
-    return ("".equals(getCurrentPost().getTitle()));
   }
 
   private class OnFocusChanged implements View.OnFocusChangeListener {

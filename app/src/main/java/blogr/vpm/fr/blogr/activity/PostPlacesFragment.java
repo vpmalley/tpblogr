@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,15 +24,11 @@ import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.location.AddressesListener;
 import blogr.vpm.fr.blogr.location.AndroidPlacesProvider;
 import blogr.vpm.fr.blogr.location.PlacesProvider;
-import blogr.vpm.fr.blogr.persistence.FilePostSaver;
-import blogr.vpm.fr.blogr.persistence.PostSaver;
 
 /**
  * Created by vince on 21/03/15.
  */
 public class PostPlacesFragment extends Fragment implements AddressesListener {
-
-  private PostSaver saver;
 
   private EditText searchField;
 
@@ -55,9 +50,6 @@ public class PostPlacesFragment extends Fragment implements AddressesListener {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
-
-    // init services
-    saver = new FilePostSaver(getActivity());
   }
 
   @Override

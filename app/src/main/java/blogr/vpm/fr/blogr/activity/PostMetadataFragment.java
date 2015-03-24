@@ -30,10 +30,6 @@ import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.bean.PostMetadata;
 import blogr.vpm.fr.blogr.insertion.MetadataProvider;
-import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
-import blogr.vpm.fr.blogr.location.LocationProvider;
-import blogr.vpm.fr.blogr.persistence.FilePostSaver;
-import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.picture.PictureMetadataProvider;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
@@ -43,10 +39,6 @@ import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 public class PostMetadataFragment extends Fragment implements PicturePickedListener {
 
   public static final int PICK_PIC_REQ_CODE = 32;
-
-  private PostSaver saver;
-
-  private LocationProvider locationProvider;
 
   private AbsListView metadataList;
 
@@ -67,9 +59,6 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
     setHasOptionsMenu(true);
 
     Log.d("postMDF", "creating fragment");
-    // init services
-    saver = new FilePostSaver(getActivity());
-    locationProvider = new AndroidLocationProvider(getActivity());
   }
 
   @Override
@@ -93,15 +82,6 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
     super.onResume();
     getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     refreshViewFromPost();
-    locationProvider.connect();
-  }
-
-  @Override
-  public void onPause() {
-    super.onPause();
-    refreshPostFromView();
-    saveCurrentPost();
-    locationProvider.disconnect();
   }
 
   @Override
@@ -181,19 +161,9 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
   /**
    * Refreshes the Post with the current view elements
    */
-  private void refreshPostFromView() {
+  void refreshPostFromView() {
     if (getCurrentPost() != null) {
       getCurrentPost().setMd(new PostMetadata(metadataAdapter.getMd()));
-    }
-  }
-
-  /**
-   * Saves the post built from the view
-   */
-  private void saveCurrentPost() {
-    // save only if post has content or title
-    if ((getCurrentPost() != null) ) {
-      saver.persist(getCurrentPost());
     }
   }
 

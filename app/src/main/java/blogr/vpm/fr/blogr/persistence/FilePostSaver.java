@@ -15,6 +15,7 @@ import java.io.StringReader;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 
 /**
  * Created by vincent on 06/10/14.
@@ -47,6 +48,9 @@ public class FilePostSaver implements PostSaver {
         } catch (IOException e) {
           Toast.makeText(context, context.getResources().getString(R.string.cannotsavepost), Toast.LENGTH_SHORT).show();
         }
+      }
+      if (post.getBlog().hasMetadataProvider()) {
+        new DefaultInserter(context).prepend(post, post.getBlog().getMetadataProvider(post));
       }
       saved = fillFile(postFile, post.getContent());
       saved &= persistPlaces(post);
