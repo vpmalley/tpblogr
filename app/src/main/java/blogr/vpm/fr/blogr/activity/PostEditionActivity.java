@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
-import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
@@ -17,7 +16,7 @@ import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 /**
  * Created by vince on 17/10/14.
  */
-public class PostEditionActivity extends FragmentActivity implements PicturePickedListener, RefreshListener, PlacePickedListener {
+public class PostEditionActivity extends FragmentActivity implements PicturePickedListener, RefreshListener {
 
   public static final int REQ_MD = 41;
   public static final int MAX_NEW_POST_FILES = 100;
@@ -122,14 +121,6 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
   public void onPicturePicked(String picUrl) {
     // This only delegates to the fragment
     postEditionFragment.onPicturePicked(picUrl);
-  }
-
-  @Override
-  public void onPlacePicked(PlaceTagMdProvider provider, int request) {
-    if (REQ_MD == request) {
-      currentPost.getMd().putData(provider.getMappings());
-    }
-    refreshViewFromPost();
   }
 
   private class PostPagerAdapter extends FragmentPagerAdapter {

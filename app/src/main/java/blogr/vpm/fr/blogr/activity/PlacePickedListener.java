@@ -7,6 +7,6 @@ import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
  */
 public interface PlacePickedListener {
 
-  void onPlacePicked(PlaceTagMdProvider provider, int request);
+  void onPlacePicked(PlaceTagMdProvider provider);
 
 }

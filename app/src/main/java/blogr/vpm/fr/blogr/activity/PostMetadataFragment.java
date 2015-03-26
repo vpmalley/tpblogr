@@ -30,6 +30,7 @@ import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.bean.PostMetadata;
 import blogr.vpm.fr.blogr.insertion.MetadataProvider;
+import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
 import blogr.vpm.fr.blogr.picture.PictureMetadataProvider;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
@@ -98,7 +99,13 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
         return true;
       case R.id.action_insert_location:
         refreshPostFromView();
-        new PlacePickerFragment().openPlacesPicker(getActivity(), getCurrentPost().getPlaces(), PostEditionActivity.REQ_MD);
+        new PlacePickerFragment().openPlacesPicker(getActivity(), getCurrentPost().getPlaces(), new PlacePickedListener() {
+          @Override
+          public void onPlacePicked(PlaceTagMdProvider provider) {
+            getCurrentPost().getMd().putData(provider.getMappings());
+            refreshViewFromPost();
+          }
+        });
         refreshViewFromPost();
         return true;
       case R.id.action_insert_picture:

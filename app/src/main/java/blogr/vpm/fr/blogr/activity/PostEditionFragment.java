@@ -29,8 +29,8 @@ import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.insertion.Inserter;
 import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
-import blogr.vpm.fr.blogr.location.LatLongTagProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
+import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.service.PostPublishingPreferencesProvider;
@@ -117,7 +117,7 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
 
-    Inserter tagsInserter = new DefaultInserter(getActivity());
+    final Inserter tagsInserter = new DefaultInserter(getActivity());
     switch (item.getItemId()) {
       case R.id.action_settings:
         startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
@@ -129,7 +129,13 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
         publisher.publish(currentBlog, getCurrentPost());
         return true;
       case R.id.action_insert_location:
-        tagsInserter.insert(contentField, new LatLongTagProvider(getActivity(), locationProvider));
+        new PlacePickerFragment().openPlacesPicker(getActivity(), getCurrentPost().getPlaces(), new PlacePickedListener() {
+          @Override
+          public void onPlacePicked(PlaceTagMdProvider provider) {
+            tagsInserter.insert(contentField, provider);
+            refreshPostFromView();
+          }
+        });
         return true;
       case R.id.action_insert_picture:
         Intent i = new Intent(Intent.ACTION_PICK);
