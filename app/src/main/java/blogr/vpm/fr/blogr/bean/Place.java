@@ -5,6 +5,8 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Locale;
 
 /**
@@ -12,23 +14,23 @@ import java.util.Locale;
  */
 public class Place implements Parcelable {
 
-  private boolean hasLocation = false;
-  private float accuracy;
-  private double altitude;
-  private float bearing;
-  private double latitude = 0;
-  private double longitude = 0;
-  private float speed;
+  @Expose private boolean hasLocation = false;
+  @Expose private float accuracy;
+  @Expose private double altitude;
+  @Expose private float bearing;
+  @Expose private double latitude = 0;
+  @Expose private double longitude = 0;
+  @Expose private float speed;
 
-  private boolean hasAddress = false;
-  private String addressDisplay = "";
-  private String adminArea = "";
-  private String countryCode = "";
-  private String countryName = "";
-  private Locale locale;
-  private String featureName = "";
-  private String locality = "";
-  private String url = "";
+  @Expose private boolean hasAddress = false;
+  @Expose private String addressDisplay = "";
+  @Expose private String adminArea = "";
+  @Expose private String countryCode = "";
+  @Expose private String countryName = "";
+  @Expose private Locale locale;
+  @Expose private String featureName = "";
+  @Expose private String locality = "";
+  @Expose private String url = "";
 
   public Place(Location location) {
     if (location.hasAccuracy()) {

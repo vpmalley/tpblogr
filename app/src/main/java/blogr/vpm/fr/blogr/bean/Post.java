@@ -10,6 +10,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,8 +49,10 @@ public class Post implements Parcelable {
 
   private PostMetadata md;
 
+  @Expose
   private ArrayList<Place> places;
 
+  @Expose
   private ArrayList<ParcelableFlickrPhoto> flickrPictures;
 
 
@@ -159,6 +163,10 @@ public class Post implements Parcelable {
 
   public void addFlickrPicture(ParcelableFlickrPhoto pic) {
     flickrPictures.add(pic);
+  }
+
+  public void setFlickrPictures(ArrayList<ParcelableFlickrPhoto> flickrPictures) {
+    this.flickrPictures = flickrPictures;
   }
 
   @Override

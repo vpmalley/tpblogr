@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.apache.commons.io.IOUtils;
 
@@ -67,9 +68,9 @@ public class FilePostSaver implements PostSaver {
         Toast.makeText(context, context.getResources().getString(R.string.cannotsavepost), Toast.LENGTH_SHORT).show();
       }
     }
-    Gson gson = new Gson();
-    String serializedPlaces = gson.toJson(post.getPlaces());
-    return fillFile(postFile, serializedPlaces);
+    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    String serializedPost = gson.toJson(post);
+    return fillFile(postFile, serializedPost);
   }
 
   private boolean fillFile(File postFile, String serializedPlaces) {

@@ -5,7 +5,7 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 
 import org.apache.commons.io.IOUtils;
 
@@ -13,15 +13,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.EmailBlog;
-import blogr.vpm.fr.blogr.bean.Place;
 import blogr.vpm.fr.blogr.bean.Post;
 
 /**
@@ -88,12 +85,13 @@ public class FilePostRetriever implements PostRetriever {
           if (blog.hasMetadataExtracter()) {
             blog.getMetadataExtracter().extract(blog, post);
           }
-          File placesFile = new FileManager().getDataFileForPost(context, post);
-          if (placesFile.exists()) {
-            String serializedPlaces = readFile(placesFile);
-            Type collectionType = new TypeToken<Collection<Place>>(){}.getType();
-            Collection<Place> places = new Gson().fromJson(serializedPlaces, collectionType);
-            post.setPlaces(places);
+          File dataFile = new FileManager().getDataFileForPost(context, post);
+          if (dataFile.exists()) {
+            String serializedPlaces = readFile(dataFile);
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            Post postData = gson.fromJson(serializedPlaces, Post.class);
+            post.setPlaces(postData.getPlaces());
+            post.setFlickrPictures(postData.getFlickrPictures());
           }
           posts.add(post);
         }

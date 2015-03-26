@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
 import com.googlecode.flickrjandroid.FlickrException;
 import com.googlecode.flickrjandroid.photos.Photo;
 
@@ -30,28 +31,40 @@ public class ParcelableFlickrPhoto implements Parcelable, PictureLoadedListener 
   private static final String PAR_URL_SQ = "parceled_url_square";
   private static final String PAR_URL_LSQ = "parceled_url_largesquare";
 
+  @Expose
   private final String id;
 
+  @Expose
   private final String picUrl;
 
+  @Expose
   private final String title;
 
+  @Expose
   private final String description;
 
+  @Expose
   private final String thumbnailSizeUrl;
 
+  @Expose
   private final String smallSizeUrl;
 
+  @Expose
   private final String mediumSizeUrl;
 
+  @Expose
   private final String largeSizeUrl;
 
+  @Expose
   private String originalSizeUrl;
 
+  @Expose
   private final String largeSquareSizeUrl;
 
+  @Expose
   private final String squareSizeUrl;
 
+  @Expose
   private Bitmap smallBitmap;
 
   public ParcelableFlickrPhoto(Photo photo) {
@@ -74,17 +87,18 @@ public class ParcelableFlickrPhoto implements Parcelable, PictureLoadedListener 
   }
 
   private ParcelableFlickrPhoto(Parcel p) {
-    this.id = p.readBundle().getString(PAR_ID);
-    this.picUrl = p.readBundle().getString(PAR_URL);
-    this.title = p.readBundle().getString(PAR_TITLE);
-    this.description = p.readBundle().getString(PAR_DESC);
-    this.thumbnailSizeUrl = p.readBundle().getString(PAR_URL_T);
-    this.smallSizeUrl = p.readBundle().getString(PAR_URL_S);
-    this.mediumSizeUrl = p.readBundle().getString(PAR_URL_M);
-    this.largeSizeUrl = p.readBundle().getString(PAR_URL_L);
-    this.originalSizeUrl = p.readBundle().getString(PAR_URL_O);
-    this.squareSizeUrl = p.readBundle().getString(PAR_URL_SQ);
-    this.largeSquareSizeUrl = p.readBundle().getString(PAR_URL_LSQ);
+    Bundle b = p.readBundle();
+    this.id = b.getString(PAR_ID);
+    this.picUrl = b.getString(PAR_URL);
+    this.title = b.getString(PAR_TITLE);
+    this.description = b.getString(PAR_DESC);
+    this.thumbnailSizeUrl = b.getString(PAR_URL_T);
+    this.smallSizeUrl = b.getString(PAR_URL_S);
+    this.mediumSizeUrl = b.getString(PAR_URL_M);
+    this.largeSizeUrl = b.getString(PAR_URL_L);
+    this.originalSizeUrl = b.getString(PAR_URL_O);
+    this.squareSizeUrl = b.getString(PAR_URL_SQ);
+    this.largeSquareSizeUrl = b.getString(PAR_URL_LSQ);
   }
 
   public String getId() {

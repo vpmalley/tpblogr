@@ -34,7 +34,7 @@ public class AsyncPictureLoader extends AsyncTask<String, Integer, Bitmap> {
       pictureStream = new URL(pictureUrl).openStream();
       pictureBitmap = BitmapFactory.decodeStream(pictureStream);
     } catch (IOException e) {
-      throw new IllegalArgumentException("A well-formatted url was expected.");
+      throw new IllegalArgumentException("A well-formatted url was expected. " + e.toString());
     } finally {
       if (pictureStream != null) {
         try {
