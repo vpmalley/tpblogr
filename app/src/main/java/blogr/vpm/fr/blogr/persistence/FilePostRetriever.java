@@ -2,10 +2,12 @@ package blogr.vpm.fr.blogr.persistence;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import org.apache.commons.io.IOUtils;
 
@@ -88,10 +90,14 @@ public class FilePostRetriever implements PostRetriever {
           File dataFile = new FileManager().getDataFileForPost(context, post);
           if (dataFile.exists()) {
             String serializedPlaces = readFile(dataFile);
-            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            Post postData = gson.fromJson(serializedPlaces, Post.class);
-            post.setPlaces(postData.getPlaces());
-            post.setFlickrPictures(postData.getFlickrPictures());
+            try {
+              Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+              Post postData = gson.fromJson(serializedPlaces, Post.class);
+              post.setPlaces(postData.getPlaces());
+              post.setFlickrPictures(postData.getFlickrPictures());
+            } catch(JsonSyntaxException e) {
+              Log.w("json", "Error reading JSON data. " + e.toString());
+            }
           }
           posts.add(post);
         }

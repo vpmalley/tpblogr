@@ -53,15 +53,17 @@ public class PostMetadataFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
-
-    Log.d("postMDF", "creating fragment");
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.fragment_post_metadata, container, false);
     metadataList = (AbsListView) v.findViewById(R.id.allitems);
-    refreshViewFromPost();
+    getCurrentPost().getMd().addKeys(getCurrentPost().getBlog().getMdKeys());
+    getActivity().setTitle(getCurrentPost().getTitle());
+    Map<String, Object> postMd = (Map<String, Object>) getCurrentPost().getMd().getAsMap();
+    metadataAdapter = new MetadataAdapter(getActivity(), postMd);
+    metadataList.setAdapter(metadataAdapter);
     return v;
   }
 
@@ -137,7 +139,6 @@ public class PostMetadataFragment extends Fragment {
     if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
       Uri pictureUri = data.getData();
       getCurrentPost().addPicture(pictureUri);
-      //onPicturePicked(pictureUri.toString());
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
@@ -146,14 +147,9 @@ public class PostMetadataFragment extends Fragment {
   /**
    * Refreshes the view with the current Post
    */
-  void refreshViewFromPost() {
-    if (metadataAdapter == null) {
-      getCurrentPost().getMd().addKeys(getCurrentPost().getBlog().getMdKeys());
-      getActivity().setTitle(getCurrentPost().getTitle());
-      Map<String, Object> postMd = (Map<String, Object>) getCurrentPost().getMd().getAsMap();
-      metadataAdapter = new MetadataAdapter(getActivity(), postMd);
-      metadataList.setAdapter(metadataAdapter);
-    } else {
+  void  refreshViewFromPost() {
+    if (metadataAdapter != null) {
+      Log.d("md", "picalt");
       metadataAdapter.clear();
       metadataAdapter.addAll(new ArrayList<Map.Entry<String, ?>>(getCurrentPost().getMd().getAsMap().entrySet()));
     }

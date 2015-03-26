@@ -172,20 +172,11 @@ public class PostEditionFragment extends Fragment {
     if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
       Uri pictureUri = data.getData();
       getCurrentPost().addPicture(pictureUri);
-      //onPicturePicked(pictureUri.toString());
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
   }
-/*
-  @Override
-  public void onPicturePicked(ParcelableFlickrPhoto pic) {
-    SurroundingTagsProvider pictureTagProvider = currentBlog.getPictureTagsProvider(getActivity(), pic);
-    String updatedPostContent = new DefaultInserter(getActivity()).insert(contentField, pictureTagProvider);
-    // the getCurrentPost must be updated because this may be called before onResume
-    getCurrentPost().setContent(updatedPostContent);
-  }
-*/
+
   /**
    * Updates the current post with given instance and refreshes the view
    *
@@ -231,7 +222,7 @@ public class PostEditionFragment extends Fragment {
     public void onFocusChange(View view, boolean focused) {
       if (!focused) {
         refreshPostFromView();
-        ((PostEditionActivity) getActivity()).refreshViewFromPost();
+        getActivity().setTitle(getCurrentPost().getTitle());
       }
     }
   }

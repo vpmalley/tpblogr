@@ -8,16 +8,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
-import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
  * Created by vince on 17/10/14.
  */
-public class PostEditionActivity extends FragmentActivity implements PicturePickedListener, RefreshListener {
+public class PostEditionActivity extends FragmentActivity implements RefreshListener {
 
   public static final int REQ_MD = 41;
   public static final int MAX_NEW_POST_FILES = 100;
@@ -80,6 +78,7 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
     setTitle(currentPost.getTitle());
     postPlacesFragment.refreshViewFromPost();
     postMetadataFragment.refreshViewFromPost();
+    postPicturesFragment.refreshViewFromPost();
   }
 
   public void refreshPostFromView() {
@@ -119,13 +118,6 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
 
   private boolean isPostTitleEmpty() {
     return ("".equals(getCurrentPost().getTitle()));
-  }
-
-  @Override
-  public void onPicturePicked(ParcelableFlickrPhoto pic) {
-    // This only delegates to the fragment
-    //postEditionFragment.onPicturePicked(pic);
-    currentPost.addFlickrPicture(pic);
   }
 
   private class PostPagerAdapter extends FragmentPagerAdapter {
