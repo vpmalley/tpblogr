@@ -29,6 +29,7 @@ import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
 import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
+import blogr.vpm.fr.blogr.picture.PictureTextileTagProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
 import blogr.vpm.fr.blogr.service.PostPublishingPreferencesProvider;
 import blogr.vpm.fr.blogr.service.PostPublishingServiceProvider;
@@ -145,7 +146,7 @@ public class PostEditionFragment extends Fragment {
                 new PicturePickedListener() {
                   @Override
                   public void onPicturePicked(ParcelableFlickrPhoto pic) {
-                    tagsInserter.insert(contentField, getCurrentPost().getBlog().getPictureTagsProvider(getActivity(), pic.getLargeSizeUrl()));
+                    tagsInserter.insert(contentField, new PictureTextileTagProvider(pic));
                     refreshPostFromView();
                   }
                 });
