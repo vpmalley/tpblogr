@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
+
 /**
  * Created by vincent on 29/08/14.
  */
@@ -47,6 +49,8 @@ public class Post implements Parcelable {
 
   private ArrayList<Place> places;
 
+  private ArrayList<ParcelableFlickrPhoto> flickrPictures;
+
 
   public Post(String title, String content, Blog blog) {
     this.title = title;
@@ -55,6 +59,7 @@ public class Post implements Parcelable {
     this.blog = blog;
     this.places = new ArrayList<>();
     this.md = new PostMetadata(new ArrayList<String>());
+    this.flickrPictures = new ArrayList<>();
   }
 
   public Post(Post post) {
@@ -64,6 +69,7 @@ public class Post implements Parcelable {
     this.blog = post.getBlog();
     this.places = post.getPlaces();
     this.md = post.getMd();
+    this.flickrPictures = post.getFlickrPictures();
   }
 
   public String getTitle() {
@@ -147,6 +153,14 @@ public class Post implements Parcelable {
     this.places = new ArrayList<>(places);
   }
 
+  public ArrayList<ParcelableFlickrPhoto> getFlickrPictures() {
+    return flickrPictures;
+  }
+
+  public void addFlickrPicture(ParcelableFlickrPhoto pic) {
+    flickrPictures.add(pic);
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -162,6 +176,7 @@ public class Post implements Parcelable {
     b.putParcelable(MD_KEY, md);
     parcel.writeBundle(b);
     parcel.writeTypedList(places);
+    parcel.writeTypedList(flickrPictures);
   }
 
   private Post(Parcel in) {
@@ -175,6 +190,8 @@ public class Post implements Parcelable {
     md = b.getParcelable(MD_KEY);
     places = new ArrayList<>();
     in.readTypedList(places, Place.CREATOR);
+    flickrPictures = new ArrayList<>();
+    in.readTypedList(flickrPictures, ParcelableFlickrPhoto.CREATOR);
   }
 
   public static final Parcelable.Creator<Post> CREATOR

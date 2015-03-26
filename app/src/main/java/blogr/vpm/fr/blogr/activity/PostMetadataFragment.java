@@ -3,10 +3,8 @@ package blogr.vpm.fr.blogr.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,23 +19,20 @@ import android.widget.EditText;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.apis.flickr.FlickrJAndroidProvider;
-import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
-import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
+import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.bean.PostMetadata;
-import blogr.vpm.fr.blogr.insertion.MetadataProvider;
 import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
-import blogr.vpm.fr.blogr.picture.PictureMetadataProvider;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
  * Created by vince on 13/03/15.
  */
-public class PostMetadataFragment extends Fragment implements PicturePickedListener {
+public class PostMetadataFragment extends Fragment {
 
   public static final int PICK_PIC_REQ_CODE = 32;
 
@@ -115,12 +110,18 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
         startActivityForResult(picIntent, PICK_PIC_REQ_CODE);
         return true;
       case R.id.action_insert_flickr:
-        FlickrProvider flickrD = new FlickrJAndroidProvider(getActivity());
-        FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String flickrUsername = prefs.getString("pref_flickr_username", "");
-        int picNb = Integer.valueOf(prefs.getString("pref_flickr_number_pics", "20"));
-        flickrP.getUserPhotos(flickrUsername, picNb);
+        new FlickrDialogFragment().openPicturePicker(getActivity(),
+                getCurrentPost().getFlickrPictures().toArray(new ParcelableFlickrPhoto[getCurrentPost().getFlickrPictures().size()]),
+                new PicturePickedListener() {
+                  @Override
+                  public void onPicturePicked(ParcelableFlickrPhoto pic) {
+                    Map<String, String> picMappings = new HashMap<String, String>();
+                    picMappings.put("pic", pic.getMediumSizeUrl());
+                    picMappings.put("picalt", pic.getDescription());
+                    getCurrentPost().getMd().putData(picMappings);
+                    refreshViewFromPost();
+                  }
+                });
         return true;
       case R.id.action_settings:
         startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
@@ -136,17 +137,10 @@ public class PostMetadataFragment extends Fragment implements PicturePickedListe
     if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
       Uri pictureUri = data.getData();
       getCurrentPost().addPicture(pictureUri);
-      onPicturePicked(pictureUri.toString());
+      //onPicturePicked(pictureUri.toString());
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
-  }
-
-  @Override
-  public void onPicturePicked(String picUrl) {
-    MetadataProvider picProvider = new PictureMetadataProvider(picUrl);
-    getCurrentPost().getMd().putData(picProvider.getMappings());
-    refreshViewFromPost();
   }
 
   /**

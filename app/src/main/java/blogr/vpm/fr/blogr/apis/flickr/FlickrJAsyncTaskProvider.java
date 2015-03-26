@@ -1,15 +1,14 @@
 package blogr.vpm.fr.blogr.apis.flickr;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import com.googlecode.flickrjandroid.photos.PhotoList;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.activity.FlickrDialogFragment;
+import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
  * Created by vincent on 19/10/14.
@@ -20,7 +19,10 @@ public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider
 
   private final Activity activity;
 
-  public FlickrJAsyncTaskProvider(Activity activity, FlickrProvider delegate) {
+  private final PicturePickedListener listener;
+
+  public FlickrJAsyncTaskProvider(Activity activity, FlickrProvider delegate, PicturePickedListener listener) {
+    this.listener = listener;
     this.delegate = delegate;
     this.activity = activity;
   }
@@ -40,7 +42,7 @@ public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider
   protected void onPostExecute(PhotoList pics) {
     if (pics.size() > 0) {
       ParcelableFlickrPhoto[] pPics = getParcelablePictureArray(pics);
-      openFlickrDialog(pPics);
+      new FlickrDialogFragment().openPicturePicker(activity, pPics, listener);
     } else {
       Toast.makeText(activity, activity.getResources().getString(R.string.no_access_flickr), Toast.LENGTH_SHORT).show();
     }
@@ -65,13 +67,14 @@ public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider
    *
    * @param pPics the array of parcelable (i.e. serializable) pictures
    */
+  /*
   private void openFlickrDialog(ParcelableFlickrPhoto[] pPics) {
-    DialogFragment flickrFragment = new FlickrDialogFragment();
     Bundle args = new Bundle();
     args.putParcelableArray(FlickrDialogFragment.ARG_PICS, pPics);
     flickrFragment.setArguments(args);
     flickrFragment.show(activity.getFragmentManager(), "flickrPicker");
   }
+  */
 
   public class FlickrSearchBean {
     String username;

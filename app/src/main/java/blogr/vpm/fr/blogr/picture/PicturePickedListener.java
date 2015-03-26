@@ -1,5 +1,7 @@
 package blogr.vpm.fr.blogr.picture;
 
+import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
+
 /**
  * Created by vince on 21/10/14.
  * <p/>
@@ -10,7 +12,7 @@ public interface PicturePickedListener {
   /**
    * Called when a user picked a picture among a list, and this picture's url should be inserted
    *
-   * @param picUrl the url to the picture file to be inserted
+   * @param pic the url to the picture file to be inserted
    */
-  void onPicturePicked(String picUrl);
+  void onPicturePicked(ParcelableFlickrPhoto pic);
 }

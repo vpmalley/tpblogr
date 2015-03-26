@@ -17,9 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.apis.flickr.FlickrJAndroidProvider;
-import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
-import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
+import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.format.AlignCenterTagsProvider;
@@ -27,7 +25,6 @@ import blogr.vpm.fr.blogr.format.AlignLeftTagsProvider;
 import blogr.vpm.fr.blogr.format.AlignRightTagsProvider;
 import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.insertion.Inserter;
-import blogr.vpm.fr.blogr.insertion.SurroundingTagsProvider;
 import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
 import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
@@ -39,7 +36,7 @@ import blogr.vpm.fr.blogr.service.PostPublishingServiceProvider;
 /**
  * Created by vincent on 07/10/14.
  */
-public class PostEditionFragment extends Fragment implements PicturePickedListener {
+public class PostEditionFragment extends Fragment {
 
   public static final int PICK_PIC_REQ_CODE = 32;
 
@@ -143,12 +140,15 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
         startActivityForResult(i, PICK_PIC_REQ_CODE);
         return true;
       case R.id.action_insert_flickr:
-        FlickrProvider flickrD = new FlickrJAndroidProvider(getActivity());
-        FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String flickrUsername = prefs.getString("pref_flickr_username", "");
-        int picNb = Integer.valueOf(prefs.getString("pref_flickr_number_pics", "20"));
-        flickrP.getUserPhotos(flickrUsername, picNb);
+        new FlickrDialogFragment().openPicturePicker(getActivity(),
+                getCurrentPost().getFlickrPictures().toArray(new ParcelableFlickrPhoto[getCurrentPost().getFlickrPictures().size()]),
+                new PicturePickedListener() {
+                  @Override
+                  public void onPicturePicked(ParcelableFlickrPhoto pic) {
+                    tagsInserter.insert(contentField, getCurrentPost().getBlog().getPictureTagsProvider(getActivity(), pic.getLargeSizeUrl()));
+                    refreshPostFromView();
+                  }
+                });
         return true;
       case R.id.action_align_left:
         tagsInserter.insert(contentField, new AlignLeftTagsProvider());
@@ -171,20 +171,20 @@ public class PostEditionFragment extends Fragment implements PicturePickedListen
     if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
       Uri pictureUri = data.getData();
       getCurrentPost().addPicture(pictureUri);
-      onPicturePicked(pictureUri.toString());
+      //onPicturePicked(pictureUri.toString());
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
   }
-
+/*
   @Override
-  public void onPicturePicked(String picUrl) {
-    SurroundingTagsProvider pictureTagProvider = currentBlog.getPictureTagsProvider(getActivity(), picUrl);
+  public void onPicturePicked(ParcelableFlickrPhoto pic) {
+    SurroundingTagsProvider pictureTagProvider = currentBlog.getPictureTagsProvider(getActivity(), pic);
     String updatedPostContent = new DefaultInserter(getActivity()).insert(contentField, pictureTagProvider);
     // the getCurrentPost must be updated because this may be called before onResume
     getCurrentPost().setContent(updatedPostContent);
   }
-
+*/
   /**
    * Updates the current post with given instance and refreshes the view
    *

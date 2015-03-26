@@ -104,7 +104,7 @@ public class PostPlacesFragment extends Fragment implements AddressesListener {
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.postmetadata, menu);
+    inflater.inflate(R.menu.postplaces, menu);
   }
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {

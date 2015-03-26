@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -23,6 +24,8 @@ import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 public class FlickrDialogFragment extends DialogFragment {
 
   public static final String ARG_PICS = "flickrPics";
+
+  private PicturePickedListener listener;
 
   public FlickrDialogFragment(){
   }
@@ -65,7 +68,7 @@ public class FlickrDialogFragment extends DialogFragment {
         .setAdapter(picsAdapter, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialogInterface, int position) {
-            ((PicturePickedListener) getActivity()).onPicturePicked(pPics[position].getMediumSizeUrl());
+            listener.onPicturePicked(pPics[position]);
           }
         })
         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -77,6 +80,13 @@ public class FlickrDialogFragment extends DialogFragment {
         .create();
   }
 
+  public void openPicturePicker(Activity activity, ParcelableFlickrPhoto[] pPics, PicturePickedListener listener) {
+    this.listener = listener;
+    Bundle args = new Bundle();
+    args.putParcelableArray(FlickrDialogFragment.ARG_PICS, pPics);
+    setArguments(args);
+    show(activity.getFragmentManager(), "flickrPicker");
+  }
 
   /**
    * Keeps a reference to the views associated with a item. Only views should be stored there,

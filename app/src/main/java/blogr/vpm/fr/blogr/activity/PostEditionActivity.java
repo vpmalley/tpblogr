@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.persistence.PostSaver;
@@ -26,6 +27,8 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
   private PostMetadataFragment postMetadataFragment;
 
   private PostPlacesFragment postPlacesFragment;
+
+  private PostPicturesFragment postPicturesFragment;
 
   private ViewPager viewPager;
   private Post currentPost;
@@ -48,6 +51,7 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
     postEditionFragment = new PostEditionFragment();
     postMetadataFragment = new PostMetadataFragment();
     postPlacesFragment = new PostPlacesFragment();
+    postPicturesFragment = new PostPicturesFragment();
     setTitle("");
     getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -118,9 +122,10 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
   }
 
   @Override
-  public void onPicturePicked(String picUrl) {
+  public void onPicturePicked(ParcelableFlickrPhoto pic) {
     // This only delegates to the fragment
-    postEditionFragment.onPicturePicked(picUrl);
+    //postEditionFragment.onPicturePicked(pic);
+    currentPost.addFlickrPicture(pic);
   }
 
   private class PostPagerAdapter extends FragmentPagerAdapter {
@@ -138,13 +143,15 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
         f = postMetadataFragment;
       } else if (2 == position) {
         f = postPlacesFragment;
+      } else if (3 == position) {
+        f = postPicturesFragment;
       }
       return f;
     }
 
     @Override
     public int getCount() {
-      return 3;
+      return 4;
     }
 
     @Override
@@ -156,6 +163,8 @@ public class PostEditionActivity extends FragmentActivity implements PicturePick
         title = "Metadata";
       } else if (2 == position) {
         title = "Places";
+      } else if (3 == position) {
+        title = "Pictures";
       }
       return title;
     }
