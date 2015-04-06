@@ -18,7 +18,6 @@ import android.widget.EditText;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
-import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.format.AlignCenterTagsProvider;
 import blogr.vpm.fr.blogr.format.AlignLeftTagsProvider;
@@ -44,8 +43,6 @@ public class PostEditionFragment extends Fragment {
   private PostPublishingServiceProvider publisherProvider;
 
   private LocationProvider locationProvider;
-
-  private Blog currentBlog;
 
   private EditText contentField;
 
@@ -123,8 +120,8 @@ public class PostEditionFragment extends Fragment {
       case R.id.action_publish:
         refreshPostFromView();
         ((PostEditionActivity) getActivity()).saveCurrentPost();
-        PostPublisher publisher = currentBlog.getPublisherService(getActivity());
-        publisher.publish(currentBlog, getCurrentPost());
+        PostPublisher publisher = getCurrentPost().getBlog().getPublisherService(getActivity());
+        publisher.publish(getCurrentPost().getBlog(), getCurrentPost());
         return true;
       case R.id.action_insert_location:
         new PlacePickerFragment().openPlacesPicker(getActivity(), getCurrentPost().getPlaces(), new PlacePickedListener() {
@@ -184,7 +181,6 @@ public class PostEditionFragment extends Fragment {
    */
   public void editPost(Post post) {
     setCurrentPost(post);
-    currentBlog = post.getBlog();
     refreshViewFromPost();
     getActivity().invalidateOptionsMenu();
   }
