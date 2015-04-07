@@ -1,9 +1,10 @@
-package blogr.vpm.fr.blogr.activity.tests;
+package blogr.vpm.fr.blogr.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.ViewAsserts;
 import android.widget.EditText;
 
 import blogr.vpm.fr.blogr.R;
@@ -36,19 +37,9 @@ public class PostEditionActivityTest extends ActivityInstrumentationTestCase2<Po
         viewPager = (ViewPager) testActivity.findViewById(R.id.pager);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
-    public void testPreconditions() {
-        assertNotNull("Pager does not exist", viewPager);
-        assertEquals("Initial fragment is wrong", 0, viewPager.getCurrentItem());
-    }
-
     public void testEditionView() {
+        assertNotNull("Pager does not exist", viewPager);
         EditText postContent = (EditText) testActivity.findViewById(R.id.postContent);
-        assertNotNull("content field is null", postContent);
-        assertFalse("content field is empty", postContent.getText().toString().isEmpty());
+        ViewAsserts.assertOnScreen(testActivity.getWindow().getDecorView(), postContent);
     }
 }
