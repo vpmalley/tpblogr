@@ -3,13 +3,13 @@ package blogr.vpm.fr.blogr.activity;
 import android.content.Intent;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ViewAsserts;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.AbsListView;
-import android.widget.EditText;
 
 import org.hamcrest.Matchers;
 
@@ -48,7 +48,14 @@ public class PostMetadataFragmentTest extends ActivityInstrumentationTestCase2<P
         setActivityIntent(i);
         editionActivity = getActivity();
         viewPager = (ViewPager) editionActivity.findViewById(R.id.pager);
+        editionActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                viewPager.setCurrentItem(1);
+            }
+        });
+        assertNotNull("Pager does not exist", viewPager);
         Espresso.onView(ViewMatchers.withId(R.id.pager)).perform(ViewActions.swipeRight());
+        Espresso.onView(ViewMatchers.withId(R.id.pager)).perform(ViewActions.swipeLeft());
     }
 
     public void testPreConditions() {
@@ -63,9 +70,16 @@ public class PostMetadataFragmentTest extends ActivityInstrumentationTestCase2<P
 
     @MediumTest
     public void testTitleEdition() {
-        Espresso.onView(ViewMatchers.withText("mytitle")).perform(ViewActions.replaceText("Bonjour"));
+        AbsListView mdItems = (AbsListView) editionActivity.findViewById(R.id.allitems);
+        ViewAsserts.assertOnScreen(editionActivity.getWindow().getDecorView(), mdItems);
 
+        Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.allitems)).atPosition(0)
+            .onChildView(ViewMatchers.withId(R.id.md_value)).perform(ViewActions.replaceText("Bonjour"));
         Espresso.onView(ViewMatchers.withId(R.id.pager)).perform(ViewActions.swipeRight());
+        Espresso.onView(ViewMatchers.withId(R.id.pager)).perform(ViewActions.swipeLeft());
+
+        Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.allitems)).atPosition(0)
+            .onChildView(ViewMatchers.withId(R.id.md_value)).check(ViewAssertions.matches(ViewMatchers.withText("Bonjour")));
 
         assertEquals("Bonjour", editionActivity.getCurrentPost().getMd().getAsMap().get("title"));
     }
@@ -82,8 +96,5 @@ public class PostMetadataFragmentTest extends ActivityInstrumentationTestCase2<P
         ViewAsserts.assertOnScreen(editionActivity.getWindow().getDecorView(), mdItems);
         assertEquals("mytitle", editionActivity.getCurrentPost().getMd().getAsMap().get("title"));
     }
-
-
-
 
 }
