@@ -1,6 +1,7 @@
 package blogr.vpm.fr.blogr.activity;
 
 import android.content.Intent;
+import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
@@ -73,15 +74,16 @@ public class PostMetadataFragmentTest extends ActivityInstrumentationTestCase2<P
         AbsListView mdItems = (AbsListView) editionActivity.findViewById(R.id.allitems);
         ViewAsserts.assertOnScreen(editionActivity.getWindow().getDecorView(), mdItems);
 
-        Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.allitems)).atPosition(0)
-            .onChildView(ViewMatchers.withId(R.id.md_value)).perform(ViewActions.replaceText("Bonjour"));
+        DataInteraction mdValueInteraction = Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.allitems)).atPosition(0)
+            .onChildView(ViewMatchers.withId(R.id.md_value));
+        mdValueInteraction.perform(ViewActions.click());
+        mdValueInteraction.perform(ViewActions.replaceText("Bonjour"));
+
         Espresso.onView(ViewMatchers.withId(R.id.pager)).perform(ViewActions.swipeRight());
         Espresso.onView(ViewMatchers.withId(R.id.pager)).perform(ViewActions.swipeLeft());
 
-        Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.allitems)).atPosition(0)
-            .onChildView(ViewMatchers.withId(R.id.md_value)).check(ViewAssertions.matches(ViewMatchers.withText("Bonjour")));
-
-        assertEquals("Bonjour", editionActivity.getCurrentPost().getMd().getAsMap().get("title"));
+        mdValueInteraction.check(ViewAssertions.matches(ViewMatchers.withText("Bonjour")));
+        assertTrue("MD do not contain the value 'Bonjour'", editionActivity.getCurrentPost().getMd().getAsMap().containsValue("Bonjour"));
     }
 
     @MediumTest

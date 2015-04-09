@@ -42,7 +42,11 @@ public class PostMetadataFragment extends Fragment {
 
 
   private Post getCurrentPost() {
-    return ((PostEditionActivity) getActivity()).getCurrentPost();
+    Post currentPost = null;
+    if (getActivity() != null) {
+      currentPost = ((PostEditionActivity) getActivity()).getCurrentPost();
+    }
+    return currentPost;
   }
 
   private void setCurrentPost(Post currentPost) {
@@ -113,17 +117,17 @@ public class PostMetadataFragment extends Fragment {
         return true;
       case R.id.action_insert_flickr:
         new FlickrDialogFragment().openPicturePicker(getActivity(),
-                getCurrentPost().getFlickrPictures().toArray(new ParcelableFlickrPhoto[getCurrentPost().getFlickrPictures().size()]),
-                new PicturePickedListener() {
-                  @Override
-                  public void onPicturePicked(ParcelableFlickrPhoto pic) {
-                    Map<String, String> picMappings = new HashMap<String, String>();
-                    picMappings.put("pic", pic.getMediumSizeUrl());
-                    picMappings.put("picalt", pic.getDescription());
-                    getCurrentPost().getMd().putData(picMappings);
-                    refreshViewFromPost();
-                  }
-                });
+            getCurrentPost().getFlickrPictures().toArray(new ParcelableFlickrPhoto[getCurrentPost().getFlickrPictures().size()]),
+            new PicturePickedListener() {
+              @Override
+              public void onPicturePicked(ParcelableFlickrPhoto pic) {
+                Map<String, String> picMappings = new HashMap<String, String>();
+                picMappings.put("pic", pic.getMediumSizeUrl());
+                picMappings.put("picalt", pic.getDescription());
+                getCurrentPost().getMd().putData(picMappings);
+                refreshViewFromPost();
+              }
+            });
         return true;
       case R.id.action_settings:
         startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
