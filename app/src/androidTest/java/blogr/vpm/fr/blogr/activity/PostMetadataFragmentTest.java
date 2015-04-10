@@ -1,6 +1,7 @@
 package blogr.vpm.fr.blogr.activity;
 
 import android.content.Intent;
+import android.location.Location;
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
@@ -45,6 +46,9 @@ public class PostMetadataFragmentTest extends ActivityInstrumentationTestCase2<P
         Map<String, Object> md = new HashMap<>();
         md.put("title", "mytitle");
         post.setMd(new PostMetadata(md));
+        Location location = new Location("jesaisoujesuis");
+        location.setLatitude(23);
+        post.addPlace(location);
         i.putExtra(Post.INTENT_EXTRA_KEY, post);
         setActivityIntent(i);
         editionActivity = getActivity();
@@ -97,6 +101,21 @@ public class PostMetadataFragmentTest extends ActivityInstrumentationTestCase2<P
 
         ViewAsserts.assertOnScreen(editionActivity.getWindow().getDecorView(), mdItems);
         assertEquals("mytitle", editionActivity.getCurrentPost().getMd().getAsMap().get("title"));
+    }
+
+    @MediumTest
+    public void testInsertPlace() {
+        DataInteraction mdValueInteraction = Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.allitems)).atPosition(0)
+            .onChildView(ViewMatchers.withId(R.id.md_value));
+        mdValueInteraction.perform(ViewActions.click());
+
+        Espresso.onView(ViewMatchers.withId(R.id.action_insert)).perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withText(R.string.action_insert_location)).perform(ViewActions.click());
+
+        Espresso.onView(ViewMatchers.withText("Lat. 23.0, Lon. 0.0")).perform(ViewActions.click());
+
+        assertEquals("23.0", editionActivity.getCurrentPost().getMd().getAsMap().get("latitude"));
+        assertEquals("0.0", editionActivity.getCurrentPost().getMd().getAsMap().get("longitude"));
     }
 
 }

@@ -5,6 +5,7 @@ import android.location.Location;
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
@@ -38,7 +39,9 @@ public class PostPlacesFragmentTest extends ActivityInstrumentationTestCase2<Pos
         setActivityInitialTouchMode(true);
         Intent i = new Intent();
         Post post = new Post("Hello", "Hello World", new GithubBlog("jojo"));
-        post.addPlace(new Location("jesaisoujesuis"));
+        Location location = new Location("jesaisoujesuis");
+        location.setLatitude(23);
+        post.addPlace(location);
         i.putExtra(Post.INTENT_EXTRA_KEY, post);
         setActivityIntent(i);
         editionActivity = getActivity();
@@ -68,7 +71,7 @@ public class PostPlacesFragmentTest extends ActivityInstrumentationTestCase2<Pos
         Espresso.onView(ViewMatchers.withId(R.id.pager)).perform(ViewActions.swipeLeft());
 
         ViewAsserts.assertOnScreen(editionActivity.getWindow().getDecorView(), places);
-        assertEquals(0.0, editionActivity.getCurrentPost().getPlaces().get(0).getLatitude());
+        assertEquals(23.0, editionActivity.getCurrentPost().getPlaces().get(0).getLatitude());
         assertEquals(0.0, editionActivity.getCurrentPost().getPlaces().get(0).getLongitude());
     }
 
@@ -77,9 +80,18 @@ public class PostPlacesFragmentTest extends ActivityInstrumentationTestCase2<Pos
         DataInteraction dataInteraction = Espresso.onData(Matchers.anything());
         DataInteraction dataInteraction1 = dataInteraction.inAdapterView(ViewMatchers.withId(R.id.places));
         DataInteraction dataInteraction2 = dataInteraction1.atPosition(0);
+        dataInteraction2.check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString("Lat. 23"))));
         dataInteraction2.perform(ViewActions.click());
     }
 
+    @MediumTest
+    public void testInsertLocation() {
+        Espresso.onView(ViewMatchers.withId(R.id.locateButton)).perform(ViewActions.click());
 
+        assertEquals(2, editionActivity.getCurrentPost().getPlaces().size());
+        DataInteraction dataInteraction = Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.places)).atPosition(1);
+        dataInteraction.check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString("Lat."))));
+        dataInteraction.check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString("Lon."))));
+    }
 
 }
