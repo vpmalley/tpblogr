@@ -67,6 +67,20 @@ public class ParcelableFlickrPhoto implements Parcelable, PictureLoadedListener 
   @Expose
   private Bitmap smallBitmap;
 
+  public ParcelableFlickrPhoto(String title, String url) {
+    this.id = null;
+    this.picUrl = url;
+    this.title = title;
+    this.description = title;
+    this.thumbnailSizeUrl = url;
+    this.smallSizeUrl = url;
+    this.mediumSizeUrl = url;
+    this.largeSizeUrl = url;
+    this.originalSizeUrl = url;
+    this.squareSizeUrl = url;
+    this.largeSquareSizeUrl = url;
+  }
+
   public ParcelableFlickrPhoto(Photo photo) {
     this.id = photo.getId();
     this.picUrl = photo.getUrl();
