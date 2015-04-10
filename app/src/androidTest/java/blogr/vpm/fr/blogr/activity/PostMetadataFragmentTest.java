@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import blogr.vpm.fr.blogr.R;
+import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.GithubBlog;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.bean.PostMetadata;
@@ -33,6 +34,8 @@ public class PostMetadataFragmentTest extends ActivityInstrumentationTestCase2<P
     private PostEditionActivity editionActivity;
 
     private ViewPager viewPager;
+
+    private static final String pic_url = "http://i.answers.microsoft.com/static/images/msheader.png";
 
     public PostMetadataFragmentTest() {
         super(PostEditionActivity.class);
@@ -49,6 +52,7 @@ public class PostMetadataFragmentTest extends ActivityInstrumentationTestCase2<P
         Location location = new Location("jesaisoujesuis");
         location.setLatitude(23);
         post.addPlace(location);
+        post.addFlickrPicture(new ParcelableFlickrPhoto("Some picture", pic_url));
         i.putExtra(Post.INTENT_EXTRA_KEY, post);
         setActivityIntent(i);
         editionActivity = getActivity();
@@ -116,6 +120,40 @@ public class PostMetadataFragmentTest extends ActivityInstrumentationTestCase2<P
 
         assertEquals("23.0", editionActivity.getCurrentPost().getMd().getAsMap().get("latitude"));
         assertEquals("0.0", editionActivity.getCurrentPost().getMd().getAsMap().get("longitude"));
+
+        Espresso.onView(ViewMatchers.withText("latitude")).perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withText("longitude")).perform(ViewActions.click());
     }
 
+    @MediumTest
+    public void testInsertPicture() {
+        DataInteraction mdValueInteraction = Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.allitems)).atPosition(0)
+            .onChildView(ViewMatchers.withId(R.id.md_value));
+        mdValueInteraction.perform(ViewActions.click());
+
+        Espresso.onView(ViewMatchers.withId(R.id.action_insert)).perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withText(R.string.action_insert_flickr)).perform(ViewActions.click());
+
+        Espresso.onView(ViewMatchers.withText("Some picture")).perform(ViewActions.click());
+
+        assertEquals("Some picture", editionActivity.getCurrentPost().getMd().getAsMap().get("picalt"));
+        assertEquals(pic_url, editionActivity.getCurrentPost().getMd().getAsMap().get("pic"));
+
+        Espresso.onView(ViewMatchers.withText("pic")).perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withText("picalt")).perform(ViewActions.click());
+    }
+
+    @MediumTest
+    public void testInsertNewRow() {
+        AbsListView mdItems = (AbsListView) editionActivity.findViewById(R.id.allitems);
+        int initSize = mdItems.getAdapter().getCount();
+
+        DataInteraction mdValueInteraction = Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.allitems)).atPosition(0)
+            .onChildView(ViewMatchers.withId(R.id.md_value));
+        mdValueInteraction.perform(ViewActions.click());
+
+        Espresso.onView(ViewMatchers.withId(R.id.action_new)).perform(ViewActions.click());
+
+        assertEquals(initSize + 1, mdItems.getAdapter().getCount());
+    }
 }
