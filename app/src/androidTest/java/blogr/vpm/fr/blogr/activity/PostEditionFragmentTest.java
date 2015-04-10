@@ -1,18 +1,22 @@
 package blogr.vpm.fr.blogr.activity;
 
 import android.content.Intent;
+import android.location.Location;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.UiThreadTest;
 import android.test.ViewAsserts;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.EditText;
 
+import org.hamcrest.Matchers;
+
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.activity.PostEditionActivity;
+import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.GithubBlog;
 import blogr.vpm.fr.blogr.bean.Post;
 
@@ -27,6 +31,8 @@ public class PostEditionFragmentTest extends ActivityInstrumentationTestCase2<Po
 
     private ViewPager viewPager;
 
+    private static final String pic_url = "http://i.answers.microsoft.com/static/images/msheader.png";
+
     public PostEditionFragmentTest() {
         super(PostEditionActivity.class);
     }
@@ -35,7 +41,12 @@ public class PostEditionFragmentTest extends ActivityInstrumentationTestCase2<Po
         super.setUp();
         setActivityInitialTouchMode(true);
         Intent i = new Intent();
-        i.putExtra(Post.INTENT_EXTRA_KEY, new Post("Hello", "Hello World", new GithubBlog("jojo")));
+        Post post = new Post("Hello", "Hello World", new GithubBlog("jojo"));
+        Location location = new Location("jesaisoujesuis");
+        location.setLatitude(23);
+        post.addPlace(location);
+        post.addFlickrPicture(new ParcelableFlickrPhoto("Some picture", pic_url));
+        i.putExtra(Post.INTENT_EXTRA_KEY, post);
         setActivityIntent(i);
         editionActivity = getActivity();
         viewPager = (ViewPager) editionActivity.findViewById(R.id.pager);
@@ -83,7 +94,43 @@ public class PostEditionFragmentTest extends ActivityInstrumentationTestCase2<Po
         assertEquals("Hello World", editionActivity.getCurrentPost().getContent());
     }
 
+    @MediumTest
+    public void testInsertPlace() {
+        Espresso.onView(ViewMatchers.withId(R.id.postContent)).perform(ViewActions.click());
 
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        Espresso.onView(ViewMatchers.withText(R.string.action_insert)).perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withText(R.string.action_insert_location)).perform(ViewActions.click());
+
+        Espresso.onView(ViewMatchers.withText("Lat. 23.0, Lon. 0.0")).perform(ViewActions.click());
+
+        assertTrue(editionActivity.getCurrentPost().getContent().contains("23.0"));
+        assertTrue(editionActivity.getCurrentPost().getContent().contains("0.0"));
+
+        Espresso.onView(ViewMatchers.withId(R.id.postContent)).
+            check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString("23.0"))));
+        Espresso.onView(ViewMatchers.withId(R.id.postContent)).
+            check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString("0.0"))));
+    }
+
+    @MediumTest
+    public void testInsertPicture() {
+        Espresso.onView(ViewMatchers.withId(R.id.postContent)).perform(ViewActions.click());
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        Espresso.onView(ViewMatchers.withText(R.string.action_insert)).perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withText(R.string.action_insert_flickr)).perform(ViewActions.click());
+
+        Espresso.onView(ViewMatchers.withText("Some picture")).perform(ViewActions.click());
+
+        assertTrue(editionActivity.getCurrentPost().getContent().contains("Some picture"));
+        assertTrue(editionActivity.getCurrentPost().getContent().contains(pic_url));
+
+        Espresso.onView(ViewMatchers.withId(R.id.postContent)).
+            check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString("Some picture"))));
+        Espresso.onView(ViewMatchers.withId(R.id.postContent)).
+            check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString(pic_url))));
+    }
 
 
 }
