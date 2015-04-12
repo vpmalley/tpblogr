@@ -5,8 +5,23 @@
           android:title="@string/action_new"
           android:orderInCategory="80"
           android:showAsAction="always"
-          android:icon="@drawable/ic_action_new"/>
-    <item android:id="@+id/action_settings"
+          android:icon="@drawable/ic_action_new">
+        <menu>
+            <item
+                android:id="@+id/action_insert_picture"
+                android:title="@string/action_insert_gallery"
+                android:orderInCategory="10"
+                android:showAsAction="ifRoom"/>
+            <item
+                android:id="@+id/action_insert_flickr"
+                android:title="@string/action_insert_flickr"
+                android:orderInCategory="20"
+                android:showAsAction="ifRoom"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_settings"
           android:title="@string/action_settings"
           android:orderInCategory="100"
           android:showAsAction="ifRoom"

@@ -89,8 +89,27 @@ public class PostPicturesFragmentTest extends ActivityInstrumentationTestCase2<P
     dataInteraction.perform(ViewActions.click());
 
     Espresso.onView(ViewMatchers.withId(R.id.action_new)).perform(ViewActions.click());
+    Espresso.onView(ViewMatchers.withText(R.string.action_insert_flickr)).perform(ViewActions.click());
     DataInteraction dataInteraction1 = Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withClassName(Matchers.containsString("ListView"))).atPosition(0);
     dataInteraction1.perform(ViewActions.click());
+
+    assertEquals(2, editionActivity.getCurrentPost().getFlickrPictures().size());
+    DataInteraction dataInteraction2 = Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.pictures)).atPosition(1);
+    dataInteraction2.check(ViewAssertions.matches(ViewMatchers.withText(editionActivity.getCurrentPost().getFlickrPictures().get(1).getTitle())));
+  }
+
+  @MediumTest
+  public void testInsertGalleryPicture() {
+    DataInteraction dataInteraction = Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.pictures)).atPosition(0);
+    dataInteraction.check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString("Some picture"))));
+    dataInteraction.perform(ViewActions.click());
+
+    Espresso.onView(ViewMatchers.withId(R.id.action_new)).perform(ViewActions.click());
+    Espresso.onView(ViewMatchers.withText(R.string.action_insert_gallery)).perform(ViewActions.click());
+
+    // TODO use a ActivityUnitTestCase
+
+    Espresso.onView(ViewMatchers.withClassName(Matchers.equalTo("ImageView"))).perform(ViewActions.click());
 
     assertEquals(2, editionActivity.getCurrentPost().getFlickrPictures().size());
     DataInteraction dataInteraction2 = Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.pictures)).atPosition(1);

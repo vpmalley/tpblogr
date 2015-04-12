@@ -15,7 +15,7 @@
     <string name="newpost">New Post</string>
     <string name="postlist_emptytext">No Post</string>
     <string name="action_insert_flickr">Picture from Flickr</string>
-    <string name="action_insert_picture">Picture from Gallery</string>
+    <string name="action_insert_gallery">Picture from Gallery</string>
     <string name="action_insert_location">Location</string>
     <string name="post_content_hint">Have a story to share today?</string>
     <string name="flickr_pick_picture">Pick a picture from Flickr</string>
@@ -50,4 +50,5 @@
     <string name="address">Address</string>
     <string name="country">Country</string>
     <string name="feature">Feature</string>
+    <string name="action_insert_picture">Picture</string>
 </resources>

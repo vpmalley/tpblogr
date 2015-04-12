@@ -1,9 +1,7 @@
 package blogr.vpm.fr.blogr.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -37,8 +35,6 @@ import blogr.vpm.fr.blogr.service.PostPublishingServiceProvider;
  * Created by vincent on 07/10/14.
  */
 public class PostEditionFragment extends Fragment {
-
-  public static final int PICK_PIC_REQ_CODE = 32;
 
   private PostPublishingServiceProvider publisherProvider;
 
@@ -133,11 +129,6 @@ public class PostEditionFragment extends Fragment {
         });
         return true;
       case R.id.action_insert_picture:
-        Intent i = new Intent(Intent.ACTION_PICK);
-        i.setType("image/*");
-        startActivityForResult(i, PICK_PIC_REQ_CODE);
-        return true;
-      case R.id.action_insert_flickr:
         new FlickrDialogFragment().openPicturePicker(getActivity(),
                 getCurrentPost().getFlickrPictures().toArray(new ParcelableFlickrPhoto[getCurrentPost().getFlickrPictures().size()]),
                 new PicturePickedListener() {
@@ -159,18 +150,6 @@ public class PostEditionFragment extends Fragment {
         return true;
       default:
         return super.onOptionsItemSelected(item);
-    }
-  }
-
-  // called before onResume
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    Log.d("onActResult", "RQCODE: " + requestCode);
-    if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
-      Uri pictureUri = data.getData();
-      getCurrentPost().addPicture(pictureUri);
-    } else {
-      super.onActivityResult(requestCode, resultCode, data);
     }
   }
 

@@ -1,8 +1,10 @@
 package blogr.vpm.fr.blogr.activity;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -27,6 +29,8 @@ import blogr.vpm.fr.blogr.picture.PicturePickedListener;
  * Created by vince on 21/03/15.
  */
 public class PostPicturesFragment extends Fragment implements PicturePickedListener {
+
+  public static final int PICK_PIC_REQ_CODE = 32;
 
   private ArrayAdapter<ParcelableFlickrPhoto> picturesAdapter;
 
@@ -79,7 +83,7 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.action_new:
+      case R.id.action_insert_flickr:
         FlickrProvider flickrD = new FlickrJAndroidProvider(getActivity());
         FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD, this);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -87,11 +91,27 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
         int picNb = Integer.valueOf(prefs.getString("pref_flickr_number_pics", "20"));
         flickrP.getUserPhotos(flickrUsername, picNb);
         return true;
+      case R.id.action_insert_picture:
+        Intent picIntent = new Intent(Intent.ACTION_PICK);
+        picIntent.setType("image/*");
+        startActivityForResult(picIntent, PICK_PIC_REQ_CODE);
+        return true;
       case R.id.action_settings:
         startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
         return true;
       default:
         return super.onOptionsItemSelected(item);
+    }
+  }
+
+  // called before onResume
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
+      Uri pictureUri = data.getData();
+      getCurrentPost().addPicture(pictureUri);
+    } else {
+      super.onActivityResult(requestCode, resultCode, data);
     }
   }
 

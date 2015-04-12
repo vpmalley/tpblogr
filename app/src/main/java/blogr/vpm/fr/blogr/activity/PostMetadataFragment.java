@@ -1,9 +1,7 @@
 package blogr.vpm.fr.blogr.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -33,8 +31,6 @@ import blogr.vpm.fr.blogr.picture.PicturePickedListener;
  * Created by vince on 13/03/15.
  */
 public class PostMetadataFragment extends Fragment {
-
-  public static final int PICK_PIC_REQ_CODE = 32;
 
   private AbsListView metadataList;
 
@@ -110,12 +106,6 @@ public class PostMetadataFragment extends Fragment {
         refreshViewFromPost();
         return true;
       case R.id.action_insert_picture:
-        refreshPostFromView();
-        Intent picIntent = new Intent(Intent.ACTION_PICK);
-        picIntent.setType("image/*");
-        startActivityForResult(picIntent, PICK_PIC_REQ_CODE);
-        return true;
-      case R.id.action_insert_flickr:
         new FlickrDialogFragment().openPicturePicker(getActivity(),
             getCurrentPost().getFlickrPictures().toArray(new ParcelableFlickrPhoto[getCurrentPost().getFlickrPictures().size()]),
             new PicturePickedListener() {
@@ -134,17 +124,6 @@ public class PostMetadataFragment extends Fragment {
         return true;
       default:
         return super.onOptionsItemSelected(item);
-    }
-  }
-
-  // called before onResume
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
-      Uri pictureUri = data.getData();
-      getCurrentPost().addPicture(pictureUri);
-    } else {
-      super.onActivityResult(requestCode, resultCode, data);
     }
   }
 
