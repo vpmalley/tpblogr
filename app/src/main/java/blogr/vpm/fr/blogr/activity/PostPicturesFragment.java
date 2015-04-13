@@ -111,12 +111,14 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
     if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
       Uri pictureUri = data.getData();
       getCurrentPost().addPicture(pictureUri);
+      refreshViewFromPost();
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
   }
 
   void refreshViewFromPost() {
+    getCurrentPost().updateAllPictures();
     if (picturesAdapter != null) {
       picturesAdapter.notifyDataSetChanged();
     }

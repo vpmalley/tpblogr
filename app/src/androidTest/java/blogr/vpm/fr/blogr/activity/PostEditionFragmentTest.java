@@ -119,7 +119,7 @@ public class PostEditionFragmentTest extends ActivityInstrumentationTestCase2<Po
 
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         Espresso.onView(ViewMatchers.withText(R.string.action_insert)).perform(ViewActions.click());
-        Espresso.onView(ViewMatchers.withText(R.string.action_insert_flickr)).perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withText(R.string.action_insert_picture)).perform(ViewActions.click());
 
         Espresso.onView(ViewMatchers.withText("Some picture")).perform(ViewActions.click());
 

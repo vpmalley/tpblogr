@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 
@@ -57,6 +58,7 @@ public class Post implements Parcelable {
   @Expose
   private ArrayList<ParcelableFlickrPhoto> flickrPictures;
 
+  private ArrayList<Picture> allPictures;
 
   public Post(String title, String content, Blog blog) {
     this.title = title;
@@ -66,6 +68,7 @@ public class Post implements Parcelable {
     this.places = new ArrayList<>();
     this.md = new PostMetadata(new ArrayList<String>());
     this.flickrPictures = new ArrayList<>();
+    this.allPictures = new ArrayList<>();
   }
 
   public Post(Post post) {
@@ -76,6 +79,7 @@ public class Post implements Parcelable {
     this.places = post.getPlaces();
     this.md = post.getMd();
     this.flickrPictures = post.getFlickrPictures();
+    this.allPictures = new ArrayList<>();
   }
 
   public String getTitle() {
@@ -202,6 +206,7 @@ public class Post implements Parcelable {
     in.readTypedList(places, Place.CREATOR);
     flickrPictures = new ArrayList<>();
     in.readTypedList(flickrPictures, ParcelableFlickrPhoto.CREATOR);
+    this.allPictures = new ArrayList<>();
   }
 
   public static final Parcelable.Creator<Post> CREATOR
@@ -215,7 +220,8 @@ public class Post implements Parcelable {
     }
   };
 
-  public Picture[] getAllPictures() {
+  public ArrayList<Picture> getAllPictures() {
+    /*
     Picture[] allPictures = new Picture[flickrPictures.size() + pictures.size()];
     int i = 0;
     for (ParcelableFlickrPhoto pic : flickrPictures) {
@@ -224,6 +230,17 @@ public class Post implements Parcelable {
     for (Uri pic : pictures) {
       allPictures[i++] = new LocalPicture(pic);
     }
+    */
+    updateAllPictures();
     return allPictures;
+  }
+
+  public void updateAllPictures() {
+    allPictures.clear();
+    allPictures.addAll(flickrPictures);
+    for (Uri pic : pictures) {
+      allPictures.add(new LocalPicture(pic));
+    }
+    Log.d("updatePics", "updated: " + allPictures.size());
   }
 }
