@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.google.gson.annotations.Expose;
 import com.googlecode.flickrjandroid.FlickrException;
 import com.googlecode.flickrjandroid.photos.Photo;
+import com.squareup.picasso.Picasso;
 
+import blogr.vpm.fr.blogr.picture.Picture;
 import blogr.vpm.fr.blogr.picture.PictureLoadedListener;
 
 /**
@@ -17,7 +20,7 @@ import blogr.vpm.fr.blogr.picture.PictureLoadedListener;
  * <p/>
  * The bean to store a picture from Flickr.
  */
-public class ParcelableFlickrPhoto implements Parcelable, PictureLoadedListener {
+public class ParcelableFlickrPhoto implements Picture, Parcelable, PictureLoadedListener {
 
   private static final String PAR_ID = "parceled_id";
   private static final String PAR_URL = "parceled_url";
@@ -119,8 +122,14 @@ public class ParcelableFlickrPhoto implements Parcelable, PictureLoadedListener 
     return id;
   }
 
-  public String getPicUrl() {
+  @Override
+  public String getUrlForInsertion() {
     return picUrl;
+  }
+
+  @Override
+  public void displayPicture(ImageView view) {
+    Picasso.with(view.getContext()).load(getSmallSizeUrl()).into(view);
   }
 
   public String getTitle() {
@@ -129,6 +138,16 @@ public class ParcelableFlickrPhoto implements Parcelable, PictureLoadedListener 
 
   public String getDescription() {
     return description;
+  }
+
+  @Override
+  public boolean shouldBeUploaded() {
+    return false;
+  }
+
+  @Override
+  public void upload() {
+    throw new UnsupportedOperationException("No instance of this class should be uploaded");
   }
 
   public String getThumbnailSizeUrl() {

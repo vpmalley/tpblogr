@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
-import blogr.vpm.fr.blogr.picture.AsyncPictureLoader;
+import blogr.vpm.fr.blogr.picture.Picture;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
@@ -32,12 +32,14 @@ public class FlickrDialogFragment extends DialogFragment {
 
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
-    final ParcelableFlickrPhoto[] pPics = (ParcelableFlickrPhoto[]) getArguments().getParcelableArray(ARG_PICS);
-    for (ParcelableFlickrPhoto picture : pPics) {
-      new AsyncPictureLoader(picture).execute(picture.getSmallSizeUrl());
+    final Picture[] pPics = (Picture[]) getArguments().getParcelableArray(ARG_PICS);
+    /*
+    for (Picture picture : pPics) {
+      new AsyncPictureLoader(picture).execute(picture.getUrl());
     }
+    */
 
-    ArrayAdapter<ParcelableFlickrPhoto> picsAdapter = new ArrayAdapter<ParcelableFlickrPhoto>(getActivity(), R.layout.flickr_pic_item, pPics) {
+    ArrayAdapter<Picture> picsAdapter = new ArrayAdapter<Picture>(getActivity(), R.layout.flickr_pic_item, pPics) {
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder itemHolder;
@@ -54,11 +56,14 @@ public class FlickrDialogFragment extends DialogFragment {
           itemHolder = (ViewHolder) convertView.getTag();
         }
         itemHolder.titleView.setText(pPics[position].getTitle());
+        /*
         if (pPics[position].getSmallBitmap() != null) {
           itemHolder.pictureView.setImageBitmap(pPics[position].getSmallBitmap());
         } else {
           itemHolder.pictureView.setImageResource(R.drawable.ic_action_picture);
         }
+        */
+        pPics[position].displayPicture(itemHolder.pictureView);
         return convertView;
       }
     };
@@ -68,7 +73,7 @@ public class FlickrDialogFragment extends DialogFragment {
         .setAdapter(picsAdapter, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialogInterface, int position) {
-            listener.onPicturePicked(pPics[position]);
+            //listener.onPicturePicked(pPics[position]);
           }
         })
         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

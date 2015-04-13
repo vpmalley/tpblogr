@@ -23,6 +23,7 @@ import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
 import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.picture.Picture;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
@@ -32,7 +33,7 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
 
   public static final int PICK_PIC_REQ_CODE = 32;
 
-  private ArrayAdapter<ParcelableFlickrPhoto> picturesAdapter;
+  private ArrayAdapter<Picture> picturesAdapter;
 
   private Post getCurrentPost() {
     return ((PostEditionActivity) getActivity()).getCurrentPost();
@@ -53,7 +54,7 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
     View v = inflater.inflate(R.layout.fragment_post_pictures, container, false);
     AbsListView picturesList = (AbsListView) v.findViewById(R.id.pictures);
 
-    picturesAdapter = new ArrayAdapter<ParcelableFlickrPhoto>(getActivity(), R.layout.post_item, R.id.postItem, getCurrentPost().getFlickrPictures());
+    picturesAdapter = new ArrayAdapter<Picture>(getActivity(), R.layout.post_item, R.id.postItem, getCurrentPost().getAllPictures());
     picturesList.setAdapter(picturesAdapter);
     refreshViewFromPost();
 

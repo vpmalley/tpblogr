@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
+import blogr.vpm.fr.blogr.picture.LocalPicture;
+import blogr.vpm.fr.blogr.picture.Picture;
 
 /**
  * Created by vincent on 29/08/14.
@@ -100,31 +102,6 @@ public class Post implements Parcelable {
     return new Post("", "", blog);
   }
 
-  public void addPicture(Uri pictureUri) {
-    pictures.add(pictureUri);
-  }
-
-  public ArrayList<Uri> getPicturesAsMediaContent() {
-    return pictures;
-  }
-
-  public ArrayList<Uri> getPicturesAsFiles(Context context) {
-    ArrayList<Uri> pictureFiles = new ArrayList<Uri>();
-    for (Uri pic : pictures) {
-      Cursor c = context.getContentResolver().query(pic, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
-      if (c.getCount() > 0) {
-        c.moveToFirst();
-        String filePath = c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA));
-        File picFile = new File(filePath);
-        picFile.setReadable(true, false);
-        Uri pictureUri = Uri.fromFile(picFile);
-        pictureFiles.add(pictureUri);
-        c.close();
-      }
-    }
-    return pictureFiles;
-  }
-
   public PostMetadata getMd() {
     return md;
   }
@@ -167,6 +144,31 @@ public class Post implements Parcelable {
 
   public void setFlickrPictures(ArrayList<ParcelableFlickrPhoto> flickrPictures) {
     this.flickrPictures = flickrPictures;
+  }
+
+  public void addPicture(Uri pictureUri) {
+    pictures.add(pictureUri);
+  }
+
+  public ArrayList<Uri> getPicturesAsMediaContent() {
+    return pictures;
+  }
+
+  public ArrayList<Uri> getPicturesAsFiles(Context context) {
+    ArrayList<Uri> pictureFiles = new ArrayList<Uri>();
+    for (Uri pic : pictures) {
+      Cursor c = context.getContentResolver().query(pic, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+      if (c.getCount() > 0) {
+        c.moveToFirst();
+        String filePath = c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA));
+        File picFile = new File(filePath);
+        picFile.setReadable(true, false);
+        Uri pictureUri = Uri.fromFile(picFile);
+        pictureFiles.add(pictureUri);
+        c.close();
+      }
+    }
+    return pictureFiles;
   }
 
   @Override
@@ -212,4 +214,16 @@ public class Post implements Parcelable {
       return new Post[size];
     }
   };
+
+  public Picture[] getAllPictures() {
+    Picture[] allPictures = new Picture[flickrPictures.size() + pictures.size()];
+    int i = 0;
+    for (ParcelableFlickrPhoto pic : flickrPictures) {
+      allPictures[i++] = pic;
+    }
+    for (Uri pic : pictures) {
+      allPictures[i++] = new LocalPicture(pic);
+    }
+    return allPictures;
+  }
 }
