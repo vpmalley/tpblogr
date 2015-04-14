@@ -71,8 +71,8 @@ public class PostPicturesFragmentTest extends ActivityInstrumentationTestCase2<P
     Espresso.onView(ViewMatchers.withId(R.id.pager)).perform(ViewActions.swipeLeft());
 
     ViewAsserts.assertOnScreen(editionActivity.getWindow().getDecorView(), pictures);
-    assertEquals("Some picture", editionActivity.getCurrentPost().getFlickrPictures().get(0).getTitle());
-    assertEquals(pic_url, editionActivity.getCurrentPost().getFlickrPictures().get(0).getUrlForInsertion());
+    assertEquals("Some picture", editionActivity.getCurrentPost().getAllPictures().get(0).getTitle());
+    assertEquals(pic_url, editionActivity.getCurrentPost().getAllPictures().get(0).getUrlForInsertion());
   }
 
   @MediumTest
@@ -93,9 +93,9 @@ public class PostPicturesFragmentTest extends ActivityInstrumentationTestCase2<P
     DataInteraction dataInteraction1 = Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withClassName(Matchers.containsString("ListView"))).atPosition(0);
     dataInteraction1.perform(ViewActions.click());
 
-    assertEquals(2, editionActivity.getCurrentPost().getFlickrPictures().size());
+    assertEquals(2, editionActivity.getCurrentPost().getAllPictures().size());
     DataInteraction dataInteraction2 = Espresso.onData(Matchers.anything()).inAdapterView(ViewMatchers.withId(R.id.pictures)).atPosition(1);
-    dataInteraction2.check(ViewAssertions.matches(ViewMatchers.withText(editionActivity.getCurrentPost().getFlickrPictures().get(1).getTitle())));
+    dataInteraction2.check(ViewAssertions.matches(ViewMatchers.withText(editionActivity.getCurrentPost().getAllPictures().get(1).getTitle())));
   }
 
   /*

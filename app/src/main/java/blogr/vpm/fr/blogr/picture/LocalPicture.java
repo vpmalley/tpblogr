@@ -1,6 +1,9 @@
 package blogr.vpm.fr.blogr.picture;
 
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -9,6 +12,10 @@ import com.squareup.picasso.Picasso;
  * Created by vince on 13/04/15.
  */
 public class LocalPicture implements Picture {
+
+  private static final String TITLE_KEY = "title";
+  private static final String DESC_KEY = "description";
+  private static final String URI_KEY = "localUri";
 
   private final Uri localUri;
 
@@ -24,7 +31,7 @@ public class LocalPicture implements Picture {
 
   @Override
   public String getUrlForInsertion() {
-    return null;
+    return "placeholder-" + localUri.getPath();
   }
 
   @Override
@@ -52,6 +59,7 @@ public class LocalPicture implements Picture {
     // TODO
     // retrieve the picture with uri
     // upload to Flickr or other service
+    // replace the placehoders?
   }
 
   @Override
@@ -64,4 +72,38 @@ public class LocalPicture implements Picture {
     }
     return description;
   }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel parcel, int i) {
+    Bundle b = new Bundle();
+    b.putString(TITLE_KEY, title);
+    b.putString(DESC_KEY, description);
+    b.putParcelable(URI_KEY, localUri);
+    parcel.writeBundle(b);
+  }
+
+  private LocalPicture(Parcel in) {
+    Bundle b = in.readBundle(LocalPicture.class.getClassLoader());
+    // without setting the classloader, it fails on BadParcelableException : ClassNotFoundException when
+    // unmarshalling LocalPicture class
+    title = b.getString(TITLE_KEY);
+    description = b.getString(DESC_KEY);
+    localUri = b.getParcelable(URI_KEY);
+  }
+
+  public static final Parcelable.Creator<LocalPicture> CREATOR
+      = new Parcelable.Creator<LocalPicture>() {
+    public LocalPicture createFromParcel(Parcel in) {
+      return new LocalPicture(in);
+    }
+
+    public LocalPicture[] newArray(int size) {
+      return new LocalPicture[size];
+    }
+  };
 }

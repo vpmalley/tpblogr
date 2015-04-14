@@ -23,7 +23,7 @@ import blogr.vpm.fr.blogr.picture.PicturePickedListener;
  */
 public class FlickrDialogFragment extends DialogFragment {
 
-  public static final String ARG_PICS = "flickrPics";
+  public static final String ARG_PICS = "pics";
 
   private PicturePickedListener listener;
 
@@ -75,7 +75,7 @@ public class FlickrDialogFragment extends DialogFragment {
         .create();
   }
 
-  public void openPicturePicker(Activity activity, ParcelableFlickrPhoto[] pPics, PicturePickedListener listener) {
+  public void openPicturePicker(Activity activity, Picture[] pPics, PicturePickedListener listener) {
     this.listener = listener;
     Bundle args = new Bundle();
     args.putParcelableArray(FlickrDialogFragment.ARG_PICS, pPics);

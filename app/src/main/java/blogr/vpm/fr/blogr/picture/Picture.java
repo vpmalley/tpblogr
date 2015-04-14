@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.picture;
 
+import android.os.Parcelable;
 import android.widget.ImageView;
 
 /**
@@ -7,7 +8,7 @@ import android.widget.ImageView;
  * <p/>
  * Pictures should offer some access to their content
  */
-public interface Picture {
+public interface Picture extends Parcelable {
 
   /**
    * A url to load the picture or to insert it in a post

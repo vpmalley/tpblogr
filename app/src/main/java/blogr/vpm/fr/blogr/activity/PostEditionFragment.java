@@ -25,6 +25,7 @@ import blogr.vpm.fr.blogr.insertion.Inserter;
 import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
 import blogr.vpm.fr.blogr.location.LocationProvider;
 import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
+import blogr.vpm.fr.blogr.picture.Picture;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 import blogr.vpm.fr.blogr.picture.PictureTextileTagProvider;
 import blogr.vpm.fr.blogr.publish.PostPublisher;
@@ -130,7 +131,7 @@ public class PostEditionFragment extends Fragment {
         return true;
       case R.id.action_insert_picture:
         new FlickrDialogFragment().openPicturePicker(getActivity(),
-                getCurrentPost().getFlickrPictures().toArray(new ParcelableFlickrPhoto[getCurrentPost().getFlickrPictures().size()]),
+            getCurrentPost().getFlickrPictures().toArray(new Picture[getCurrentPost().getFlickrPictures().size()]),
                 new PicturePickedListener() {
                   @Override
                   public void onPicturePicked(ParcelableFlickrPhoto pic) {
