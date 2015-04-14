@@ -74,7 +74,11 @@ public class ParcelableFlickrPhoto implements Picture, Parcelable, PictureLoaded
     this.id = null;
     this.picUrl = url;
     this.title = title;
-    this.description = title;
+    if (title == null) {
+      this.description = "";
+    } else {
+      this.description = title;
+    }
     this.thumbnailSizeUrl = url;
     this.smallSizeUrl = url;
     this.mediumSizeUrl = url;
@@ -108,7 +112,11 @@ public class ParcelableFlickrPhoto implements Picture, Parcelable, PictureLoaded
     this.id = b.getString(PAR_ID);
     this.picUrl = b.getString(PAR_URL);
     this.title = b.getString(PAR_TITLE);
-    this.description = b.getString(PAR_DESC);
+    if (b.getString(PAR_DESC) == null) {
+      this.description = "";
+    } else {
+      this.description = b.getString(PAR_DESC);
+    }
     this.thumbnailSizeUrl = b.getString(PAR_URL_T);
     this.smallSizeUrl = b.getString(PAR_URL_S);
     this.mediumSizeUrl = b.getString(PAR_URL_M);
@@ -124,7 +132,7 @@ public class ParcelableFlickrPhoto implements Picture, Parcelable, PictureLoaded
 
   @Override
   public String getUrlForInsertion() {
-    return picUrl;
+    return getMediumSizeUrl();
   }
 
   @Override
@@ -194,6 +202,7 @@ public class ParcelableFlickrPhoto implements Picture, Parcelable, PictureLoaded
 
   @Override
   public void writeToParcel(Parcel parcel, int i) {
+    parcel.writeString(ParcelableFlickrPhoto.class.getCanonicalName());
     Bundle b = new Bundle();
     b.putString(PAR_ID, id);
     b.putString(PAR_URL, picUrl);

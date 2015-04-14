@@ -25,10 +25,13 @@ import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.bean.PostMetadata;
 import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
+import blogr.vpm.fr.blogr.picture.Picture;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
  * Created by vince on 13/03/15.
+ *
+ * Tab for inserting and managing metadata
  */
 public class PostMetadataFragment extends Fragment {
 
@@ -110,9 +113,11 @@ public class PostMetadataFragment extends Fragment {
             getCurrentPost().getFlickrPictures().toArray(new ParcelableFlickrPhoto[getCurrentPost().getFlickrPictures().size()]),
             new PicturePickedListener() {
               @Override
-              public void onPicturePicked(ParcelableFlickrPhoto pic) {
-                Map<String, String> picMappings = new HashMap<String, String>();
-                picMappings.put("pic", pic.getMediumSizeUrl());
+              public void onPicturePicked(Picture pic) {
+                Map<String, String> picMappings = new HashMap<>();
+                Log.d("pic", pic.getUrlForInsertion());
+                Log.d("picalt", pic.getDescription());
+                picMappings.put("pic", pic.getUrlForInsertion());
                 picMappings.put("picalt", pic.getDescription());
                 getCurrentPost().getMd().putData(picMappings);
                 refreshViewFromPost();
@@ -199,7 +204,8 @@ public class PostMetadataFragment extends Fragment {
         itemHolder.mdKeyView.setInputType(InputType.TYPE_NULL);
       }
       */
-      itemHolder.mdValueView.setText(md.getValue().toString());
+      String mdValue = md.getValue().toString();
+      itemHolder.mdValueView.setText(mdValue);
       if (PostMetadata.TRAVEL_DATE_KEY.equals(md.getKey())) {
         itemHolder.mdValueView.setHint("yyyy-MM-dd");
       } else {

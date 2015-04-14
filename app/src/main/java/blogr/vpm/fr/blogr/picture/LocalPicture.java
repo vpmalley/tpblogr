@@ -6,10 +6,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
 
+import com.google.gson.annotations.Expose;
 import com.squareup.picasso.Picasso;
 
 /**
  * Created by vince on 13/04/15.
+ *
+ * A representation of a picture stored on the device
  */
 public class LocalPicture implements Picture {
 
@@ -17,16 +20,23 @@ public class LocalPicture implements Picture {
   private static final String DESC_KEY = "description";
   private static final String URI_KEY = "localUri";
 
+  @Expose
   private final Uri localUri;
 
+  @Expose
   private String title;
 
+  @Expose
   private String description;
 
   public LocalPicture(Uri localUri) {
     this.localUri = localUri;
     this.title = "";
     this.description = "";
+  }
+
+  public Uri getLocalUri() {
+    return localUri;
   }
 
   @Override
@@ -80,6 +90,7 @@ public class LocalPicture implements Picture {
 
   @Override
   public void writeToParcel(Parcel parcel, int i) {
+    parcel.writeString(LocalPicture.class.getCanonicalName());
     Bundle b = new Bundle();
     b.putString(TITLE_KEY, title);
     b.putString(DESC_KEY, description);

@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.picture.Picture;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
@@ -61,9 +60,7 @@ public class FlickrDialogFragment extends DialogFragment {
         .setAdapter(picsAdapter, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialogInterface, int position) {
-            if (pPics[position] instanceof ParcelableFlickrPhoto) {
-              listener.onPicturePicked((ParcelableFlickrPhoto) pPics[position]);
-            }
+            listener.onPicturePicked(pPics[position]);
           }
         })
         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

@@ -2,6 +2,7 @@ package blogr.vpm.fr.blogr.persistence;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -17,6 +18,9 @@ import java.io.StringReader;
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.insertion.DefaultInserter;
+import blogr.vpm.fr.blogr.picture.Picture;
+import blogr.vpm.fr.blogr.picture.PictureDeserializer;
+import blogr.vpm.fr.blogr.picture.PictureSerializer;
 
 /**
  * Created by vincent on 06/10/14.
@@ -68,8 +72,11 @@ public class FilePostSaver implements PostSaver {
         Toast.makeText(context, context.getResources().getString(R.string.cannotsavepost), Toast.LENGTH_SHORT).show();
       }
     }
-    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    Gson gson = new GsonBuilder().registerTypeAdapter(Picture.class, new PictureSerializer()).
+        registerTypeAdapter(Picture.class, new PictureDeserializer()).excludeFieldsWithoutExposeAnnotation().create();
+    Log.d("pre-serializing", "pictures: " + post.getAllPictures().size());
     String serializedPost = gson.toJson(post);
+    Log.d("postserializing", serializedPost);
     return fillFile(postFile, serializedPost);
   }
 

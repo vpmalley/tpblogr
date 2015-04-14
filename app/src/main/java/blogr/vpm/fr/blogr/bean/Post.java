@@ -46,8 +46,6 @@ public class Post implements Parcelable {
 
   private String content;
 
-  private final ArrayList<Uri> pictures;
-
   private Blog blog;
 
   private PostMetadata md;
@@ -56,30 +54,24 @@ public class Post implements Parcelable {
   private ArrayList<Place> places;
 
   @Expose
-  private ArrayList<ParcelableFlickrPhoto> flickrPictures;
-
   private ArrayList<Picture> allPictures;
 
   public Post(String title, String content, Blog blog) {
     this.title = title;
     this.content = content;
-    this.pictures = new ArrayList<Uri>();
     this.blog = blog;
     this.places = new ArrayList<>();
     this.md = new PostMetadata(new ArrayList<String>());
-    this.flickrPictures = new ArrayList<>();
     this.allPictures = new ArrayList<>();
   }
 
   public Post(Post post) {
     this.title = post.getTitle();
     this.content = post.getContent();
-    this.pictures = post.getPicturesAsMediaContent();
     this.blog = post.getBlog();
     this.places = post.getPlaces();
     this.md = post.getMd();
-    this.flickrPictures = post.getFlickrPictures();
-    this.allPictures = new ArrayList<>();
+    this.allPictures = post.getAllPictures();
   }
 
   public String getTitle() {
@@ -139,37 +131,43 @@ public class Post implements Parcelable {
   }
 
   public ArrayList<ParcelableFlickrPhoto> getFlickrPictures() {
-    return flickrPictures;
+    ArrayList<ParcelableFlickrPhoto> flickrPics = new ArrayList<>();
+    for (Picture pic : getAllPictures()) {
+      if (pic instanceof ParcelableFlickrPhoto) {
+        flickrPics.add((ParcelableFlickrPhoto) pic);
+      }
+    }
+    return flickrPics;
   }
 
   public void addFlickrPicture(ParcelableFlickrPhoto pic) {
-    flickrPictures.add(pic);
+    addPicture(pic);
   }
 
-  public void setFlickrPictures(ArrayList<ParcelableFlickrPhoto> flickrPictures) {
-    this.flickrPictures = flickrPictures;
+  public void setAllPictures(ArrayList<Picture> pictures) {
+    this.allPictures = pictures;
   }
 
-  public void addPicture(Uri pictureUri) {
-    pictures.add(pictureUri);
-  }
-
-  public ArrayList<Uri> getPicturesAsMediaContent() {
-    return pictures;
+  public void addPicture(Picture picture) {
+    allPictures.add(picture);
+    Log.d("add pic", "count: " + allPictures.size());
   }
 
   public ArrayList<Uri> getPicturesAsFiles(Context context) {
-    ArrayList<Uri> pictureFiles = new ArrayList<Uri>();
-    for (Uri pic : pictures) {
-      Cursor c = context.getContentResolver().query(pic, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
-      if (c.getCount() > 0) {
-        c.moveToFirst();
-        String filePath = c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA));
-        File picFile = new File(filePath);
-        picFile.setReadable(true, false);
-        Uri pictureUri = Uri.fromFile(picFile);
-        pictureFiles.add(pictureUri);
-        c.close();
+    ArrayList<Uri> pictureFiles = new ArrayList<>();
+    for (Picture pic : allPictures) {
+      if (pic instanceof LocalPicture) {
+        Cursor c = context.getContentResolver().query(((LocalPicture) pic).getLocalUri(),
+            new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+        if (c.getCount() > 0) {
+          c.moveToFirst();
+          String filePath = c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA));
+          File picFile = new File(filePath);
+          picFile.setReadable(true, false);
+          Uri pictureUri = Uri.fromFile(picFile);
+          pictureFiles.add(pictureUri);
+          c.close();
+        }
       }
     }
     return pictureFiles;
@@ -185,12 +183,11 @@ public class Post implements Parcelable {
     Bundle b = new Bundle();
     b.putString(TITLE_KEY, title);
     b.putString(CONTENT_KEY, content);
-    b.putParcelableArrayList(PICTURES_KEY, pictures);
     b.putParcelable(BLOG_KEY, blog);
     b.putParcelable(MD_KEY, md);
     parcel.writeBundle(b);
     parcel.writeTypedList(places);
-    parcel.writeTypedList(flickrPictures);
+    parcel.writeTypedList(allPictures);
   }
 
   private Post(Parcel in) {
@@ -199,14 +196,12 @@ public class Post implements Parcelable {
     // unmarshalling Media class
     title = b.getString(TITLE_KEY);
     content = b.getString(CONTENT_KEY);
-    pictures = b.getParcelableArrayList(PICTURES_KEY);
     blog = b.getParcelable(BLOG_KEY);
     md = b.getParcelable(MD_KEY);
     places = new ArrayList<>();
     in.readTypedList(places, Place.CREATOR);
-    flickrPictures = new ArrayList<>();
-    in.readTypedList(flickrPictures, ParcelableFlickrPhoto.CREATOR);
-    this.allPictures = new ArrayList<>();
+    allPictures = new ArrayList<>();
+    in.readTypedList(allPictures, Picture.CREATOR);
   }
 
   public static final Parcelable.Creator<Post> CREATOR
@@ -221,26 +216,7 @@ public class Post implements Parcelable {
   };
 
   public ArrayList<Picture> getAllPictures() {
-    /*
-    Picture[] allPictures = new Picture[flickrPictures.size() + pictures.size()];
-    int i = 0;
-    for (ParcelableFlickrPhoto pic : flickrPictures) {
-      allPictures[i++] = pic;
-    }
-    for (Uri pic : pictures) {
-      allPictures[i++] = new LocalPicture(pic);
-    }
-    */
-    updateAllPictures();
     return allPictures;
   }
 
-  public void updateAllPictures() {
-    allPictures.clear();
-    allPictures.addAll(flickrPictures);
-    for (Uri pic : pictures) {
-      allPictures.add(new LocalPicture(pic));
-    }
-    Log.d("updatePics", "updated: " + allPictures.size());
-  }
 }

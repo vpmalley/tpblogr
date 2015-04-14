@@ -1,6 +1,5 @@
 package blogr.vpm.fr.blogr.picture;
 
-import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
 
 /**
@@ -8,9 +7,9 @@ import blogr.vpm.fr.blogr.insertion.SingleTagProvider;
  */
 public class PictureTextileTagProvider implements SingleTagProvider {
 
-  private final ParcelableFlickrPhoto picture;
+  private final Picture picture;
 
-  public PictureTextileTagProvider(ParcelableFlickrPhoto picture) {
+  public PictureTextileTagProvider(Picture picture) {
     this.picture = picture;
   }
 
@@ -19,7 +18,7 @@ public class PictureTextileTagProvider implements SingleTagProvider {
     StringBuilder tagBuilder = new StringBuilder();
 
     tagBuilder.append("!");
-    tagBuilder.append(picture.getLargeSizeUrl());
+    tagBuilder.append(picture.getUrlForInsertion());
     tagBuilder.append("(");
     tagBuilder.append(picture.getTitle());
     tagBuilder.append(")!");

@@ -1,7 +1,10 @@
 package blogr.vpm.fr.blogr.picture;
 
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
+
+import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 
 /**
  * Created by vince on 13/04/15.
@@ -51,4 +54,25 @@ public interface Picture extends Parcelable {
    * @pre {#shouldBeUploaded} should be checked before.
    */
   void upload();
+
+  Parcelable.Creator<Picture> CREATOR
+      = new Parcelable.Creator<Picture>() {
+
+    @Override
+    public Picture createFromParcel(Parcel parcel) {
+      String className = parcel.readString();
+      Picture p;
+      if (LocalPicture.class.getCanonicalName().equals(className)) {
+        p = LocalPicture.CREATOR.createFromParcel(parcel);
+      } else {
+        p = (Picture) ParcelableFlickrPhoto.CREATOR.createFromParcel(parcel);
+      }
+      return p;
+    }
+
+    @Override
+    public Picture[] newArray(int size) {
+      return new Picture[size];
+    }
+  };
 }

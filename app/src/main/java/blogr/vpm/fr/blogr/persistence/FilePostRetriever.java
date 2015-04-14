@@ -22,6 +22,9 @@ import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Blog;
 import blogr.vpm.fr.blogr.bean.EmailBlog;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.picture.Picture;
+import blogr.vpm.fr.blogr.picture.PictureDeserializer;
+import blogr.vpm.fr.blogr.picture.PictureSerializer;
 
 /**
  * Created by vincent on 08/10/14.
@@ -36,12 +39,12 @@ public class FilePostRetriever implements PostRetriever {
 
   @Override
   public List<Post> retrieveAll() {
-    List<Post> posts = new ArrayList<Post>();
+    List<Post> posts = new ArrayList<>();
     if (isExternalStorageReadable()) {
 
       File blogsDir = new FileBlogManager().getBlogsDir();
 
-      List<Blog> blogs = null;
+      List<Blog> blogs;
       try {
         blogs = new FileBlogManager().retrieveAll();
         for (Blog blog : blogs) {
@@ -62,7 +65,7 @@ public class FilePostRetriever implements PostRetriever {
    * @return the list of blogs for this device
    */
   private List<EmailBlog> retrieveBlogs(File blogsDir) {
-    List<EmailBlog> blogs = new ArrayList<EmailBlog>();
+    List<EmailBlog> blogs = new ArrayList<>();
     if (blogsDir.exists() && blogsDir.isDirectory()) {
       for (File blogDir : blogsDir.listFiles()) {
         blogs.add(new EmailBlog(blogDir.getName(), ""));
@@ -78,7 +81,7 @@ public class FilePostRetriever implements PostRetriever {
    * @return the list of posts for this blog
    */
   private List<Post> retrievePosts(File postDir, Blog blog) {
-    List<Post> posts = new ArrayList<Post>();
+    List<Post> posts = new ArrayList<>();
     if (postDir.exists() && postDir.isDirectory()) {
       for (File postFile : postDir.listFiles()) {
         if (!postFile.getPath().endsWith(".json")) {
@@ -89,12 +92,13 @@ public class FilePostRetriever implements PostRetriever {
           }
           File dataFile = new FileManager().getDataFileForPost(context, post);
           if (dataFile.exists()) {
-            String serializedPlaces = readFile(dataFile);
+            String serializedPost = readFile(dataFile);
             try {
-              Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-              Post postData = gson.fromJson(serializedPlaces, Post.class);
+              Gson gson = new GsonBuilder().registerTypeAdapter(Picture.class, new PictureSerializer()).
+                  registerTypeAdapter(Picture.class, new PictureDeserializer()).excludeFieldsWithoutExposeAnnotation().create();
+              Post postData = gson.fromJson(serializedPost, Post.class);
               post.setPlaces(postData.getPlaces());
-              post.setFlickrPictures(postData.getFlickrPictures());
+              post.setAllPictures(postData.getAllPictures());
             } catch(JsonSyntaxException e) {
               Log.w("json", "Error reading JSON data. " + e.toString());
             }

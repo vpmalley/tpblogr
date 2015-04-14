@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.format.AlignCenterTagsProvider;
 import blogr.vpm.fr.blogr.format.AlignLeftTagsProvider;
@@ -34,6 +33,8 @@ import blogr.vpm.fr.blogr.service.PostPublishingServiceProvider;
 
 /**
  * Created by vincent on 07/10/14.
+ *
+ * Tab for editing content
  */
 public class PostEditionFragment extends Fragment {
 
@@ -134,7 +135,7 @@ public class PostEditionFragment extends Fragment {
             getCurrentPost().getFlickrPictures().toArray(new Picture[getCurrentPost().getFlickrPictures().size()]),
                 new PicturePickedListener() {
                   @Override
-                  public void onPicturePicked(ParcelableFlickrPhoto pic) {
+                  public void onPicturePicked(Picture pic) {
                     tagsInserter.insert(contentField, new PictureTextileTagProvider(pic));
                     refreshPostFromView();
                   }

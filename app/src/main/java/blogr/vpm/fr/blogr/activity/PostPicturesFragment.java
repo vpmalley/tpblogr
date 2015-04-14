@@ -21,13 +21,15 @@ import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrJAndroidProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
-import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.picture.LocalPicture;
 import blogr.vpm.fr.blogr.picture.Picture;
 import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 
 /**
  * Created by vince on 21/03/15.
+ *
+ * Tab for inserting and managing pictures
  */
 public class PostPicturesFragment extends Fragment implements PicturePickedListener {
 
@@ -54,7 +56,7 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
     View v = inflater.inflate(R.layout.fragment_post_pictures, container, false);
     AbsListView picturesList = (AbsListView) v.findViewById(R.id.pictures);
 
-    picturesAdapter = new ArrayAdapter<Picture>(getActivity(), R.layout.post_item, R.id.postItem, getCurrentPost().getAllPictures());
+    picturesAdapter = new ArrayAdapter<>(getActivity(), R.layout.post_item, R.id.postItem, getCurrentPost().getAllPictures());
     picturesList.setAdapter(picturesAdapter);
     refreshViewFromPost();
 
@@ -110,7 +112,7 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
       Uri pictureUri = data.getData();
-      getCurrentPost().addPicture(pictureUri);
+      getCurrentPost().addPicture(new LocalPicture(pictureUri));
       refreshViewFromPost();
     } else {
       super.onActivityResult(requestCode, resultCode, data);
@@ -118,15 +120,14 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
   }
 
   void refreshViewFromPost() {
-    getCurrentPost().updateAllPictures();
     if (picturesAdapter != null) {
       picturesAdapter.notifyDataSetChanged();
     }
   }
 
   @Override
-  public void onPicturePicked(ParcelableFlickrPhoto pic) {
-    getCurrentPost().addFlickrPicture(pic);
+  public void onPicturePicked(Picture pic) {
+    getCurrentPost().addPicture(pic);
     refreshViewFromPost();
   }
 }

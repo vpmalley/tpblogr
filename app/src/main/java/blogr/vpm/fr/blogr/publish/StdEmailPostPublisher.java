@@ -32,7 +32,7 @@ public class StdEmailPostPublisher implements PostPublisher {
       return;
     }
     EmailBlog emailBlog = (EmailBlog) blog;
-    if (!post.getPicturesAsMediaContent().isEmpty()) {
+    if (!post.getPicturesAsFiles(context).isEmpty()) {
       intent = emailIntentWithAttachments(emailBlog, post);
     } else {
       intent = emailIntentWithoutAttachments(emailBlog, post);
