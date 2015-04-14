@@ -84,6 +84,9 @@ public class PostPlacesFragmentTest extends ActivityInstrumentationTestCase2<Pos
         dataInteraction2.perform(ViewActions.click());
     }
 
+    /**
+     * @pre enable GPS
+     */
     @MediumTest
     public void testInsertLocation() {
         Espresso.onView(ViewMatchers.withId(R.id.locateButton)).perform(ViewActions.click());

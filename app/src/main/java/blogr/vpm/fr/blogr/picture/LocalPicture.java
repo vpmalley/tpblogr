@@ -19,6 +19,7 @@ public class LocalPicture implements Picture {
   private static final String TITLE_KEY = "title";
   private static final String DESC_KEY = "description";
   private static final String URI_KEY = "localUri";
+  public static final String UNTITLED = "untitled";
 
   @Expose
   private final Uri localUri;
@@ -31,8 +32,8 @@ public class LocalPicture implements Picture {
 
   public LocalPicture(Uri localUri) {
     this.localUri = localUri;
-    this.title = "";
-    this.description = "";
+    this.title = UNTITLED;
+    this.description = UNTITLED;
   }
 
   public Uri getLocalUri() {
@@ -41,7 +42,7 @@ public class LocalPicture implements Picture {
 
   @Override
   public String getUrlForInsertion() {
-    return "placeholder-" + localUri.getPath();
+    return "placeholder-" + localUri.toString();
   }
 
   @Override
@@ -74,7 +75,7 @@ public class LocalPicture implements Picture {
 
   @Override
   public String toString() {
-    String description = "untitled";
+    String description = UNTITLED;
     if (!getTitle().isEmpty()) {
       description = getTitle();
     } else if (!getDescription().isEmpty()) {

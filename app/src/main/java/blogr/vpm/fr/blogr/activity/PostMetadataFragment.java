@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.bean.PostMetadata;
 import blogr.vpm.fr.blogr.location.PlaceTagMdProvider;
@@ -110,13 +109,11 @@ public class PostMetadataFragment extends Fragment {
         return true;
       case R.id.action_insert_picture:
         new FlickrDialogFragment().openPicturePicker(getActivity(),
-            getCurrentPost().getFlickrPictures().toArray(new ParcelableFlickrPhoto[getCurrentPost().getFlickrPictures().size()]),
+            getCurrentPost().getAllPictures().toArray(new Picture[getCurrentPost().getAllPictures().size()]),
             new PicturePickedListener() {
               @Override
               public void onPicturePicked(Picture pic) {
                 Map<String, String> picMappings = new HashMap<>();
-                Log.d("pic", pic.getUrlForInsertion());
-                Log.d("picalt", pic.getDescription());
                 picMappings.put("pic", pic.getUrlForInsertion());
                 picMappings.put("picalt", pic.getDescription());
                 getCurrentPost().getMd().putData(picMappings);

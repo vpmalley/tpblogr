@@ -1,6 +1,7 @@
 package blogr.vpm.fr.blogr.picture;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
@@ -21,7 +22,11 @@ public class PictureSerializer implements JsonSerializer<Picture> {
   public JsonElement serialize(Picture src, Type typeOfSrc, JsonSerializationContext context) {
     JsonElement serializedPicture;
     if (src instanceof LocalPicture) {
-      serializedPicture = context.serialize(src, LocalPicture.class);
+      serializedPicture = new JsonObject();
+      serializedPicture.getAsJsonObject().addProperty("title", src.getTitle());
+      serializedPicture.getAsJsonObject().addProperty("description", src.getDescription());
+      serializedPicture.getAsJsonObject().addProperty("localUri", ((LocalPicture) src).getLocalUri().toString());
+      //serializedPicture = context.serialize(src, LocalPicture.class);
       serializedPicture.getAsJsonObject().addProperty(TYPE_KEY, LocalPicture.class.getCanonicalName());
     } else {
       serializedPicture = context.serialize(src, ParcelableFlickrPhoto.class);

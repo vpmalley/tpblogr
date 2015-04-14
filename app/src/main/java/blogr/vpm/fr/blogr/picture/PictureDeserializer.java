@@ -1,5 +1,7 @@
 package blogr.vpm.fr.blogr.picture;
 
+import android.net.Uri;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -21,7 +23,10 @@ public class PictureDeserializer implements JsonDeserializer<Picture> {
     json.getAsJsonObject().remove("type");
     Picture p;
     if (LocalPicture.class.getCanonicalName().equals(className)) {
-      p = context.deserialize(json, LocalPicture.class);
+      String title = json.getAsJsonObject().get("title").getAsString();
+      String description = json.getAsJsonObject().get("description").getAsString();
+      String localUri = json.getAsJsonObject().get("localUri").getAsString();
+      p = new LocalPicture(Uri.parse(localUri));
     } else {
       p = context.deserialize(json, ParcelableFlickrPhoto.class);
     }
