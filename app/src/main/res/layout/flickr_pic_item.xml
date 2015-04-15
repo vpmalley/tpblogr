@@ -10,8 +10,10 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:minWidth="240px"
-        android:minHeight="100px"
+        android:minWidth="100dp"
+        android:minHeight="100dp"
+        android:maxWidth="100dp"
+        android:maxHeight="100dp"
         android:id="@+id/picImage"/>
     <TextView
         android:layout_width="wrap_content"

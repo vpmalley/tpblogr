@@ -132,7 +132,7 @@ public class PostEditionFragment extends Fragment {
         return true;
       case R.id.action_insert_picture:
         new FlickrDialogFragment().openPicturePicker(getActivity(),
-            getCurrentPost().getFlickrPictures().toArray(new Picture[getCurrentPost().getFlickrPictures().size()]),
+            getCurrentPost().getAllPictures().toArray(new Picture[getCurrentPost().getAllPictures().size()]),
                 new PicturePickedListener() {
                   @Override
                   public void onPicturePicked(Picture pic) {

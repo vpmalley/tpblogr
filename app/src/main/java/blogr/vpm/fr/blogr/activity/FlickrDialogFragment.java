@@ -56,7 +56,7 @@ public class FlickrDialogFragment extends DialogFragment {
     };
 
     return new AlertDialog.Builder(getActivity())
-        .setTitle(R.string.flickr_pick_picture)
+        .setTitle(R.string.pick_picture)
         .setAdapter(picsAdapter, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialogInterface, int position) {

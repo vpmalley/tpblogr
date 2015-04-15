@@ -2,6 +2,7 @@ package blogr.vpm.fr.blogr.activity;
 
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
@@ -19,6 +20,7 @@ import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.bean.GithubBlog;
 import blogr.vpm.fr.blogr.bean.Post;
+import blogr.vpm.fr.blogr.picture.LocalPicture;
 
 /**
  * Created by vince on 06/04/15.
@@ -31,7 +33,9 @@ public class PostEditionFragmentTest extends ActivityInstrumentationTestCase2<Po
 
     private ViewPager viewPager;
 
-    private static final String pic_url = "http://i.answers.microsoft.com/static/images/msheader.png";
+    private static final String PIC_URI = "content://media/external/images/media/300";
+
+    private static final String PIC_URL = "http://i.answers.microsoft.com/static/images/msheader.png";
 
     public PostEditionFragmentTest() {
         super(PostEditionActivity.class);
@@ -45,7 +49,8 @@ public class PostEditionFragmentTest extends ActivityInstrumentationTestCase2<Po
         Location location = new Location("jesaisoujesuis");
         location.setLatitude(23);
         post.addPlace(location);
-        post.addFlickrPicture(new ParcelableFlickrPhoto("Some picture", pic_url));
+        post.addFlickrPicture(new ParcelableFlickrPhoto("Some picture", PIC_URL));
+        post.addPicture(new LocalPicture(Uri.parse(PIC_URI)));
         i.putExtra(Post.INTENT_EXTRA_KEY, post);
         setActivityIntent(i);
         editionActivity = getActivity();
@@ -114,7 +119,7 @@ public class PostEditionFragmentTest extends ActivityInstrumentationTestCase2<Po
     }
 
     @MediumTest
-    public void testInsertPicture() {
+    public void testInsertFlickrPicture() {
         Espresso.onView(ViewMatchers.withId(R.id.postContent)).perform(ViewActions.click());
 
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
@@ -124,12 +129,31 @@ public class PostEditionFragmentTest extends ActivityInstrumentationTestCase2<Po
         Espresso.onView(ViewMatchers.withText("Some picture")).perform(ViewActions.click());
 
         assertTrue(editionActivity.getCurrentPost().getContent().contains("Some picture"));
-        assertTrue(editionActivity.getCurrentPost().getContent().contains(pic_url));
+        assertTrue(editionActivity.getCurrentPost().getContent().contains(PIC_URL));
 
         Espresso.onView(ViewMatchers.withId(R.id.postContent)).
             check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString("Some picture"))));
         Espresso.onView(ViewMatchers.withId(R.id.postContent)).
-            check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString(pic_url))));
+            check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString(PIC_URL))));
+    }
+
+    @MediumTest
+    public void testInsertGalleryPicture() {
+        Espresso.onView(ViewMatchers.withId(R.id.postContent)).perform(ViewActions.click());
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        Espresso.onView(ViewMatchers.withText(R.string.action_insert)).perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withText(R.string.action_insert_picture)).perform(ViewActions.click());
+
+        Espresso.onView(ViewMatchers.withText("untitled")).perform(ViewActions.click());
+
+        assertTrue(editionActivity.getCurrentPost().getContent().contains("untitled"));
+        assertTrue(editionActivity.getCurrentPost().getContent().contains(PIC_URI));
+
+        Espresso.onView(ViewMatchers.withId(R.id.postContent)).
+            check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString("untitled"))));
+        Espresso.onView(ViewMatchers.withId(R.id.postContent)).
+            check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString(PIC_URI))));
     }
 
 

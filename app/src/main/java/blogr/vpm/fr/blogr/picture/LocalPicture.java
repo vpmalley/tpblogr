@@ -47,7 +47,7 @@ public class LocalPicture implements Picture {
 
   @Override
   public void displayPicture(ImageView view) {
-    Picasso.with(view.getContext()).load(localUri).into(view);
+    Picasso.with(view.getContext()).load(localUri).fit().into(view);
   }
 
   @Override

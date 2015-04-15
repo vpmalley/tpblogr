@@ -18,7 +18,7 @@
     <string name="action_insert_gallery">Picture from Gallery</string>
     <string name="action_insert_location">Location</string>
     <string name="post_content_hint">Have a story to share today?</string>
-    <string name="flickr_pick_picture">Pick a picture from Flickr</string>
+    <string name="pick_picture">Pick a picture</string>
     <string name="cancel">Cancel</string>
     <string name="no_access_flickr">Pictures could not be loaded from Flickr. Check your connection, your username in the settings and try again later.</string>
     <string name="action_save">Save</string>
