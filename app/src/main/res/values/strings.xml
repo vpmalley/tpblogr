@@ -51,4 +51,6 @@
     <string name="country">Country</string>
     <string name="feature">Feature</string>
     <string name="action_insert_picture">Picture</string>
+    <string name="ok">OK</string>
+    <string name="type_flickr_code">Type code</string>
 </resources>
