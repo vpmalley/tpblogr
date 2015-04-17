@@ -16,12 +16,15 @@ import blogr.vpm.fr.blogr.R;
 
 /**
  * Created by vincent on 08/10/14.
+ *
+ * Uses the flickrj-android library to retrieve pictures for a specific user.
+ * This must be called from an asynchronous task, this cannot be called on the UI thread.
  */
-public class FlickrJAndroidProvider implements FlickrProvider {
+public class FlickrJPicturesProvider implements FlickrProvider {
 
   private Context context;
 
-  public FlickrJAndroidProvider(Context context) {
+  public FlickrJPicturesProvider(Context context) {
     this.context = context;
   }
 

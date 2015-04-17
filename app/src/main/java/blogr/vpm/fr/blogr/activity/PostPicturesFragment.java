@@ -18,8 +18,8 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.apis.flickr.FlickrJAndroidProvider;
-import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncTaskProvider;
+import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncPicturesProvider;
+import blogr.vpm.fr.blogr.apis.flickr.FlickrJPicturesProvider;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrProvider;
 import blogr.vpm.fr.blogr.bean.Post;
 import blogr.vpm.fr.blogr.picture.LocalPicture;
@@ -87,8 +87,8 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.action_insert_flickr:
-        FlickrProvider flickrD = new FlickrJAndroidProvider(getActivity());
-        FlickrProvider flickrP = new FlickrJAsyncTaskProvider(getActivity(), flickrD, this);
+        FlickrProvider flickrP = new FlickrJAsyncPicturesProvider(getActivity(),
+            new FlickrJPicturesProvider(getActivity()), this);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String flickrUsername = prefs.getString("pref_flickr_username", "");
         int picNb = Integer.valueOf(prefs.getString("pref_flickr_number_pics", "20"));

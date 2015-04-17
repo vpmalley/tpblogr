@@ -13,7 +13,7 @@ import blogr.vpm.fr.blogr.picture.PicturePickedListener;
 /**
  * Created by vincent on 19/10/14.
  */
-public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider.FlickrSearchBean, Integer, PhotoList> implements FlickrProvider {
+public class FlickrJAsyncPicturesProvider extends AsyncTask<FlickrJAsyncPicturesProvider.FlickrSearchBean, Integer, PhotoList> implements FlickrProvider {
 
   private final FlickrProvider delegate;
 
@@ -21,7 +21,7 @@ public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider
 
   private final PicturePickedListener listener;
 
-  public FlickrJAsyncTaskProvider(Activity activity, FlickrProvider delegate, PicturePickedListener listener) {
+  public FlickrJAsyncPicturesProvider(Activity activity, FlickrProvider delegate, PicturePickedListener listener) {
     this.listener = listener;
     this.delegate = delegate;
     this.activity = activity;
@@ -61,20 +61,6 @@ public class FlickrJAsyncTaskProvider extends AsyncTask<FlickrJAsyncTaskProvider
     }
     return pPics;
   }
-
-  /**
-   * Opens a dialog with the list of Flickr pictures
-   *
-   * @param pPics the array of parcelable (i.e. serializable) pictures
-   */
-  /*
-  private void openFlickrDialog(ParcelableFlickrPhoto[] pPics) {
-    Bundle args = new Bundle();
-    args.putParcelableArray(FlickrDialogFragment.ARG_PICS, pPics);
-    flickrFragment.setArguments(args);
-    flickrFragment.show(activity.getFragmentManager(), "flickrPicker");
-  }
-  */
 
   public class FlickrSearchBean {
     String username;

@@ -25,7 +25,12 @@ import blogr.vpm.fr.blogr.R;
  */
 public class FlickrOAuthAuthoriser {
 
-
+  /**
+   * Obtains the service for Flickr authorization
+   *
+   * @param context an Android Context
+   * @return the service for Flickr OAuth authorization
+   */
   public OAuthService getService(Context context) {
     OAuthService service = new ServiceBuilder()
         .provider(FlickrApi.class)
@@ -35,6 +40,10 @@ public class FlickrOAuthAuthoriser {
     return service;
   }
 
+  /**
+   * Opens the authorization page in a browser
+   * @param activity the current activity, to open the dialog in
+   */
   public void openAuthorizationWebPage(final Activity activity) {
     final OAuthService service = getService(activity);
 
@@ -56,6 +65,9 @@ public class FlickrOAuthAuthoriser {
     }.execute();
   }
 
+  /**
+   * Used to display some UI to collect the verifier from the user
+   */
   public static class VerifierDialogFragment extends DialogFragment {
 
     private Context context;
@@ -68,7 +80,7 @@ public class FlickrOAuthAuthoriser {
       this.context = activity;
       this.service = service;
       this.requestToken = requestToken;
-      show(activity.getFragmentManager(), "verifierCollecter");
+      show(activity.getFragmentManager(), "verifierCollector");
     }
 
     @Override
@@ -81,19 +93,7 @@ public class FlickrOAuthAuthoriser {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
               String verifier = flickrVerifier.getText().toString();
-              new AsyncTask<String, Integer, Token>() {
-
-                @Override
-                protected Token doInBackground(String... verifiers) {
-                  Token accessToken = service.getAccessToken(requestToken, new Verifier(verifiers[0]));
-                  return accessToken;
-                }
-
-                @Override
-                protected void onPostExecute(Token accessToken) {
-                  // use the token
-                }
-              }.execute(verifier);
+              new AccessTokenGetter(requestToken, service).execute(verifier);
             }
           })
           .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -103,6 +103,32 @@ public class FlickrOAuthAuthoriser {
             }
           })
           .create();
+    }
+  }
+
+  /**
+   * Used to determine the access token and use it, once the verifier is obtained from the user
+   */
+  public static class AccessTokenGetter extends AsyncTask<String, Integer, Token> {
+
+    private final Token requestToken;
+
+    private final OAuthService service;
+
+    public AccessTokenGetter(Token requestToken, OAuthService service) {
+      this.requestToken = requestToken;
+      this.service = service;
+    }
+
+    @Override
+    protected Token doInBackground(String... verifiers) {
+      Token accessToken = service.getAccessToken(requestToken, new Verifier(verifiers[0]));
+      return accessToken;
+    }
+
+    @Override
+    protected void onPostExecute(Token accessToken) {
+      // use the token
     }
   }
 
