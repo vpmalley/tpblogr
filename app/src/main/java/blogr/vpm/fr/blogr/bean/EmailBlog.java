@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.bean;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -59,7 +60,7 @@ public class EmailBlog implements Blog {
   }
 
   @Override
-  public PostPublisher getPublisherService(Context context) {
+  public PostPublisher getPublisherService(Activity context) {
     return new StdEmailPostPublisher(context);
   }
 

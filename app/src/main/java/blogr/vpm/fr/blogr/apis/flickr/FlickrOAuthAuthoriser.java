@@ -25,6 +25,12 @@ import blogr.vpm.fr.blogr.R;
  */
 public class FlickrOAuthAuthoriser {
 
+  private final PostExecution postExecution;
+
+  public FlickrOAuthAuthoriser(PostExecution postExecution) {
+    this.postExecution = postExecution;
+  }
+
   /**
    * Obtains the service for Flickr authorization
    *
@@ -44,7 +50,7 @@ public class FlickrOAuthAuthoriser {
    * Opens the authorization page in a browser
    * @param activity the current activity, to open the dialog in
    */
-  public void openAuthorizationWebPage(final Activity activity) {
+  public void launchAuthorizationFlow(final Activity activity) {
     final OAuthService service = getService(activity);
 
     new AsyncTask<String, Integer, Token>() {
@@ -59,7 +65,7 @@ public class FlickrOAuthAuthoriser {
       protected void onPostExecute(Token requestToken) {
         String authorizationUrl = service.getAuthorizationUrl(requestToken);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(authorizationUrl));
-        new VerifierDialogFragment().openDialog(activity, service, requestToken);
+        new VerifierDialogFragment().openDialog(activity, service, requestToken, postExecution);
         activity.startActivity(intent);
       }
     }.execute();
@@ -76,10 +82,13 @@ public class FlickrOAuthAuthoriser {
 
     private Token requestToken;
 
-    public void openDialog(Activity activity, OAuthService service, Token requestToken) {
+    private PostExecution postExecution;
+
+    public void openDialog(Activity activity, OAuthService service, Token requestToken, PostExecution postExecution) {
       this.context = activity;
       this.service = service;
       this.requestToken = requestToken;
+      this.postExecution = postExecution;
       show(activity.getFragmentManager(), "verifierCollector");
     }
 
@@ -93,7 +102,7 @@ public class FlickrOAuthAuthoriser {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
               String verifier = flickrVerifier.getText().toString();
-              new AccessTokenGetter(requestToken, service).execute(verifier);
+              new AccessTokenGetter(requestToken, service, postExecution).execute(verifier);
             }
           })
           .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -115,9 +124,12 @@ public class FlickrOAuthAuthoriser {
 
     private final OAuthService service;
 
-    public AccessTokenGetter(Token requestToken, OAuthService service) {
+    private final PostExecution postExecution;
+
+    public AccessTokenGetter(Token requestToken, OAuthService service, PostExecution postExecution) {
       this.requestToken = requestToken;
       this.service = service;
+      this.postExecution = postExecution;
     }
 
     @Override
@@ -128,8 +140,17 @@ public class FlickrOAuthAuthoriser {
 
     @Override
     protected void onPostExecute(Token accessToken) {
-      // use the token
+      postExecution.onPostExecute(accessToken);
     }
   }
 
+  public interface PostExecution {
+
+    /**
+     * A simple listener that runs at the end of a task
+     *
+     * @param accessToken
+     */
+    void onPostExecute(Token accessToken);
+  }
 }

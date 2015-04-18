@@ -1,7 +1,6 @@
 package blogr.vpm.fr.blogr.publish;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 
 import java.io.File;
@@ -20,21 +19,22 @@ import blogr.vpm.fr.blogr.git.GitRepository;
 import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.persistence.FileBlogManager;
 import blogr.vpm.fr.blogr.persistence.FileManager;
+import blogr.vpm.fr.blogr.picture.Picture;
 
 /**
  * Created by vince on 08/02/15.
  */
 public class GithubPublisher implements PostPublisher {
 
-  private final Context context;
-  private static final String PUBLISHED_POSTS_DIR = "_posts";;
+  private final Activity activity;
+  private static final String PUBLISHED_POSTS_DIR = "_posts";
 
   private Blog blog;
 
   private Post post;
 
-  public GithubPublisher(Context context) {
-    this.context = context;
+  public GithubPublisher(Activity activity) {
+    this.activity = activity;
   }
 
   @Override
@@ -42,14 +42,20 @@ public class GithubPublisher implements PostPublisher {
     this.blog = blog;
     this.post = post;
 
-    new AsyncGithubBlogPuller(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
+    for (Picture p : post.getAllPictures()) {
+      if (p.shouldBeUploaded()) {
+        p.upload(activity);
+      }
+    }
+
+    new AsyncGithubBlogPuller(activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
 
     if (blog.hasMetadataProvider()) {
-      new DefaultInserter(context).prepend(post, blog.getMetadataProvider(post));
+      new DefaultInserter(activity).prepend(post, blog.getMetadataProvider(post));
     }
 
     GithubPublicationDialogFragment fragment = GithubPublicationDialogFragment.newInstance(this, blog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""));
-    fragment.show(((Activity)context).getFragmentManager(), "credentialInput"); // try to remove this ugly cast
+    fragment.show(activity.getFragmentManager(), "credentialInput"); // try to remove this ugly cast
   }
 
   @Override
@@ -66,17 +72,17 @@ public class GithubPublisher implements PostPublisher {
 
     // move draft to posts with right name
     File newFileForPost = getFileForPost(post);
-    boolean result = new FileManager().getFileForPost(context, post).renameTo(newFileForPost);
+    boolean result = new FileManager().getFileForPost(activity, post).renameTo(newFileForPost);
 
     // add and commit
     GitInteraction gitClient = new GitRepository();
     GithubBlog githubBlog = (GithubBlog) post.getBlog();
     if (result) {
-      result = gitClient.add(githubBlog, PUBLISHED_POSTS_DIR + "/" + getFileName(post), context);
+      result = gitClient.add(githubBlog, PUBLISHED_POSTS_DIR + "/" + getFileName(post), activity);
     }
     if (result) {
-      AsyncGithubBlogPusher pusher = new AsyncGithubBlogPusher(context, username, password);
-      new AsyncGithubBlogCommitter(context, "published " + post.getTitle(), pusher).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
+      AsyncGithubBlogPusher pusher = new AsyncGithubBlogPusher(activity, username, password);
+      new AsyncGithubBlogCommitter(activity, "published " + post.getTitle(), pusher).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
     }
   }
 

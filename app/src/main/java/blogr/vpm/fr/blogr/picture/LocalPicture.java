@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.picture;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -8,6 +9,12 @@ import android.widget.ImageView;
 
 import com.google.gson.annotations.Expose;
 import com.squareup.picasso.Picasso;
+
+import org.scribe.model.Token;
+
+import blogr.vpm.fr.blogr.apis.flickr.FlickrJPicturesUploader;
+import blogr.vpm.fr.blogr.apis.flickr.FlickrOAuthAuthoriser;
+import blogr.vpm.fr.blogr.apis.flickr.FlickrPicturesUploader;
 
 /**
  * Created by vince on 13/04/15.
@@ -66,10 +73,17 @@ public class LocalPicture implements Picture {
   }
 
   @Override
-  public void upload() {
-    // TODO
-    // retrieve the picture with uri
-    // upload to Flickr or other service
+  public void upload(final Activity activity) {
+    FlickrOAuthAuthoriser.PostExecution postExecution = new FlickrOAuthAuthoriser.PostExecution() {
+      @Override
+      public void onPostExecute(Token accessToken) {
+        FlickrPicturesUploader picUploader = new FlickrJPicturesUploader(activity, accessToken);
+        picUploader.uploadPicture(LocalPicture.this);
+      }
+    };
+
+    new FlickrOAuthAuthoriser(postExecution).launchAuthorizationFlow(activity);
+    // retrieve the id of picture
     // replace the placehoders?
   }
 

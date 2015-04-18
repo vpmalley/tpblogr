@@ -47,6 +47,7 @@ public class GitRepository implements GitInteraction {
       result = false;
     }
     StoredConfig config = git.getRepository().getConfig();
+    // TODO update with Preferences
     config.setString("user", null, "name", "vpmalley");
     config.setString("user", null, "email", "vpmalley@gmail.com");
     try {

@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.service;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -29,7 +30,7 @@ public class PostPublishingPreferencesProvider implements PostPublishingServiceP
   }
 
   @Override
-  public PostPublisher getPublisherService(Context context) {
+  public PostPublisher getPublisherService(Activity context) {
     PostPublisher serviceInstance;
     initPreferencesValues(context);
     String prefValue = getPreferredPublisher(context);

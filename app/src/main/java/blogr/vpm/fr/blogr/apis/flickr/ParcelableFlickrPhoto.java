@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.apis.flickr;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -154,7 +155,7 @@ public class ParcelableFlickrPhoto implements Picture, Parcelable, PictureLoaded
   }
 
   @Override
-  public void upload() {
+  public void upload(Activity context) {
     throw new UnsupportedOperationException("No instance of this class should be uploaded");
   }
 

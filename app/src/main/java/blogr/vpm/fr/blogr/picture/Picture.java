@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.picture;
 
+import android.app.Activity;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
@@ -52,8 +53,9 @@ public interface Picture extends Parcelable {
    * Uploads the picture if it should be. This should be called at publication.
    *
    * @pre {#shouldBeUploaded} should be checked before.
+   * @param context
    */
-  void upload();
+  void upload(Activity context);
 
   Parcelable.Creator<Picture> CREATOR
       = new Parcelable.Creator<Picture>() {

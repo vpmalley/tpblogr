@@ -8,7 +8,6 @@ import android.test.ViewAsserts;
 import android.widget.EditText;
 
 import blogr.vpm.fr.blogr.R;
-import blogr.vpm.fr.blogr.activity.PostEditionActivity;
 import blogr.vpm.fr.blogr.bean.GithubBlog;
 import blogr.vpm.fr.blogr.bean.Post;
 

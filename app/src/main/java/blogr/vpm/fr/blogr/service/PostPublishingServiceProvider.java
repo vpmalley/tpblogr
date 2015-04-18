@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.service;
 
+import android.app.Activity;
 import android.content.Context;
 
 import blogr.vpm.fr.blogr.bean.Post;
@@ -21,7 +22,7 @@ public interface PostPublishingServiceProvider {
    * @param context The Android Context, used to determine and instantiate the right service.
    * @return the instantiated PostPublisher service
    */
-  PostPublisher getPublisherService(Context context);
+  PostPublisher getPublisherService(Activity context);
 
   /**
    * Provides a service to provide tags for a picture.

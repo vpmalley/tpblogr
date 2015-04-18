@@ -1,5 +1,6 @@
 package blogr.vpm.fr.blogr.bean;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -90,8 +91,8 @@ public class GithubBlog implements Blog {
   }
 
   @Override
-  public PostPublisher getPublisherService(Context context) {
-    return new GithubPublisher(context);
+  public PostPublisher getPublisherService(Activity activity) {
+    return new GithubPublisher(activity);
   }
 
   @Override
