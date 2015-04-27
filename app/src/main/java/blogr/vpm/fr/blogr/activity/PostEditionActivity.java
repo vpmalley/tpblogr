@@ -51,14 +51,16 @@ public class PostEditionActivity extends FragmentActivity implements RefreshList
     postPlacesFragment = new PostPlacesFragment();
     postPicturesFragment = new PostPicturesFragment();
     setTitle("");
-    getActionBar().setDisplayHomeAsUpEnabled(true);
+    if (getActionBar() != null) {
+      getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
     if (getIntent().hasExtra(Post.INTENT_EXTRA_KEY)) {
       currentPost = (Post) getIntent().getExtras().get(Post.INTENT_EXTRA_KEY);
     }
 
-    FragmentPagerAdapter rssItemAdapter = new PostPagerAdapter(getSupportFragmentManager());
-    viewPager.setAdapter(rssItemAdapter);
+    FragmentPagerAdapter fragmentAdapter = new PostPagerAdapter(getSupportFragmentManager());
+    viewPager.setAdapter(fragmentAdapter);
     if (savedInstanceState == null) {
       viewPager.setCurrentItem(0);
     }
@@ -129,14 +131,19 @@ public class PostEditionActivity extends FragmentActivity implements RefreshList
     @Override
     public Fragment getItem(int position) {
       Fragment f = null;
-      if (0 == position) {
-        f = postEditionFragment;
-      } else if (1 == position) {
-        f = postMetadataFragment;
-      } else if (2 == position) {
-        f = postPlacesFragment;
-      } else if (3 == position) {
-        f = postPicturesFragment;
+      switch (position) {
+        case 0:
+          f = postEditionFragment;
+          break;
+        case 1:
+          f = postMetadataFragment;
+          break;
+        case 2:
+          f = postPlacesFragment;
+          break;
+        case 3:
+          f = postPicturesFragment;
+          break;
       }
       return f;
     }
@@ -149,14 +156,19 @@ public class PostEditionActivity extends FragmentActivity implements RefreshList
     @Override
     public CharSequence getPageTitle(int position) {
       String title = "";
-      if (0 == position) {
-        title = "Free text";
-      } else if (1 == position) {
-        title = "Metadata";
-      } else if (2 == position) {
-        title = "Places";
-      } else if (3 == position) {
-        title = "Pictures";
+      switch (position) {
+        case 0:
+          title = "Free text";
+          break;
+        case 1:
+          title = "Metadata";
+          break;
+        case 2:
+          title = "Places";
+          break;
+        case 3:
+          title = "Pictures";
+          break;
       }
       return title;
     }

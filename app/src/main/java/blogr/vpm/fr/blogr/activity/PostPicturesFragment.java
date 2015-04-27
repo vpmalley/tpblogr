@@ -95,9 +95,7 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
         flickrP.getUserPhotos(flickrUsername, picNb);
         return true;
       case R.id.action_insert_picture:
-        Intent picIntent = new Intent(Intent.ACTION_PICK);
-        picIntent.setType("image/*");
-        startActivityForResult(picIntent, PICK_PIC_REQ_CODE);
+        pickGalleryPic();
         return true;
       case R.id.action_settings:
         startActivity(new Intent(getActivity(), AllPreferencesActivity.class));
@@ -105,6 +103,12 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
       default:
         return super.onOptionsItemSelected(item);
     }
+  }
+
+  void pickGalleryPic() {
+    Intent picIntent = new Intent(Intent.ACTION_PICK);
+    picIntent.setType("image/*");
+    startActivityForResult(picIntent, PICK_PIC_REQ_CODE);
   }
 
   // called before onResume
