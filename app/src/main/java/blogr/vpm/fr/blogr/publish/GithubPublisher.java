@@ -17,6 +17,7 @@ import blogr.vpm.fr.blogr.git.AsyncGithubBlogPusher;
 import blogr.vpm.fr.blogr.git.GitInteraction;
 import blogr.vpm.fr.blogr.git.GitRepository;
 import blogr.vpm.fr.blogr.insertion.DefaultInserter;
+import blogr.vpm.fr.blogr.network.DefaultNetworkChecker;
 import blogr.vpm.fr.blogr.persistence.FileBlogManager;
 import blogr.vpm.fr.blogr.persistence.FileManager;
 import blogr.vpm.fr.blogr.picture.Picture;
@@ -42,20 +43,23 @@ public class GithubPublisher implements PostPublisher {
     this.blog = blog;
     this.post = post;
 
-    for (Picture p : post.getAllPictures()) {
-      if (p.shouldBeUploaded()) {
-        p.upload(activity);
+    if (new DefaultNetworkChecker().checkNetworkForDownload(activity, true)) {
+
+      for (Picture p : post.getAllPictures()) {
+        if (p.shouldBeUploaded()) {
+          p.upload(activity);
+        }
       }
+
+      new AsyncGithubBlogPuller(activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
+
+      if (blog.hasMetadataProvider()) {
+        new DefaultInserter(activity).prepend(post, blog.getMetadataProvider(post));
+      }
+
+      GithubPublicationDialogFragment fragment = GithubPublicationDialogFragment.newInstance(this, blog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""));
+      fragment.show(activity.getFragmentManager(), "credentialInput"); // try to remove this ugly cast
     }
-
-    new AsyncGithubBlogPuller(activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
-
-    if (blog.hasMetadataProvider()) {
-      new DefaultInserter(activity).prepend(post, blog.getMetadataProvider(post));
-    }
-
-    GithubPublicationDialogFragment fragment = GithubPublicationDialogFragment.newInstance(this, blog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""));
-    fragment.show(activity.getFragmentManager(), "credentialInput"); // try to remove this ugly cast
   }
 
   @Override
