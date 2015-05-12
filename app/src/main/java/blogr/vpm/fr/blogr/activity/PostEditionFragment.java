@@ -16,9 +16,6 @@ import android.widget.EditText;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
-import blogr.vpm.fr.blogr.format.AlignCenterTagsProvider;
-import blogr.vpm.fr.blogr.format.AlignLeftTagsProvider;
-import blogr.vpm.fr.blogr.format.AlignRightTagsProvider;
 import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.insertion.Inserter;
 import blogr.vpm.fr.blogr.location.AndroidLocationProvider;
@@ -72,6 +69,7 @@ public class PostEditionFragment extends Fragment {
     View v = inflater.inflate(R.layout.fragment_post, container, false);
     contentField = (EditText) v.findViewById(R.id.postContent);
     contentField.setOnFocusChangeListener(new OnFocusChanged());
+    contentField.setCustomSelectionActionModeCallback(new AlignCallback(new DefaultInserter(getActivity()), contentField));
     refreshViewFromPost();
     return v;
   }
@@ -133,22 +131,13 @@ public class PostEditionFragment extends Fragment {
       case R.id.action_insert_picture:
         new FlickrDialogFragment().openPicturePicker(getActivity(),
             getCurrentPost().getAllPictures().toArray(new Picture[getCurrentPost().getAllPictures().size()]),
-                new PicturePickedListener() {
-                  @Override
-                  public void onPicturePicked(Picture pic) {
-                    tagsInserter.insert(contentField, new PictureTextileTagProvider(pic));
-                    refreshPostFromView();
-                  }
-                });
-        return true;
-      case R.id.action_align_left:
-        tagsInserter.insert(contentField, new AlignLeftTagsProvider());
-        return true;
-      case R.id.action_align_center:
-        tagsInserter.insert(contentField, new AlignCenterTagsProvider());
-        return true;
-      case R.id.action_align_right:
-        tagsInserter.insert(contentField, new AlignRightTagsProvider());
+            new PicturePickedListener() {
+              @Override
+              public void onPicturePicked(Picture pic) {
+                tagsInserter.insert(contentField, new PictureTextileTagProvider(pic));
+                refreshPostFromView();
+              }
+            });
         return true;
       default:
         return super.onOptionsItemSelected(item);
