@@ -97,8 +97,10 @@ public class FilePostRetriever implements PostRetriever {
               Gson gson = new GsonBuilder().registerTypeAdapter(Picture.class, new PictureSerializer()).
                   registerTypeAdapter(Picture.class, new PictureDeserializer()).excludeFieldsWithoutExposeAnnotation().create();
               Post postData = gson.fromJson(serializedPost, Post.class);
-              post.setPlaces(postData.getPlaces());
-              post.setAllPictures(postData.getAllPictures());
+              if (postData != null) {
+                post.setPlaces(postData.getPlaces());
+                post.setAllPictures(postData.getAllPictures());
+              }
             } catch(JsonSyntaxException e) {
               Log.w("json", "Error reading JSON data. " + e.toString());
             }

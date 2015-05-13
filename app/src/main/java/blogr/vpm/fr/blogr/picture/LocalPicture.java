@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.gson.annotations.Expose;
@@ -14,6 +15,7 @@ import org.scribe.model.Token;
 
 import blogr.vpm.fr.blogr.apis.flickr.FlickrJPicturesUploader;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrOAuthAuthoriser;
+import blogr.vpm.fr.blogr.apis.flickr.FlickrOAuthTokenStore;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrPicturesUploader;
 
 /**
@@ -74,15 +76,24 @@ public class LocalPicture implements Picture {
 
   @Override
   public void upload(final Activity activity) {
-    FlickrOAuthAuthoriser.PostExecution postExecution = new FlickrOAuthAuthoriser.PostExecution() {
-      @Override
-      public void onPostExecute(Token accessToken) {
-        FlickrPicturesUploader picUploader = new FlickrJPicturesUploader(activity, accessToken);
-        picUploader.uploadPicture(LocalPicture.this);
-      }
-    };
+    FlickrOAuthTokenStore store = new FlickrOAuthTokenStore();
+    if (store.hasStoredToken(activity)) {
+      Log.d("picture", "hasToken");
+      Token token = store.getStoredToken(activity);
+      FlickrPicturesUploader picUploader = new FlickrJPicturesUploader(activity, token);
+      picUploader.uploadPicture(LocalPicture.this);
+    } else {
 
-    new FlickrOAuthAuthoriser(postExecution).launchAuthorizationFlow(activity);
+      FlickrOAuthAuthoriser.PostExecution postExecution = new FlickrOAuthAuthoriser.PostExecution() {
+        @Override
+        public void onPostExecute(Token accessToken) {
+          FlickrPicturesUploader picUploader = new FlickrJPicturesUploader(activity, accessToken);
+          picUploader.uploadPicture(LocalPicture.this);
+        }
+      };
+      new FlickrOAuthAuthoriser(postExecution).launchAuthorizationFlow(activity);
+    }
+
     // retrieve the id of picture
     // replace the placehoders?
   }
