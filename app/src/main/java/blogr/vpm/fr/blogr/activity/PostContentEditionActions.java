@@ -11,17 +11,18 @@ import blogr.vpm.fr.blogr.format.AlignCenterTagsProvider;
 import blogr.vpm.fr.blogr.format.AlignLeftTagsProvider;
 import blogr.vpm.fr.blogr.format.AlignRightTagsProvider;
 import blogr.vpm.fr.blogr.insertion.Inserter;
+import blogr.vpm.fr.blogr.insertion.WikipediaLinkTagsProvider;
 
 /**
  * Created by vince on 11/05/15.
  */
-public class AlignCallback implements ActionMode.Callback {
+public class PostContentEditionActions implements ActionMode.Callback {
 
   private final Inserter inserter;
 
   private final EditText editText;
 
-  public AlignCallback(Inserter inserter, EditText editText) {
+  public PostContentEditionActions(Inserter inserter, EditText editText) {
     this.inserter = inserter;
     this.editText = editText;
   }
@@ -29,7 +30,7 @@ public class AlignCallback implements ActionMode.Callback {
   @Override
   public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
     MenuInflater inflater = actionMode.getMenuInflater();
-    inflater.inflate(R.menu.posteditionalign, menu);
+    inflater.inflate(R.menu.postcontentedition, menu);
     return true;
   }
 
@@ -41,6 +42,12 @@ public class AlignCallback implements ActionMode.Callback {
   @Override
   public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
     switch (menuItem.getItemId()) {
+      case R.id.action_wiki_link:
+        if (editText.getSelectionStart() < editText.getSelectionEnd()) {
+          String articleName = editText.getText().toString().substring(editText.getSelectionStart(), editText.getSelectionEnd());
+          inserter.insert(editText, new WikipediaLinkTagsProvider(articleName));
+        }
+        return true;
       case R.id.action_align_left:
         inserter.insert(editText, new AlignLeftTagsProvider());
         return true;

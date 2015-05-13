@@ -69,7 +69,7 @@ public class PostEditionFragment extends Fragment {
     View v = inflater.inflate(R.layout.fragment_post, container, false);
     contentField = (EditText) v.findViewById(R.id.postContent);
     contentField.setOnFocusChangeListener(new OnFocusChanged());
-    contentField.setCustomSelectionActionModeCallback(new AlignCallback(new DefaultInserter(getActivity()), contentField));
+    contentField.setCustomSelectionActionModeCallback(new PostContentEditionActions(new DefaultInserter(getActivity()), contentField));
     refreshViewFromPost();
     return v;
   }

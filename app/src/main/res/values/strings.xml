@@ -53,4 +53,5 @@
     <string name="action_insert_picture">Picture</string>
     <string name="ok">OK</string>
     <string name="type_flickr_code">Type code</string>
+    <string name="action_wiki_link">Link to Wikipedia</string>
 </resources>
