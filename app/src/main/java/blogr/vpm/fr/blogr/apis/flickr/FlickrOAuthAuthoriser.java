@@ -102,7 +102,7 @@ public class FlickrOAuthAuthoriser {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
               String verifier = flickrVerifier.getText().toString();
-              new AccessTokenGetter(requestToken, service, postExecution).execute(verifier);
+              new AccessTokenGetter(context, service, requestToken, postExecution).execute(verifier);
             }
           })
           .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -120,15 +120,18 @@ public class FlickrOAuthAuthoriser {
    */
   public static class AccessTokenGetter extends AsyncTask<String, Integer, Token> {
 
-    private final Token requestToken;
+    private final Context context;
 
     private final OAuthService service;
 
+    private final Token requestToken;
+
     private final PostExecution postExecution;
 
-    public AccessTokenGetter(Token requestToken, OAuthService service, PostExecution postExecution) {
-      this.requestToken = requestToken;
+    public AccessTokenGetter(Context context, OAuthService service, Token requestToken, PostExecution postExecution) {
+      this.context = context;
       this.service = service;
+      this.requestToken = requestToken;
       this.postExecution = postExecution;
     }
 
@@ -140,6 +143,7 @@ public class FlickrOAuthAuthoriser {
 
     @Override
     protected void onPostExecute(Token accessToken) {
+      new FlickrOAuthTokenStore().storeToken(context, accessToken);
       postExecution.onPostExecute(accessToken);
     }
   }
