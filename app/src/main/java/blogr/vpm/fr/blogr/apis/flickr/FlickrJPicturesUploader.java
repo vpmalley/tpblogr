@@ -3,14 +3,20 @@ package blogr.vpm.fr.blogr.apis.flickr;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.googlecode.flickrjandroid.FlickrException;
+import com.googlecode.flickrjandroid.REST;
 import com.googlecode.flickrjandroid.RequestContext;
 import com.googlecode.flickrjandroid.oauth.OAuth;
 import com.googlecode.flickrjandroid.oauth.OAuthToken;
+import com.googlecode.flickrjandroid.photos.Photo;
+import com.googlecode.flickrjandroid.photos.upload.Ticket;
+import com.googlecode.flickrjandroid.photos.upload.UploadInterface;
 import com.googlecode.flickrjandroid.uploader.UploadMetaData;
 import com.googlecode.flickrjandroid.uploader.Uploader;
 
+import org.json.JSONException;
 import org.scribe.model.Token;
 import org.xml.sax.SAXException;
 
@@ -18,7 +24,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.picture.LocalPicture;
@@ -33,6 +42,8 @@ public class FlickrJPicturesUploader extends AsyncTask<Picture, Integer, List<Pi
 
   private final Token accessToken;
 
+  private final List<String> userNotifs = new ArrayList<>();
+
   public FlickrJPicturesUploader(Context context, Token accessToken) {
     this.context = context;
     this.accessToken = accessToken;
@@ -45,13 +56,29 @@ public class FlickrJPicturesUploader extends AsyncTask<Picture, Integer, List<Pi
 
   @Override
   protected List<Picture> doInBackground(Picture... pictures) {
+    List<String> photoIds = requestUpload(pictures);
+    List<Picture> uploadedPics = retrievePictures(photoIds);
+    return uploadedPics;
+  }
+
+  private List<Picture> retrievePictures(List<String> photoIds) {
+    List<Picture> uploadedPics = new ArrayList<>();
+    FlickrJPicturesProvider picturesProvider = new FlickrJPicturesProvider(context);
+    for (String photoId : photoIds) {
+      Photo p = picturesProvider.getPhotoForId(photoId);
+      uploadedPics.add(new ParcelableFlickrPhoto(p));
+    }
+    return uploadedPics;
+  }
+
+  private List<String> requestUpload(Picture[] pictures) {
     RequestContext requestContext = RequestContext.getRequestContext();
     OAuth oauth = new OAuth();
     oauth.setToken(new OAuthToken(accessToken.getToken(), accessToken.getSecret()));
 
     requestContext.setOAuth(oauth);
     Uploader uploader = new Uploader(context.getString(R.string.flickr_api_key), context.getString(R.string.flickr_api_secret));
-    List<String> ticketIds = new ArrayList<>();
+    List<String> photoIds = new ArrayList<>();
     for (Picture pic : pictures) {
       if (pic instanceof LocalPicture) {
         InputStream picStream = null;
@@ -62,25 +89,60 @@ public class FlickrJPicturesUploader extends AsyncTask<Picture, Integer, List<Pi
         }
 
         UploadMetaData uploadMetaData = new UploadMetaData();
-        uploadMetaData.setAsync(true);
+        uploadMetaData.setAsync(false);
         uploadMetaData.setTitle(pic.getTitle());
         uploadMetaData.setDescription(pic.getDescription());
         if (picStream != null) {
           try {
-            ticketIds.add(uploader.upload(pic.getTitle(), picStream, uploadMetaData));
-            Log.d("upload successful", "with ticket id :" + ticketIds.get(ticketIds.size() - 1));
-          } catch (IOException e) {
-            Log.w("inputStream", "failed uploading picture. " + e.toString());
-          } catch (FlickrException e) {
-            Log.w("inputStream", "failed uploading picture. " + e.toString());
-          } catch (SAXException e) {
+            String photoId = uploader.upload(pic.getTitle(), picStream, uploadMetaData);
+            photoIds.add(photoId);
+            ((LocalPicture) pic).setUploadPhotoId(photoId);
+            Log.d("upload successful", "with photo id :" + photoIds.get(photoIds.size() - 1));
+          } catch (IOException | FlickrException | SAXException e) {
             Log.w("inputStream", "failed uploading picture. " + e.toString());
           }
         }
       }
     }
+    return photoIds;
+  }
 
-    // TODO gather info about picture
-    return new ArrayList<>();
+  private List<Picture> requestPictureInformation(List<String> ticketIds) {
+    List<Picture> pictures = new ArrayList<>();
+    RequestContext requestContext = RequestContext.getRequestContext();
+    OAuth oauth = new OAuth();
+    oauth.setToken(new OAuthToken(accessToken.getToken(), accessToken.getSecret()));
+    requestContext.setOAuth(oauth);
+
+    try {
+      UploadInterface ui = new UploadInterface(context.getString(R.string.flickr_api_key), context.getString(R.string.flickr_api_secret), new REST("api.flickr.com/services"));
+      List<Ticket> tickets = ui.checkTickets(new HashSet<Object>(ticketIds));
+      for (Ticket t : tickets) {
+        if (Ticket.COMPLETED != t.getStatus()) {
+          FlickrJPicturesProvider picturesProvider = new FlickrJPicturesProvider(context);
+          Photo p = picturesProvider.getPhotoForId(t.getPhotoId());
+          pictures.add(new ParcelableFlickrPhoto(p));
+          Log.d("upload", "uploaded a picture with title " + p.getTitle());
+          userNotifs.add("uploaded a picture with title " + p.getTitle());
+        } else if (Ticket.FAILED == t.getStatus()) {
+          Log.d("upload", "a picture upload has failed");
+          userNotifs.add("a picture upload has failed");
+        } else {
+          Log.d("upload", "picture still uploading");
+          userNotifs.add("picture still uploading");
+        }
+      }
+    } catch (ParserConfigurationException | JSONException | IOException | FlickrException e) {
+      Log.w("uploader", "failed to retrieve ticket");
+    }
+    return pictures;
+  }
+
+  @Override
+  protected void onPostExecute(List<Picture> pictures) {
+    super.onPostExecute(pictures);
+    for (String notif : userNotifs) {
+      Toast.makeText(context, notif, Toast.LENGTH_SHORT).show();
+    }
   }
 }

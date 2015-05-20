@@ -29,6 +29,7 @@ public class LocalPicture implements Picture {
   private static final String DESC_KEY = "description";
   private static final String URI_KEY = "localUri";
   public static final String UNTITLED = "untitled";
+  private static final String UPLOAD_KEY = "upload";
 
   @Expose
   private final Uri localUri;
@@ -39,10 +40,14 @@ public class LocalPicture implements Picture {
   @Expose
   private String description;
 
+  @Expose
+  private String uploadPhotoId;
+
   public LocalPicture(Uri localUri) {
     this.localUri = localUri;
     this.title = UNTITLED;
     this.description = UNTITLED;
+    this.uploadPhotoId = "";
   }
 
   public Uri getLocalUri() {
@@ -71,7 +76,7 @@ public class LocalPicture implements Picture {
 
   @Override
   public boolean shouldBeUploaded() {
-    return true;
+    return getUploadPhotoId().isEmpty();
   }
 
   @Override
@@ -98,6 +103,14 @@ public class LocalPicture implements Picture {
     // replace the placehoders?
   }
 
+  public String getUploadPhotoId() {
+    return uploadPhotoId;
+  }
+
+  public void setUploadPhotoId(String uploadPhotoId) {
+    this.uploadPhotoId = uploadPhotoId;
+  }
+
   @Override
   public String toString() {
     String description = UNTITLED;
@@ -121,6 +134,7 @@ public class LocalPicture implements Picture {
     b.putString(TITLE_KEY, title);
     b.putString(DESC_KEY, description);
     b.putParcelable(URI_KEY, localUri);
+    b.putString(UPLOAD_KEY, uploadPhotoId);
     parcel.writeBundle(b);
   }
 
@@ -131,6 +145,7 @@ public class LocalPicture implements Picture {
     title = b.getString(TITLE_KEY);
     description = b.getString(DESC_KEY);
     localUri = b.getParcelable(URI_KEY);
+    uploadPhotoId = b.getString(UPLOAD_KEY);
   }
 
   public static final Parcelable.Creator<LocalPicture> CREATOR

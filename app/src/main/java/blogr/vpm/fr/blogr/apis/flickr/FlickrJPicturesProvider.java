@@ -6,6 +6,7 @@ import android.util.Log;
 import com.googlecode.flickrjandroid.Flickr;
 import com.googlecode.flickrjandroid.FlickrException;
 import com.googlecode.flickrjandroid.people.User;
+import com.googlecode.flickrjandroid.photos.Photo;
 import com.googlecode.flickrjandroid.photos.PhotoList;
 
 import org.json.JSONException;
@@ -35,13 +36,20 @@ public class FlickrJPicturesProvider implements FlickrProvider {
     try {
       User user = f.getPeopleInterface().findByUsername(username);
       photos = f.getPeopleInterface().getPublicPhotos(user.getId(), count, 1);
-    } catch (IOException e) {
-      Log.d("flickr", e.getMessage());
-    } catch (JSONException e) {
-      Log.d("flickr", e.getMessage());
-    } catch (FlickrException e) {
+    } catch (IOException | JSONException | FlickrException e) {
       Log.d("flickr", e.getMessage());
     }
     return photos;
+  }
+
+  public Photo getPhotoForId(String photoId) {
+    Photo photo = null;
+    Flickr f = new Flickr(context.getResources().getString(R.string.flickr_api_key));
+    try {
+      photo = f.getPhotosInterface().getInfo(photoId, "");
+    } catch (IOException | JSONException | FlickrException e) {
+      Log.d("flickr", e.getMessage());
+    }
+    return photo;
   }
 }
