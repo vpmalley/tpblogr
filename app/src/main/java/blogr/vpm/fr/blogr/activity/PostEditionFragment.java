@@ -2,6 +2,7 @@ package blogr.vpm.fr.blogr.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -116,8 +117,16 @@ public class PostEditionFragment extends Fragment {
       case R.id.action_publish:
         refreshPostFromView();
         ((PostEditionActivity) getActivity()).saveCurrentPost();
-        PostPublisher publisher = getCurrentPost().getBlog().getPublisherService(getActivity());
-        publisher.publish(getCurrentPost().getBlog(), getCurrentPost());
+        new AsyncTask<Post, Integer, Post>() {
+          @Override
+          protected Post doInBackground(Post... posts) {
+            if (posts.length == 0) {
+              PostPublisher publisher = posts[0].getBlog().getPublisherService(getActivity());
+              publisher.publish(posts[0].getBlog(), posts[0]);
+            }
+            return posts[0];
+          }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getCurrentPost());
         return true;
       case R.id.action_insert_location:
         new PlacePickerFragment().openPlacesPicker(getActivity(), getCurrentPost().getPlaces(), new PlacePickedListener() {

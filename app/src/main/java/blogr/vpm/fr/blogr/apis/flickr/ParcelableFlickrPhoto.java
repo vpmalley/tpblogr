@@ -155,7 +155,7 @@ public class ParcelableFlickrPhoto implements Picture, Parcelable, PictureLoaded
   }
 
   @Override
-  public void upload(Activity context) {
+  public Picture upload(Activity context) {
     throw new UnsupportedOperationException("No instance of this class should be uploaded");
   }
 

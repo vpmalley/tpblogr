@@ -54,8 +54,9 @@ public interface Picture extends Parcelable {
    *
    * @pre {#shouldBeUploaded} should be checked before.
    * @param context
+   * @return the uploaded picture
    */
-  void upload(Activity context);
+  Picture upload(Activity context);
 
   Parcelable.Creator<Picture> CREATOR
       = new Parcelable.Creator<Picture>() {

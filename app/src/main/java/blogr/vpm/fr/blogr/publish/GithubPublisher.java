@@ -47,7 +47,11 @@ public class GithubPublisher implements PostPublisher {
 
       for (Picture p : post.getAllPictures()) {
         if (p.shouldBeUploaded()) {
-          p.upload(activity);
+          Picture uploaded = p.upload(activity);
+          if (uploaded != null) {
+            post.getAllPictures().remove(p);
+            post.getAllPictures().add(uploaded);
+          }
         }
       }
 

@@ -80,13 +80,14 @@ public class LocalPicture implements Picture {
   }
 
   @Override
-  public void upload(final Activity activity) {
+  public Picture upload(final Activity activity) {
+    Picture uploaded = null;
     FlickrOAuthTokenStore store = new FlickrOAuthTokenStore();
     if (store.hasStoredToken(activity)) {
       Log.d("picture", "hasToken");
       Token token = store.getStoredToken(activity);
       FlickrPicturesUploader picUploader = new FlickrJPicturesUploader(activity, token);
-      picUploader.uploadPicture(LocalPicture.this);
+      uploaded = picUploader.uploadPicture(LocalPicture.this);
     } else {
 
       FlickrOAuthAuthoriser.PostExecution postExecution = new FlickrOAuthAuthoriser.PostExecution() {
@@ -101,6 +102,7 @@ public class LocalPicture implements Picture {
 
     // retrieve the id of picture
     // replace the placehoders?
+    return null;
   }
 
   public String getUploadPhotoId() {

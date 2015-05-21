@@ -1,9 +1,7 @@
 package blogr.vpm.fr.blogr.apis.flickr;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.googlecode.flickrjandroid.FlickrException;
 import com.googlecode.flickrjandroid.REST;
@@ -36,7 +34,7 @@ import blogr.vpm.fr.blogr.picture.Picture;
 /**
  * Created by vince on 17/04/15.
  */
-public class FlickrJPicturesUploader extends AsyncTask<Picture, Integer, List<Picture>> implements FlickrPicturesUploader {
+public class FlickrJPicturesUploader implements FlickrPicturesUploader {
 
   private final Context context;
 
@@ -50,28 +48,19 @@ public class FlickrJPicturesUploader extends AsyncTask<Picture, Integer, List<Pi
   }
 
   @Override
-  public void uploadPicture(Picture picture) {
-    executeOnExecutor(THREAD_POOL_EXECUTOR, picture);
-  }
-
-  @Override
-  protected List<Picture> doInBackground(Picture... pictures) {
+  public Picture uploadPicture(Picture picture) {
+    Picture uploaded = null;
+    List<Picture> pictures = new ArrayList<>(1);
+    pictures.add(picture);
     List<String> photoIds = requestUpload(pictures);
     List<Picture> uploadedPics = retrievePictures(photoIds);
-    return uploadedPics;
-  }
-
-  private List<Picture> retrievePictures(List<String> photoIds) {
-    List<Picture> uploadedPics = new ArrayList<>();
-    FlickrJPicturesProvider picturesProvider = new FlickrJPicturesProvider(context);
-    for (String photoId : photoIds) {
-      Photo p = picturesProvider.getPhotoForId(photoId);
-      uploadedPics.add(new ParcelableFlickrPhoto(p));
+    if (!uploadedPics.isEmpty()) {
+      uploaded = uploadedPics.get(0);
     }
-    return uploadedPics;
+    return uploaded;
   }
 
-  private List<String> requestUpload(Picture[] pictures) {
+  private List<String> requestUpload(List<Picture> pictures) {
     RequestContext requestContext = RequestContext.getRequestContext();
     OAuth oauth = new OAuth();
     oauth.setToken(new OAuthToken(accessToken.getToken(), accessToken.getSecret()));
@@ -107,6 +96,16 @@ public class FlickrJPicturesUploader extends AsyncTask<Picture, Integer, List<Pi
     return photoIds;
   }
 
+  private List<Picture> retrievePictures(List<String> photoIds) {
+    List<Picture> uploadedPics = new ArrayList<>();
+    FlickrJPicturesProvider picturesProvider = new FlickrJPicturesProvider(context);
+    for (String photoId : photoIds) {
+      Photo p = picturesProvider.getPhotoForId(photoId);
+      uploadedPics.add(new ParcelableFlickrPhoto(p));
+    }
+    return uploadedPics;
+  }
+
   private List<Picture> requestPictureInformation(List<String> ticketIds) {
     List<Picture> pictures = new ArrayList<>();
     RequestContext requestContext = RequestContext.getRequestContext();
@@ -138,11 +137,4 @@ public class FlickrJPicturesUploader extends AsyncTask<Picture, Integer, List<Pi
     return pictures;
   }
 
-  @Override
-  protected void onPostExecute(List<Picture> pictures) {
-    super.onPostExecute(pictures);
-    for (String notif : userNotifs) {
-      Toast.makeText(context, notif, Toast.LENGTH_SHORT).show();
-    }
-  }
 }

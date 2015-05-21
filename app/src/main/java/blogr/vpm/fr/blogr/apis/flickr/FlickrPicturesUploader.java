@@ -13,5 +13,5 @@ public interface FlickrPicturesUploader {
    * @param picture the picture to upload
    * @return the uploaded picture, with Flickr information
    */
-  void uploadPicture(Picture picture);
+  Picture uploadPicture(Picture picture);
 }
