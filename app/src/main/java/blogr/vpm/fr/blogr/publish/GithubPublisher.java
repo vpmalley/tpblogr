@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import blogr.vpm.fr.blogr.activity.GithubPublicationDialogFragment;
 import blogr.vpm.fr.blogr.bean.Blog;
@@ -45,22 +47,27 @@ public class GithubPublisher implements PostPublisher {
 
     if (new DefaultNetworkChecker().checkNetworkForDownload(activity, true)) {
 
+      // pull to synchronise the local repo with the distant one
+      new AsyncGithubBlogPuller(activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
+
+      // upload pictures, and replace their references in the Post
+      Map<Picture, Picture> replacements = new HashMap<>();
       for (Picture p : post.getAllPictures()) {
         if (p.shouldBeUploaded()) {
           Picture uploaded = p.upload(activity);
           if (uploaded != null) {
-            post.getAllPictures().remove(p);
-            post.getAllPictures().add(uploaded);
+            replacements.put(p, uploaded);
           }
         }
       }
+      post.replaceUploadedPictures(replacements);
 
-      new AsyncGithubBlogPuller(activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (GithubBlog) blog);
-
+      // add the metadata at the beginning of the file
       if (blog.hasMetadataProvider()) {
         new DefaultInserter(activity).prepend(post, blog.getMetadataProvider(post));
       }
 
+      // ask for the Git credentials - maybe move this to blog creation
       GithubPublicationDialogFragment fragment = GithubPublicationDialogFragment.newInstance(this, blog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""));
       fragment.show(activity.getFragmentManager(), "credentialInput"); // try to remove this ugly cast
     }

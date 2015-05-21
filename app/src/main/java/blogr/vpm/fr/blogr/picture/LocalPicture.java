@@ -99,10 +99,7 @@ public class LocalPicture implements Picture {
       };
       new FlickrOAuthAuthoriser(postExecution).launchAuthorizationFlow(activity);
     }
-
-    // retrieve the id of picture
-    // replace the placehoders?
-    return null;
+    return uploaded;
   }
 
   public String getUploadPhotoId() {

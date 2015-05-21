@@ -16,6 +16,7 @@ import com.google.gson.annotations.Expose;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import blogr.vpm.fr.blogr.apis.flickr.ParcelableFlickrPhoto;
 import blogr.vpm.fr.blogr.picture.LocalPicture;
@@ -173,6 +174,20 @@ public class Post implements Parcelable {
     return pictureFiles;
   }
 
+  public void replaceUploadedPictures(Map<Picture, Picture> replacements) {
+    for (Map.Entry<Picture, Picture> replacement : replacements.entrySet()) {
+      // replace tags in content
+      String insertedTag = replacement.getKey().getUrlForInsertion();
+      String tagToInsert = replacement.getValue().getUrlForInsertion();
+      String contentWithReplacedPictures = getContent().replace(insertedTag, tagToInsert);
+      setContent(contentWithReplacedPictures);
+
+      // replace picture in list
+      getAllPictures().remove(replacement.getKey());
+      getAllPictures().add(replacement.getValue());
+    }
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -193,7 +208,7 @@ public class Post implements Parcelable {
   private Post(Parcel in) {
     Bundle b = in.readBundle(Post.class.getClassLoader());
     // without setting the classloader, it fails on BadParcelableException : ClassNotFoundException when
-    // unmarshalling Media class
+    // unmarshalling Post class
     title = b.getString(TITLE_KEY);
     content = b.getString(CONTENT_KEY);
     blog = b.getParcelable(BLOG_KEY);

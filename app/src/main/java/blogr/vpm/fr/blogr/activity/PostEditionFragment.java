@@ -120,7 +120,7 @@ public class PostEditionFragment extends Fragment {
         new AsyncTask<Post, Integer, Post>() {
           @Override
           protected Post doInBackground(Post... posts) {
-            if (posts.length == 0) {
+            if (posts.length == 1) {
               PostPublisher publisher = posts[0].getBlog().getPublisherService(getActivity());
               publisher.publish(posts[0].getBlog(), posts[0]);
             }
