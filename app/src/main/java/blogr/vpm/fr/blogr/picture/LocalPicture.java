@@ -56,6 +56,14 @@ public class LocalPicture implements Picture {
     this.uploadPhotoId = "";
   }
 
+  public LocalPicture(Uri localUri, String title, String description) {
+    this.localUri = localUri;
+    this.title = title;
+    this.description = description;
+    this.uploadPhotoId = "";
+
+  }
+
   public Uri getLocalUri() {
     return localUri;
   }

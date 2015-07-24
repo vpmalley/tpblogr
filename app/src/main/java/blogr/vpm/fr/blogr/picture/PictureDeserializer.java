@@ -26,7 +26,7 @@ public class PictureDeserializer implements JsonDeserializer<Picture> {
       String title = json.getAsJsonObject().get("title").getAsString();
       String description = json.getAsJsonObject().get("description").getAsString();
       String localUri = json.getAsJsonObject().get("localUri").getAsString();
-      p = new LocalPicture(Uri.parse(localUri));
+      p = new LocalPicture(Uri.parse(localUri), title, description);
     } else {
       p = context.deserialize(json, ParcelableFlickrPhoto.class);
     }
