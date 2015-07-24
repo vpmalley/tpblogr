@@ -29,14 +29,19 @@ public class YamlMetadataExtracter implements Extracter {
       String metadata = post.getContent().substring(firstIndex, secondIndex);
       post.setContent(post.getContent().substring(secondIndex + YAML_SEP.length()));
 
-      YamlReader reader = new YamlReader(new StringReader(metadata));
-      Map md = null;
-      try {
-        md = (Map) reader.read();
-      } catch (YamlException e) {
-        Log.w("yaml", e.toString());
-      }
-      post.setMd(new PostMetadata(md));
+      PostMetadata md = readMd(metadata);
+      post.setMd(md);
     }
+  }
+
+  public PostMetadata readMd(String metadata) {
+    YamlReader reader = new YamlReader(new StringReader(metadata));
+    Map md = null;
+    try {
+      md = (Map) reader.read();
+    } catch (YamlException e) {
+      Log.w("yaml", e.toString());
+    }
+    return new PostMetadata(md);
   }
 }

@@ -22,7 +22,7 @@ public class PostEditionActivity extends FragmentActivity implements RefreshList
 
   private PostEditionFragment postEditionFragment;
 
-  private PostMetadataFragment postMetadataFragment;
+  private PostMdEditionFragment postMetadataFragment;
 
   private PostPlacesFragment postPlacesFragment;
 
@@ -47,7 +47,7 @@ public class PostEditionActivity extends FragmentActivity implements RefreshList
     setContentView(R.layout.activity_post_edition);
     viewPager = (ViewPager) findViewById(R.id.pager);
     postEditionFragment = new PostEditionFragment();
-    postMetadataFragment = new PostMetadataFragment();
+    postMetadataFragment = new PostMdEditionFragment();
     postPlacesFragment = new PostPlacesFragment();
     postPicturesFragment = new PostPicturesFragment();
     setTitle("");
