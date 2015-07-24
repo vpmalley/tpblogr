@@ -18,10 +18,10 @@ import blogr.vpm.fr.blogr.git.AsyncGithubBlogPuller;
 import blogr.vpm.fr.blogr.git.AsyncGithubBlogPusher;
 import blogr.vpm.fr.blogr.git.GitInteraction;
 import blogr.vpm.fr.blogr.git.GitRepository;
-import blogr.vpm.fr.blogr.insertion.DefaultInserter;
 import blogr.vpm.fr.blogr.network.DefaultNetworkChecker;
 import blogr.vpm.fr.blogr.persistence.FileBlogManager;
 import blogr.vpm.fr.blogr.persistence.FileManager;
+import blogr.vpm.fr.blogr.persistence.FilePostSaver;
 import blogr.vpm.fr.blogr.picture.Picture;
 
 /**
@@ -60,12 +60,8 @@ public class GithubPublisher implements PostPublisher {
           }
         }
       }
-      post.replaceUploadedPictures(replacements);
-
-      // add the metadata at the beginning of the file
-      if (blog.hasMetadataProvider()) {
-        new DefaultInserter(activity).prepend(post, blog.getMetadataProvider(post));
-      }
+      this.post.replaceUploadedPictures(replacements);
+      new FilePostSaver(activity).persist(this.post);
 
       // ask for the Git credentials - maybe move this to blog creation
       GithubPublicationDialogFragment fragment = GithubPublicationDialogFragment.newInstance(this, blog.getTitle().replace(GithubBlog.REPO_SUFFIX, ""));

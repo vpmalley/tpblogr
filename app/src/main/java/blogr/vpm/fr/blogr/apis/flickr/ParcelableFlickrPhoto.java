@@ -133,7 +133,7 @@ public class ParcelableFlickrPhoto implements Picture, Parcelable, PictureLoaded
 
   @Override
   public String getUrlForInsertion() {
-    return getMediumSizeUrl();
+    return getLargeSizeUrl();
   }
 
   @Override

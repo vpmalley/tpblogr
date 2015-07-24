@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.bean.Post;
@@ -117,6 +118,16 @@ public class PostEditionFragment extends Fragment {
       case R.id.action_publish:
         refreshPostFromView();
         ((PostEditionActivity) getActivity()).saveCurrentPost();
+        boolean hasPicsToUpload = false;
+        for (Picture pic : getCurrentPost().getAllPictures()) {
+          if (pic.shouldBeUploaded()) {
+            hasPicsToUpload = true;
+          }
+        }
+        if (hasPicsToUpload) {
+          Toast.makeText(getActivity(), "First, pictures should be uploaded. " +
+              "Please be patient, it might take minutes.", Toast.LENGTH_LONG).show();
+        }
         new AsyncTask<Post, Integer, Post>() {
           @Override
           protected Post doInBackground(Post... posts) {

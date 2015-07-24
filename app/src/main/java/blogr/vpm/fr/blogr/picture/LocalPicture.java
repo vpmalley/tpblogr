@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.gson.annotations.Expose;
@@ -84,7 +83,6 @@ public class LocalPicture implements Picture {
     Picture uploaded = null;
     FlickrOAuthTokenStore store = new FlickrOAuthTokenStore();
     if (store.hasStoredToken(activity)) {
-      Log.d("picture", "hasToken");
       Token token = store.getStoredToken(activity);
       FlickrPicturesUploader picUploader = new FlickrJPicturesUploader(activity, token);
       uploaded = picUploader.uploadPicture(LocalPicture.this);
