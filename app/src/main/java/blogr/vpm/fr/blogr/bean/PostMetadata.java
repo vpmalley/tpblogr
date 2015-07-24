@@ -62,7 +62,11 @@ public class PostMetadata implements Parcelable{
     this.travelDate = String.valueOf(md.get(TRAVEL_DATE_KEY));
     this.excerpt = String.valueOf(md.get(EXCERPT_KEY));
     this.layout = String.valueOf(md.get(LAYOUT_KEY));
-    this.tags = (ArrayList<String>) md.get(TAGS_KEY);
+    if (md.get(TAGS_KEY) instanceof ArrayList) {
+      this.tags = (ArrayList<String>) md.get(TAGS_KEY);
+    } else if (md.get(TAGS_KEY) instanceof String) {
+      this.tags = new ArrayList<String>(Arrays.asList(((String) md.get(TAGS_KEY)).split(" ")));
+    }
     this.otherData = new HashMap<>(md);
   }
 
