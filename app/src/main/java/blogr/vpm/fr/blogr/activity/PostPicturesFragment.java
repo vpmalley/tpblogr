@@ -2,6 +2,8 @@ package blogr.vpm.fr.blogr.activity;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 
 import blogr.vpm.fr.blogr.R;
 import blogr.vpm.fr.blogr.apis.flickr.FlickrJAsyncPicturesProvider;
@@ -115,12 +118,26 @@ public class PostPicturesFragment extends Fragment implements PicturePickedListe
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if ((PICK_PIC_REQ_CODE == requestCode) && (Activity.RESULT_OK == resultCode)) {
-      Uri pictureUri = data.getData();
-      getCurrentPost().addPicture(new LocalPicture(pictureUri));
-      refreshViewFromPost();
+      final Uri pictureUri = data.getData();
+      askForPicTitleAndSave(pictureUri);
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
+  }
+
+  void askForPicTitleAndSave(final Uri pictureUri) {
+    final EditText titleField = new EditText(getActivity());
+    AlertDialog dialog = new AlertDialog.Builder(getActivity()).setCancelable(true)
+        .setMessage("Give it a title")
+        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialogInterface, int i) {
+            getCurrentPost().addPicture(new LocalPicture(pictureUri, titleField.getText().toString()));
+            refreshViewFromPost();
+          }
+        }).create();
+    dialog.setView(titleField);
+    dialog.show();
   }
 
   void refreshViewFromPost() {
