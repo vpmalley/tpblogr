@@ -3,7 +3,7 @@ buildscript {
         repositories {
             mavenCentral()
         }
-        classpath "com.android.tools.build:gradle:1.0.0"
+        classpath "com.android.tools.build:gradle:1.1.0"
         classpath "com.github.jcandksolutions.gradle:android-unit-test:2.1.1"
     }
 }
@@ -39,7 +39,7 @@ dependencies {
     compile 'org.markdownj:markdownj-core:0.4'
     compile 'com.googlecode.flickrj-android:flickrj-android:2.1.0'
     compile 'org.slf4j:slf4j-android:1.7.9'
-    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:support-v4:22.1.1'
     compile 'org.eclipse.jgit:org.eclipse.jgit:3.6.2.201501210735-r'
     compile 'org.eclipse.jgit:org.eclipse.jgit-parent:3.6.2.201501210735-r'
     compile 'org.eclipse.jgit:org.eclipse.jgit.http.apache:3.6.2.201501210735-r'
